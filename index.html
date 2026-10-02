@@ -278,6 +278,7 @@ textarea{width:100%;min-height:24cqw;background:rgba(16,23,15,.9);border:1px sol
 #hint button{display:inline-flex;align-items:center;gap:6px;padding:7px 11px;border-radius:99px;border:1px solid var(--line);background:rgba(16,23,15,.9);color:var(--muted);font-size:12px}
 #hint button:hover{color:var(--fg)}
 #hint kbd{font-family:ui-monospace,monospace;font-size:10.5px;border:1px solid var(--line);border-radius:4px;padding:0 5px;color:var(--fg)}
+@media (max-width:640px){body #hint{display:none}}
 #intro{position:fixed;inset:0;z-index:70;display:grid;place-items:center;background:rgba(4,6,4,.86);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);padding:24px}
 #intro[hidden]{display:none}
 #intro .card-i{max-width:440px;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:28px 28px 22px;display:flex;flex-direction:column;gap:14px;color:var(--muted);font-size:14px;line-height:1.5}
@@ -459,7 +460,7 @@ textarea{width:100%;min-height:24cqw;background:rgba(16,23,15,.9);border:1px sol
     <div class="r"><select id="aitts" aria-label="Uma voice"><option value="system">System voice</option><option value="nova">Uma voice · nova (OpenAI)</option><option value="coral">Uma voice · coral (OpenAI)</option><option value="sage">Uma voice · sage (OpenAI)</option></select></div>
     <div class="s" id="aistatus">Guided answers. Add your own model key to make Uma answer live; it stays in this browser.</div>
   </div>
-  <div class="fine">Real public Upwork data, pulled Oct 2 2026: the people in Find great talent and Surprise me, the three projects in What businesses are building, and the ambient ticker (Lisbon time). Spotlight figures cite Upwork's own publications. Teammates and success-story details are illustrative. Value names are placeholders until Upwork shares the LUV list. A pasted key stays in this browser only. Prototype by SoftDoes · softdoes.com.</div>
+  <div class="fine">Real public Upwork data, pulled Oct 2 2026: the people in Find great talent and Surprise me, the three projects in What businesses are building, and the ambient ticker (Lisbon time). Spotlight figures and the success stories cite Upwork's own publications. Teammates are illustrative. Value names are placeholders until Upwork shares the LUV list. A pasted key stays in this browser only. Prototype by SoftDoes · softdoes.com.</div>
 </aside>
 <div id="glass" role="dialog" aria-label="Behind the glass"></div>
 <div id="intro" role="dialog" aria-modal="true" aria-labelledby="intro-h">
@@ -469,7 +470,7 @@ textarea{width:100%;min-height:24cqw;background:rgba(16,23,15,.9);border:1px sol
     <p>A visitor's view of the booth: the Pulse when idle, Ask Uma by voice or touch, and Send some LUV for employees. Tap the screen the way a guest would.</p>
     <div class="keys"><span><kbd>?</kbd> notes</span><span><kbd>B</kbd> how it's built</span><span><kbd>V</kbd> talk to Uma</span><span><kbd>F</kbd> full screen</span></div>
     <button id="intro-go">Step inside</button>
-    <div class="fine-i">Best in Chrome with sound on. Talent and postings shown are real public Upwork pages; other figures cite Upwork's publications or are marked illustrative. Nothing you do here is stored. Prototype by SoftDoes.</div>
+    <div class="fine-i">Best in Chrome with sound on. Talent and postings are real public Upwork pages; stories and figures cite Upwork's own publications; teammates are illustrative. Nothing you do here is stored. Prototype by SoftDoes.</div>
   </div>
 </div>
 
@@ -512,9 +513,9 @@ const building = [
   {k:"Live on Upwork · posted Oct 2", u:"https://www.upwork.com/jobs/~022106051509705641805", t:"A 50-year-old US construction firm is replacing its website on Webflow", p:"Template site already built, information architecture finished, a designer needed to finish and polish it. Part time for one to three months.", s:[["52","proposals in"],["4.8","client rating"]]}
 ];
 const stories = [
-  {k:"Success story", t:"From a founder and a laptop to a 12-person remote team", p:"A marketplace startup hired its first designer here, then its CTO. Revenue grew 5× in 18 months.", s:[["5×","revenue"],["18 mo","time"]]},
-  {k:"Success story", t:"An enterprise support team cut backlog by 60%", p:"A dedicated pod of six agents and one ops lead, assembled in under two weeks.", s:[["60%","less backlog"],["13 days","to staff"]]},
-  {k:"Success story", t:"A nonprofit translated its curriculum into nine languages", p:"Translators in nine countries worked from one shared brief. Launched for the school year.", s:[["9","languages"],["1","shared brief"]]}
+  {k:"Customer story · upwork.com", story:true, u:"https://www.upwork.com/success-stories/thumbtack", t:"Thumbtack lowered the cost of customer interactions 5× with independent talent", p:"Customer satisfaction rose to 92% along the way. Published by Upwork as a customer story.", s:[["5×","lower cost"],["92%","satisfaction"]]},
+  {k:"Customer story · upwork.com", story:true, u:"https://www.upwork.com/success-stories/how-shutterstock-expanded-content-operations-partnering-with-upwork", t:"Shutterstock expanded content operations with freelance writers", p:"About 40 articles published every month, with an average of five business days to hire.", s:[["~40","articles a month"],["5 days","average to hire"]]},
+  {k:"Customer story · upwork.com", story:true, u:"https://www.upwork.com/success-stories/compuvision", t:"CompuVision tripled output by adopting flexible talent company-wide", p:"Saved 70% compared with local rates while productivity tripled. Published by Upwork as a customer story.", s:[["3×","output"],["70%","saved vs local rates"]]}
 ];
 const surprises = [
   {k:"Unexpected combination · live on Upwork", n:"Hande A.", u:"https://www.upwork.com/freelancers/~01c1666491bb906143", i:"HA", m:"Watercolor illustrator, tattoo artist, editor, marine biologist · Turkey · $35/hr", t:["Watercolor","Translation","Photography"], p:"100% job success. One profile, four crafts: the marketplace rewards range as much as depth."},
@@ -682,7 +683,8 @@ const spots = [
   {k:"From upwork.com/reviews", h:"Clients rate talent 4.8 out of 5 across 2.9 million reviews. 95% rehire.", d:"Talent rates clients 4.9 out of 5"},
   {k:"Still the most in-demand", h:"Full-stack development, virtual assistance, data analytics and graphic design hold steady year over year.", d:"Upwork In-Demand Skills 2026"},
   {k:"Featured project · live on Upwork", h:"A consultancy in Ireland is hiring a senior agentic-AI engineer for Google Cloud.", d:"$45–50/hr · six months and more · 53 proposals in today"},
-  {k:"Companies hiring on Upwork", h:"Microsoft, Airbnb, Automattic, Bissell and Nasdaq.", d:"As listed on upwork.com"}
+  {k:"Companies hiring on Upwork", h:"Microsoft, Airbnb, Automattic, Bissell and Nasdaq.", d:"As listed on upwork.com"},
+  {k:"Customer story · upwork.com", h:"Thumbtack lowered the cost of customer interactions 5× with independent talent.", d:"Customer satisfaction at 92% · upwork.com/success-stories/thumbtack"}
 ];
 let si = 0;
 function spotCycle(){ if (mode!=='ambient') return; const v=$('#v-ambient'), it=spots[si++ % spots.length], kk=$('#spot-k'); kk.textContent=it.k; kk.classList.toggle('luvk', !!it.luv); $('#spot-h').textContent=it.h; $('#spot-d').textContent=it.d; v.classList.add('spot'); setTimeout(()=>v.classList.remove('spot'), 9000); }
@@ -692,7 +694,7 @@ setTimeout(spotCycle, 11000); setInterval(spotCycle, 24000);
 const topics = {talent:{label:'Find great talent', items:talent}, building:{label:"What businesses are building", items:building}, stories:{label:'Success stories', items:stories}, surprise:{label:'Surprise me', items:surprises}};
 $$('[data-topic]').forEach(b => b.onclick = () => playStory(b.dataset.topic));
 function art(seed){ const h1 = 110+((seed*47)%40), h2=140+((seed*31)%60); return `<div class="art" style="background:radial-gradient(70% 80% at ${20+(seed*37)%60}% ${10+(seed*53)%50}%, hsl(${h1} 80% 35% / .9), transparent 70%), radial-gradient(50% 60% at ${60+(seed*17)%30}% 90%, hsl(${h2} 70% 30% / .8), transparent 70%)"></div>`; }
-const qrBlock = it => it.u ? `<div class="qr"><div class="code" data-qr="${it.u}"></div><span>Scan to open this ${it.n ? 'profile' : 'posting'} on Upwork</span></div>` : '';
+const qrBlock = it => it.u ? `<div class="qr"><div class="code" data-qr="${it.u}"></div><span>Scan to open this ${it.n ? 'profile' : it.story ? 'story' : 'posting'} on Upwork</span></div>` : '';
 function drawQRs(root){ root.querySelectorAll('[data-qr]').forEach(el => { if (el.dataset.done) return; el.dataset.done = 1; if (!window.QRCode){ el.closest('.qr')?.remove(); return; } try { new QRCode(el, { text: el.dataset.qr, width: 128, height: 128, colorDark: '#0b100c', colorLight: '#ffffff', correctLevel: QRCode.CorrectLevel.M }); } catch(e){ el.closest('.qr')?.remove(); } }); }
 function renderItem(it, i){
   if (it.n) return `<div class="card">${art(i+3)}${it.k ? `<div class="kicker">${it.k}</div>` : ''}<div class="person"><div class="avatar">${it.i}</div><div><div class="name">${it.n}</div><div class="meta">${it.m}</div></div></div><div class="tags">${it.t.map(x=>`<span class="tag">${x}</span>`).join('')}</div><p>${it.p}</p>${qrBlock(it)}</div>`;

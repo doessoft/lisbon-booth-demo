@@ -72,7 +72,10 @@ body.kiosk #screen{border-radius:0}
 .bar{display:flex;justify-content:space-between;align-items:center;font-size:3.2cqw;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;min-height:6cqw}
 .brand{display:flex;align-items:center;gap:1.8cqw;color:var(--fg);text-transform:none;letter-spacing:0;font-family:var(--display);font-weight:600;font-size:4.2cqw}
 .orb{width:4.6cqw;height:4.6cqw;border-radius:50%;background:radial-gradient(circle at 35% 35%,#d8ffd8,var(--uma2) 40%,var(--uma));box-shadow:0 0 16px var(--uma2);animation:breathe 3s ease-in-out infinite}
-.orb.talk{animation:talk .35s ease-in-out infinite}
+.orb.talk{animation:none;transform:scale(calc(1 + var(--amp,0) * 1.1));box-shadow:0 0 calc(14px + var(--amp,0) * 40px) var(--uma2);transition:transform .08s linear,box-shadow .08s linear}
+.hero-orb{position:absolute;left:50%;top:30%;width:64cqw;height:64cqw;transform:translate(-50%,-50%) scale(calc(1 + var(--amp,0) * .35));border-radius:50%;background:radial-gradient(circle at 40% 35%, rgba(216,255,216,.85), rgba(43,227,90,.5) 35%, rgba(20,168,0,.14) 64%, transparent 72%);filter:blur(5cqw);opacity:.85;animation:breathe 5s ease-in-out infinite;pointer-events:none;z-index:0;transition:transform .08s linear}
+#v-home > *,#v-ask > *{position:relative;z-index:1}
+#v-home > .hero-orb{position:absolute;z-index:0}
 @keyframes breathe{50%{transform:scale(.84);opacity:.8}}
 @keyframes talk{50%{transform:scale(1.25);box-shadow:0 0 28px var(--uma2)}}
 h1,h2{font-family:var(--display);font-weight:300;margin:0;line-height:1.08;text-wrap:balance;letter-spacing:-.01em}
@@ -116,6 +119,7 @@ h1{font-size:11cqw}h2{font-size:8.4cqw}
 .person .meta{font-size:3.4cqw;color:var(--muted)}
 .tags{display:flex;flex-wrap:wrap;gap:1.8cqw}
 .tag{font-size:3cqw;padding:1.2cqw 2.6cqw;border-radius:99px;background:rgba(43,227,90,.14);color:var(--uma2)}
+.why{font-size:3.1cqw;color:var(--uma2);letter-spacing:.02em}
 .ring{position:relative;width:12cqw;height:12cqw}
 .ring svg{width:100%;height:100%;transform:rotate(-90deg)}
 .ring circle{fill:none;stroke-width:3}
@@ -227,6 +231,7 @@ textarea{width:100%;min-height:24cqw;background:rgba(16,23,15,.9);border:1px sol
 #cap-mic.live,#who-mic.live{background:var(--rec);animation:ringp 1s ease-out infinite}
 #cap-form button{background:var(--uma);color:#031106}
 #cap-heard,#who-heard{min-height:1.2em}
+.listen .mic.live ~ .sub::after{content:' ●';color:var(--rec);animation:breathe .8s infinite}
 .micbar{display:flex;align-items:center;gap:4cqw;padding-top:2cqw}
 .micbar button{width:16cqw;height:16cqw;border-radius:50%;background:var(--uma);color:#031106;font-size:6.5cqw;display:grid;place-items:center;flex:none;animation:ringp 2.4s ease-out infinite}
 .micbar span{font-size:3.8cqw;color:var(--muted)}
@@ -352,6 +357,7 @@ textarea{width:100%;min-height:24cqw;background:rgba(16,23,15,.9);border:1px sol
 
     <!-- PROMPT -->
     <section class="view" id="v-home">
+      <div class="hero-orb" aria-hidden="true"></div>
       <div class="bar"><span class="brand"><i class="orb"></i>Uma</span><span>Lisbon · Reception</span></div>
       <div class="grow"></div>
       <h1>What can Uma help you get done today?</h1>
@@ -445,14 +451,15 @@ textarea{width:100%;min-height:24cqw;background:rgba(16,23,15,.9);border:1px sol
     <section class="view" id="v-luv3">
       <div class="bar"><span class="brand"><i class="orb" style="background:var(--luv);box-shadow:0 0 16px var(--luv)"></i>Send some LUV</span><button class="ghost" data-go="luv2">← Back</button></div>
       <div class="steps"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></div>
-      <h2>Say it on camera</h2>
+      <h2>Add a video message?</h2>
+      <div class="sub">Optional. Your words are already captured; a short video makes it personal. Up to 30 seconds.</div>
       <div id="cam"><video id="video" autoplay muted playsinline hidden></video><div class="sim" id="sim"><div class="sil"></div></div><div class="recdot"><i></i>REC</div><div class="timer" id="timer">00:00</div></div>
       <div id="wave"></div>
       <div id="transcript"></div>
       <button id="recbtn" aria-label="Record"><i></i></button>
       <div class="grow"></div>
       <div class="btnrow">
-        <button class="big flat" id="skiprec">Skip video</button>
+        <button class="big flat" id="skiprec">Skip</button>
         <button class="big flat luvbtn" id="sendluv">Send LUV</button>
       </div>
     </section>
@@ -527,10 +534,12 @@ const WLED = new URLSearchParams(location.search).get('wled');
 async function apiHealth(){
   if (!/^https?:/.test(API_BASE)) { API.checked = true; return; }
   try { const r = await fetch(API_BASE + '/health', { cache:'no-store' }); const j = await r.json(); API.ok = !!j.ok; API.voice = !!j.voice; API.slack = !!j.slack; API.model = j.model || ''; } catch(e){ API.ok = false; }
-  API.checked = true; renderAI(); if (API.ok){ pullLuvFeed(); setInterval(pullLuvFeed, 90000); }
+  API.checked = true; renderAI(); if (API.ok){ pullLuvFeed(); setInterval(pullLuvFeed, 90000); prefetchVoice(); }
 }
 function track(type, detail){ if (!API.ok) return; try { fetch(API_BASE + '/event', { method:'POST', keepalive:true, headers:{'content-type':'application/json'}, body: JSON.stringify({ type, detail }) }).catch(()=>{}); } catch(e){} }
 function setLights(rgb){ if (!WLED) return; const [r,g,b] = rgb.split(',').map(Number); try { fetch(WLED.replace(/\/$/, '') + '/json/state', { method:'POST', mode:'no-cors', headers:{'content-type':'application/json'}, body: JSON.stringify({ on:true, bri:170, transition:7, seg:[{ col:[[r,g,b]] }] }) }).catch(()=>{}); } catch(e){} }
+const kiosk = () => document.body.classList.contains('kiosk');
+const clean = t => String(t || '').replace(/[*_#`>]+/g, '').replace(/^\s*[-•]\s+/gm, '').replace(/\s+/g, ' ').trim();
 const HEADLINE_SYSTEM = 'You write one short recognition headline for an office screen: at most 12 words, third person, present tense, warm, no quotes, no emoji, no hashtags. Output only the headline.';
 let mode = 'ambient', idleT = null, idleDeadline = 0, voice = true, storyT = null, sayTimer = null, luvPending = false, askHist = [];
 
@@ -597,11 +606,13 @@ function go(m){
   if (prev === 'ambient' && m !== 'ambient') track('session'); if (m !== 'ambient' && m !== prev) track('mode', m);
   $('#s-mode').textContent = names[m];
   globeTarget = m === 'ambient' ? {s:1,y:0,a:1} : {s:1.9,y:.9,a:.22};
-  if (m === 'ambient'){ clearTimeout(idleT); idleDeadline = 0; resetLuv(); resetAsk(); if (prev !== 'ambient') toast('Session ended · nothing left behind'); if (luvPending){ luvPending = false; si = 0; setTimeout(spotCycle, 7000); } }
+  if (m === 'ambient'){ clearTimeout(idleT); idleDeadline = 0; resetLuv(); resetAsk(); if (prev !== 'ambient') toast('Session ended · screen cleared for the next guest'); if (luvPending){ luvPending = false; si = 0; setTimeout(spotCycle, 7000); } }
   else touch();
-  if (m === 'home') say("Hi, I'm Uma. What can I help you get done today?");
+  if (m === 'home' && prev === 'ambient'){ chime('wake'); say("Hi, I'm Uma. What can I help you get done today?"); }
+  if (m === 'ask' && prev !== 'ask') say('Ask me anything about Upwork.', () => { if (kiosk() && mode === 'ask') listen(false); });
+  if (m === 'luv0') say('First, who are you?', () => { if (kiosk() && mode === 'luv0') $('#who-mic').click(); });
   if (m === 'luv3') startCam(); else stopCam();
-  if (m === 'luv4'){ confetti(); say("LUV sent. Thanks for making Upwork amazing."); setTimeout(() => { if (mode==='luv4') go('ambient'); }, 9000); }
+  if (m === 'luv4'){ confetti(); chime('send'); say("LUV sent. Thanks for making Upwork amazing."); setTimeout(() => { if (mode==='luv4') go('ambient'); }, 9000); }
 }
 const intro = $('#intro');
 (() => { let done = false; try { done = sessionStorage.getItem('uma.intro') === '1'; } catch(e){} if (done || location.hash === '#kiosk') intro.hidden = true; })();
@@ -648,7 +659,15 @@ document.addEventListener('keydown', e => {
 
 /* ---------------- voice ---------------- */
 let orbs = () => $$('.orb');
-let sayGen = 0, curAudio = null;
+let sayGen = 0, curAudio = null; const audioCache = new Map();
+let audioCtx = null, ampRaf = null, ampSim = null;
+const setAmp = v => document.documentElement.style.setProperty('--amp', v.toFixed(3));
+function ctx(){ try { audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)(); if (audioCtx.state === 'suspended') audioCtx.resume(); return audioCtx; } catch(e){ return null; } }
+function attachAmp(a){ const ac = ctx(); if (!ac) return; try { const src = ac.createMediaElementSource(a), an = ac.createAnalyser(); an.fftSize = 256; src.connect(an); an.connect(ac.destination); const buf = new Uint8Array(an.frequencyBinCount); cancelAnimationFrame(ampRaf); const loop = () => { if (a.paused || a.ended){ setAmp(0); return; } an.getByteFrequencyData(buf); let sum = 0; for (let i = 2; i < 40; i++) sum += buf[i]; setAmp(Math.min(1, (sum / 38) / 140)); ampRaf = requestAnimationFrame(loop); }; a.addEventListener('play', () => { cancelAnimationFrame(ampRaf); loop(); }, { once:true }); } catch(e){} }
+function simAmp(on){ clearInterval(ampSim); if (!on){ setAmp(0); return; } ampSim = setInterval(() => setAmp(0.25 + Math.random() * 0.55), 90); }
+function chime(kind){ const ac = ctx(); if (!ac || !voice) return; try { const t0 = ac.currentTime + 0.02; const notes = kind === 'wake' ? [523.25, 783.99] : [523.25, 659.25, 783.99]; notes.forEach((f, i) => { const o = ac.createOscillator(), g = ac.createGain(); o.type = 'sine'; o.frequency.value = f; g.gain.setValueAtTime(0.0001, t0 + i * 0.13); g.gain.exponentialRampToValueAtTime(0.07, t0 + i * 0.13 + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, t0 + i * 0.13 + 0.6); o.connect(g).connect(ac.destination); o.start(t0 + i * 0.13); o.stop(t0 + i * 0.13 + 0.65); }); } catch(e){} }
+const FIXED_LINES = ["Hi, I'm Uma. What can I help you get done today?", 'Ask me anything about Upwork.', 'Tell me what you need.', 'Tell me the challenge.', 'First, who are you?', 'Who deserves some LUV?', 'LUV sent. Thanks for making Upwork amazing.', 'Want to explore something else?'];
+async function prefetchVoice(){ if (!(API.ok && API.voice)) return; const voice = AI.tts || 'nova'; if (voice === 'system') return; for (const t of FIXED_LINES){ const k = voice + '|' + t; if (audioCache.has(k)) continue; try { const r = await fetch(API_BASE + '/speak', { method:'POST', headers:{ 'content-type':'application/json' }, body: JSON.stringify({ text: t, voice }) }); if (r.ok) audioCache.set(k, await r.blob()); } catch(e){} } }
 function say(t, onEnd){
   if (!voice) { onEnd && setTimeout(onEnd, 400); return; }
   const pref = AI.tts || 'nova';
@@ -663,25 +682,27 @@ function speakSystem(t, onEnd){
     const vs = speechSynthesis.getVoices(), prefs = ['Ava', 'Zoe', 'Samantha', 'Allison', 'Serena', 'Karen', 'Google US English', 'Daniel', 'Moira'];
     let pick = null; for (const p of prefs){ pick = vs.find(v => v.name.includes(p) && v.lang.startsWith('en')); if (pick) break; }
     pick = pick || vs.find(v => v.lang.startsWith('en')); if (pick) u.voice = pick;
-    u.onstart = () => orbs().forEach(o => o.classList.add('talk'));
-    u.onend = u.onerror = () => { orbs().forEach(o => o.classList.remove('talk')); onEnd && onEnd(); };
+    u.onstart = () => { orbs().forEach(o => o.classList.add('talk')); simAmp(true); };
+    u.onend = u.onerror = () => { orbs().forEach(o => o.classList.remove('talk')); simAmp(false); onEnd && onEnd(); };
     speechSynthesis.speak(u);
   } catch(e){ onEnd && onEnd(); }
 }
 async function speakRemote(t, onEnd, getAudio){
   const g = ++sayGen; const ctrl = new AbortController(); const to = setTimeout(() => ctrl.abort(), 9000);
+  const ck = (AI.tts || 'nova') + '|' + t;
   try {
     try { speechSynthesis.cancel(); } catch(e){}
-    const r = await getAudio(); if (!r.ok) throw new Error('HTTP ' + r.status);
-    const blob = await r.blob(); if (g !== sayGen) return;
-    const url = URL.createObjectURL(blob), a = new Audio(url); curAudio = a;
+    let blob = audioCache.get(ck);
+    if (!blob){ const r = await getAudio(); if (!r.ok) throw new Error('HTTP ' + r.status); blob = await r.blob(); if (blob.size < 200000) audioCache.set(ck, blob); }
+    if (g !== sayGen) return;
+    const url = URL.createObjectURL(blob), a = new Audio(url); curAudio = a; attachAmp(a);
     a.onplay = () => orbs().forEach(o => o.classList.add('talk'));
-    a.onended = a.onerror = () => { orbs().forEach(o => o.classList.remove('talk')); URL.revokeObjectURL(url); if (curAudio === a) curAudio = null; onEnd && onEnd(); };
+    a.onended = a.onerror = () => { orbs().forEach(o => o.classList.remove('talk')); setAmp(0); URL.revokeObjectURL(url); if (curAudio === a) curAudio = null; onEnd && onEnd(); };
     await a.play();
   } catch(e){ if (g === sayGen){ renderAI('Uma voice fell back to the system voice: ' + (e.name === 'AbortError' ? 'timed out' : e.message).slice(0, 60), 'err'); speakSystem(t, onEnd); } }
   finally { clearTimeout(to); }
 }
-function stopSpeech(){ sayGen++; try { speechSynthesis.cancel(); } catch(e){} if (curAudio){ try { curAudio.pause(); } catch(e){} curAudio = null; } orbs().forEach(o => o.classList.remove('talk')); }
+function stopSpeech(){ sayGen++; try { speechSynthesis.cancel(); } catch(e){} if (curAudio){ try { curAudio.pause(); } catch(e){} curAudio = null; } simAmp(false); setAmp(0); orbs().forEach(o => o.classList.remove('talk')); }
 try { speechSynthesis.getVoices(); speechSynthesis.onvoiceschanged = () => speechSynthesis.getVoices(); } catch(e){}
 
 /* ---------------- globe ---------------- */
@@ -786,10 +807,11 @@ const qrBlock = it => it.u ? `<div class="qr"><div class="code" data-qr="${it.u}
 function drawQRs(root){ root.querySelectorAll('[data-qr]').forEach(el => { if (el.dataset.done) return; el.dataset.done = 1; if (!window.QRCode){ el.closest('.qr')?.remove(); return; } try { new QRCode(el, { text: el.dataset.qr, width: 128, height: 128, colorDark: '#0b100c', colorLight: '#ffffff', correctLevel: QRCode.CorrectLevel.M }); } catch(e){ el.closest('.qr')?.remove(); } }); }
 function renderItem(it, i){
   if (it.say) return `<div class="card">${art(i+11)}<div class="kicker">Uma</div><div class="title" style="font-size:6.2cqw">${esc(it.say)}</div></div>`;
-  if (it.n) return `<div class="card">${art(i+3)}${it.k ? `<div class="kicker">${it.k}</div>` : ''}<div class="person"><div class="avatar">${it.i}</div><div><div class="name">${it.n}</div><div class="meta">${it.m}</div></div></div><div class="tags">${it.t.map(x=>`<span class="tag">${x}</span>`).join('')}</div><p>${it.p}</p>${qrBlock(it)}</div>`;
+  if (it.n) return `<div class="card">${art(i+3)}${it.k ? `<div class="kicker">${it.k}</div>` : ''}<div class="person"><div class="avatar">${it.i}</div><div><div class="name">${it.n}</div><div class="meta">${it.m}</div></div></div><div class="tags">${it.t.map(x=>`<span class="tag">${x}</span>`).join('')}</div><p>${it.p}</p>${it.why && it.why.length ? `<div class="why">Matched on ${it.why.map(esc).join(', ')}</div>` : ''}${qrBlock(it)}</div>`;
   return `<div class="card">${art(i+7)}<div class="kicker">${it.k}</div><div class="title">${it.t}</div><p>${it.p}</p><div class="stats">${it.s.map(([b,l])=>`<div class="stat"><b>${b}</b><span>${l}</span></div>`).join('')}</div>${qrBlock(it)}</div>`;
 }
-let talentIndex = [];
+let talentIndex = [], storyNext = null;
+$('#story-slot').addEventListener('click', e => { if (e.target.closest('a')) return; storyNext && storyNext(); touch(); });
 (async () => { try { const r = await fetch('talent-index.json', { cache:'no-store' }); if (r.ok){ const d = await r.json(); if (Array.isArray(d) && d.length) talentIndex = d; } } catch(e){} })();
 const CATS = {web:['website','web','site','landing','page','redesign','wordpress','squarespace','framer','ux','ui'], webflow:['webflow'], shopify:['shopify','store','ecommerce','e-commerce','shop','storefront','sell','online store','products'], mobile:['app','mobile','ios','android','iphone','flutter','react native'], brand:['brand','branding','logo','identity','packaging','label','rebrand'], ml:['ai','agent','chatbot','bot','machine learning','llm','automation','automate','rag','phone agent','voice agent','model'], data:['data','dashboard','analytics','excel','power bi','sql','report','spreadsheet','kpi'], video:['video','reel','reels','youtube','tiktok','edit','editing','ads','commercial','footage'], copy:['copy','copywriter','write','writing','blog','email','newsletter','content','words','tagline','story'], social:['social','instagram','facebook','linkedin','community','posts','followers'], bookkeeping:['bookkeeping','bookkeeper','books','accounting','invoices','quickbooks','xero','taxes','payroll'], voice:['voice','singer','sing','jingle','narration','voiceover','podcast','music'], translation:['translate','translation','portuguese','italian','french','subtitles']};
 const tokens = t => t.toLowerCase().replace(/[^a-z0-9À-ɏ ]/g, ' ').split(/\s+/).filter(w => w.length > 2);
@@ -797,16 +819,16 @@ function matchTalent(need, n = 3){
   const words = tokens(need), low = ' ' + need.toLowerCase() + ' ';
   const catHits = {}; let maxHits = 0; for (const [cat, keys] of Object.entries(CATS)){ const h = keys.filter(k => low.includes(' ' + k) || low.includes(k + ' ')).length; if (h){ catHits[cat] = h; maxHits = Math.max(maxHits, h); } }
   const pool = talentIndex.length ? talentIndex : [];
-  const scored = pool.map(f => { let sc = 0; if (catHits[f.cat]) sc += 4 * (catHits[f.cat] / maxHits); const hay = (f.t + ' ' + f.k.join(' ')).toLowerCase(); for (const w of words) if (hay.includes(w)) sc += 1; sc += (f.j || 0) / 100; if (/plus/i.test(f.b)) sc += .6; if (/vetted/i.test(f.b)) sc += .8; if (/\$(\d+)K/.test(f.e || '')) sc += Math.min(1, parseInt(RegExp.$1, 10) / 300); return [sc, f]; }).filter(([sc]) => sc > 0).sort((a, b) => b[0] - a[0]);
+  const scored = pool.map(f => { let sc = 0; if (catHits[f.cat]) sc += 4 * (catHits[f.cat] / maxHits); const hay = (f.t + ' ' + f.k.join(' ')).toLowerCase(); const hits = []; for (const w of words) if (hay.includes(w)){ sc += 1; hits.push(w); } f._hits = hits; sc += (f.j || 0) / 100; if (/plus/i.test(f.b)) sc += .6; if (/vetted/i.test(f.b)) sc += .8; if (/\$(\d+)K/.test(f.e || '')) sc += Math.min(1, parseInt(RegExp.$1, 10) / 300); return [sc, f]; }).filter(([sc]) => sc > 0).sort((a, b) => b[0] - a[0]);
   const seen = new Set(); const picks = [];
   for (const [, f] of scored){ if (seen.has(f.n)) continue; seen.add(f.n); picks.push(f); if (picks.length >= n) break; }
-  return picks.map(f => ({ k:'Live on Upwork · matched for you', n:f.n, u:f.u, i:f.n.split(' ').map(x=>x[0]).slice(0,2).join(''), m:`${f.t} · ${f.c} · ${f.r}`, t:f.k.slice(0, 3), p:`${f.b || 'Freelancer'}. ${f.j}% job success${f.jobs ? `, ${f.jobs} contracts` : ''}${f.e ? `, ${f.e} earned on Upwork` : ''}.` }));
+  return picks.map(f => ({ k:'Live on Upwork · matched for you', why: (f._hits || []).slice(0, 3), n:f.n, u:f.u, i:f.n.split(' ').map(x=>x[0]).slice(0,2).join(''), m:`${f.t} · ${f.c} · ${f.r}`, t:f.k.slice(0, 3), p:`${f.b || 'Freelancer'}. ${f.j}% job success${f.jobs ? `, ${f.jobs} contracts` : ''}${f.e ? `, ${f.e} earned on Upwork` : ''}.` }));
 }
 function pickBy(list, need){ const words = tokens(need); let best = null, bs = 0; for (const it of list){ const hay = ((it.t || '') + ' ' + (it.p || '') + ' ' + (it.k || '') + ' ' + ((it.s || []).flat().join(' '))).toLowerCase(); let sc = 0; for (const w of words) if (hay.includes(w)) sc++; if (sc > bs){ bs = sc; best = it; } } return best; }
 const postCards = () => livePosts.map(([iso, country, what, props]) => ({ k:'Live on Upwork · posted ' + new Date(iso).toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit', timeZone:'Europe/Lisbon'}) + ' Lisbon', t: what, p:`A client in ${country} posted this today. ${props} proposal${props === 1 ? '' : 's'} in so far.`, s:[[String(props), 'proposals in'], [country, 'client']] }));
 let capPath = null;
 const CAP = { talent:{ h:"What do you need?", sub:"Say what you're building. Uma finds real people for it.", chips:["A designer for my ice cream brand's website", "Someone to build an AI phone agent for reservations", "A Shopify developer to relaunch our store", "A video editor for short-form ads", "A bookkeeper who knows QuickBooks"] }, challenge:{ h:"What's the challenge?", sub:"Describe it in a sentence. Uma answers with a story and a live posting.", chips:["We need more leads without hiring a sales team", "Our support backlog keeps growing", "We want to launch an app in three months", "Our brand looks dated next to competitors"] } };
-function startCapture(path){ capPath = path; const c = CAP[path]; $('#cap-h').textContent = c.h; $('#cap-sub').textContent = c.sub; $('#cap-chips').innerHTML = c.chips.map(t => `<button class="chip" data-cap="${esc(t)}">${esc(t)}</button>`).join(''); $('#cap-heard').textContent = ''; $('#cap-state').textContent = 'Tap to talk'; $('#cap-mic').classList.remove('live'); go('capture'); say(path === 'talent' ? 'Tell me what you need.' : 'Tell me the challenge.'); }
+function startCapture(path){ capPath = path; const c = CAP[path]; $('#cap-h').textContent = c.h; $('#cap-sub').textContent = c.sub; $('#cap-chips').innerHTML = c.chips.map(t => `<button class="chip" data-cap="${esc(t)}">${esc(t)}</button>`).join(''); $('#cap-heard').textContent = ''; $('#cap-state').textContent = 'Tap to talk'; $('#cap-mic').classList.remove('live'); go('capture'); say(path === 'talent' ? 'Tell me what you need.' : 'Tell me the challenge.', () => { if (kiosk() && mode === 'capture' && !$('#cap-mic').classList.contains('live')) $('#cap-mic').click(); }); }
 $$('[data-path]').forEach(b => b.onclick = () => startCapture(b.dataset.path));
 $('#cap-chips').onclick = e => { const b = e.target.closest('[data-cap]'); if (b) runCapture(b.dataset.cap); };
 $('#cap-mic').onclick = () => {
@@ -825,7 +847,7 @@ async function runCapture(need){
   } else {
     $('#cap-state').textContent = 'Uma is thinking…'; $('#cap-heard').textContent = need; orbs().forEach(o => o.classList.add('talk'));
     const canned = 'Businesses bring this to Upwork every day: post a clear brief, hire a specialist or a small team, and keep the work moving while you watch results. Here is a company that did, and a posting like it from today.';
-    const a = (await askModel([{ role:'user', content:`A visitor in the Lisbon booth says their business challenge is: "${need}". In two short spoken sentences, say how they could tackle it with independent talent on Upwork.` }])) || canned;
+    const a = clean((await askModel([{ role:'user', content:`A visitor in the Lisbon booth says their business challenge is: "${need}". In two short spoken sentences, say how they could tackle it with independent talent on Upwork.` }])) || canned);
     if (mode !== 'capture') return;
     const story = pickBy(stories, need) || stories[Math.random()*stories.length|0];
     const post = pickBy(building.concat(postCards()), need) || building[Math.random()*building.length|0];
@@ -835,7 +857,8 @@ async function runCapture(need){
 function playStory(topic){ const {label, items} = topics()[topic]; playItems(label, items, null); }
 function playItems(label, items, intro){
   go('story'); $('#story-label').textContent = label;
-  const per = 10000, total = items.length*per, start = Date.now(); let idx = -1;
+  const per = 10000, total = items.length*per; let start = Date.now(); let idx = -1;
+  storyNext = () => { const el = Date.now() - start; const i = Math.floor(el / per); if (i < items.length - 1) start = Date.now() - (i + 1) * per; };
   $('#story-dots').innerHTML = items.map(()=> '<i></i>').join('');
   storyT = setInterval(() => {
     const el = Date.now()-start, i = Math.min(items.length-1, Math.floor(el/per)), left = Math.max(0, Math.ceil((total-el)/1000));
@@ -848,12 +871,12 @@ function playItems(label, items, intro){
 /* ---------------- ask uma ---------------- */
 const thread = $('#thread');
 const esc = s => String(s).replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
-function resetAsk(){ askHist = []; thread.innerHTML = `<div class="uma"><i class="orb"></i><div class="txt">Ask me anything about Upwork. Speak, type, or pick one of these.</div></div><div class="sugg" id="sugg">${faqs.map((f,i)=>`<button data-q="${i}">${f.q}<span>↗</span></button>`).join('')}</div>`; }
+function resetAsk(){ askHist = []; thread.innerHTML = `<div class="uma"><i class="orb"></i><div class="txt">Ask me anything about Upwork. Tap the mic, or pick one of these.</div></div><div class="sugg" id="sugg">${faqs.map((f,i)=>`<button data-q="${i}">${f.q}<span>↗</span></button>`).join('')}</div>`; }
 resetAsk();
 thread.addEventListener('click', e => { const b = e.target.closest('[data-q]'); if (b) answer(faqs[b.dataset.q].q); });
 $('#mic').onclick = () => listen(false);
 function listen(forceSim){
-  if (mode!=='ask') return; touch();
+  if (mode!=='ask') return; touch(); stopSpeech();
   const box = document.createElement('div'); box.className='listen';
   box.innerHTML = `<div class="mic">🎤</div><div class="heard"><span class="caret"></span></div><div class="sub">Listening…</div>`;
   thread.appendChild(box); thread.scrollTop = 1e9;
@@ -877,7 +900,7 @@ async function answer(q){
   askHist.push({role:'user', content:q}); track('prompt', q.slice(0, 80));
   let a = await askModel(askHist.slice(-6));
   if (!a) a = hit ? hit.a : "I can help with hiring, finding work, pricing, and how Upwork works. For anything about your own account, the team at reception can set you up. Want to try one of the suggested questions?";
-  askHist.push({role:'assistant', content:a});
+  a = clean(a); askHist.push({role:'assistant', content:a});
   if (mode!=='ask') return;
   um.querySelector('.txt').innerHTML = a.split(' ').map((w,i)=>`<span class="w" style="animation-delay:${i*60}ms">${esc(w)} </span>`).join('');
   um.querySelector('.orb').classList.remove('talk');
@@ -899,7 +922,7 @@ const personOf = e => Array.isArray(e) ? {name:e[0], role:e[1]} : e;
 function renderPeople(q=''){ $('#people').innerHTML = people.map(personOf).filter(p => p.name !== luv.from).filter(p => (p.name + ' ' + (p.role||'')).toLowerCase().includes(q.toLowerCase())).slice(0, 14).map(p => `<button class="row" data-p="${esc(p.name)}" aria-pressed="${luv.who===p.name}"><span class="avatar">${p.photo ? `<img src="${esc(p.photo)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">` : ''}${p.name.split(' ').map(x=>x[0]).slice(0,2).join('')}</span><span><div class="nm">${esc(p.name)}</div><div class="rl">${esc(p.role||'')}</div></span></button>`).join(''); }
 renderPeople();
 $('#people').onclick = e => { const b = e.target.closest('[data-p]'); if (!b) return; luv.who = b.dataset.p; renderPeople(); $('#luv1next').disabled = false; };
-$('#luv1next').onclick = () => { $('#luv-name').textContent = luv.who.split(' ')[0]; go('luv2'); say(`What did ${luv.who.split(' ')[0]} do?`); };
+$('#luv1next').onclick = () => { $('#luv-name').textContent = luv.who.split(' ')[0]; go('luv2'); say(`What did ${luv.who.split(' ')[0]} do?`, () => { if (kiosk() && mode === 'luv2') $('#what-mic').click(); }); };
 /* nominator */
 const personCard = p => `<span class="avatar">${p.photo ? `<img src="${esc(p.photo)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">` : ''}${p.name.split(' ').map(x=>x[0]).slice(0,2).join('')}</span><span><div class="nm">${esc(p.name)}</div><div class="rl">${esc(p.role||'')}</div></span>`;
 function renderWhoList(){ const el = $('#who-list'); if (el) el.innerHTML = people.map(personOf).map(p => `<button class="row" data-w="${esc(p.name)}">${personCard(p)}</button>`).join(''); }
@@ -910,7 +933,7 @@ function matchPerson(text){ const t = text.toLowerCase().replace(/[^a-zÀ-ɏ ]/g
 $('#who-mic').onclick = () => {
   const mic = $('#who-mic'), heard = $('#who-heard'), st = $('#who-state');
   if (mic.classList.contains('live')){ stopReal(); mic.classList.remove('live'); st.textContent = 'Tap to say your name'; return; }
-  $('#who-confirm').hidden = true;
+  stopSpeech(); $('#who-confirm').hidden = true;
   const ok = listenReal((text, err) => { mic.classList.remove('live'); if (!text){ st.textContent = err === 'not-allowed' ? 'Microphone blocked. Tap your name below.' : 'Didn’t catch that. Try again or tap your name.'; return; } const p = matchPerson(text); if (p){ $('#who-match').innerHTML = personCard(p); $('#who-confirm').hidden = false; $('#who-yes').onclick = () => setFrom(p.name); $('#who-no').onclick = () => { $('#who-confirm').hidden = true; st.textContent = 'Tap your name below, or try again.'; }; st.textContent = 'Is this you?'; say(`${p.name.split(' ')[0]}, is that you?`); } else st.textContent = 'I couldn’t find that name. Tap it below.'; }, all => { heard.textContent = all; st.textContent = 'Listening…'; });
   if (ok){ mic.classList.add('live'); st.textContent = 'Listening… say your name'; } else st.textContent = 'No microphone here. Tap your name below.';
 };
@@ -930,7 +953,7 @@ async function startCam(){ const v=$('#video'); if (v.src){ try { URL.revokeObje
 function stopCam(){ if (stream){ stream.getTracks().forEach(t=>t.stop()); stream=null; } $('#video').hidden=true; $('#sim').hidden=false; }
 $('#recbtn').onclick = () => {
   const live = $('#recbtn').classList.toggle('live'); $('#cam').classList.toggle('live', live);
-  if (live){ recS=0; recT = setInterval(()=>{ recS++; $('#timer').textContent='00:'+String(recS).padStart(2,'0'); if (recS>=30) $('#recbtn').click(); }, 1000);
+  if (live){ recS=0; recT = setInterval(()=>{ recS++; touch(); $('#timer').textContent='00:'+String(recS).padStart(2,'0'); if (recS>=30) $('#recbtn').click(); }, 1000);
     waveT = setInterval(()=>{ $$('#wave i').forEach(b => b.style.height = (10+Math.random()*90)+'%'); }, 120);
     luv.transcript = ''; luv.video = null; chunks = [];
     if (stream && window.MediaRecorder){ try { const mime = ['video/webm;codecs=vp9,opus','video/webm;codecs=vp8,opus','video/webm','video/mp4'].find(m => MediaRecorder.isTypeSupported(m)); recorder = new MediaRecorder(stream, mime ? { mimeType: mime, videoBitsPerSecond: 1200000 } : undefined); recorder.ondataavailable = e => { if (e.data && e.data.size) chunks.push(e.data); }; recorder.onstop = () => { luv.video = new Blob(chunks, { type: recorder.mimeType || 'video/webm' }); const v = $('#video'); v.srcObject = null; v.src = URL.createObjectURL(luv.video); v.loop = true; v.muted = true; v.play().catch(()=>{}); $('#timer').textContent = (luv.video.size/1048576).toFixed(1) + ' MB'; }; recorder.start(250); } catch(e){ recorder = null; } }
@@ -986,7 +1009,7 @@ function listenReal(onFinal, onInterim, opts={}){
     const r = new SR(); rec = r; r.lang = 'en-US'; r.interimResults = true; r.continuous = !!opts.continuous; r.maxAlternatives = 1;
     let fin = '', done = false, got = false;
     const end = (t, e) => { if (done) return; done = true; if (rec === r) rec = null; onFinal(t, e); };
-    r.onresult = e => { let interim = ''; for (let i = e.resultIndex; i < e.results.length; i++){ const t = e.results[i][0].transcript; if (e.results[i].isFinal) fin += t + ' '; else interim += t; } got = true; onInterim && onInterim((fin + interim).trim(), fin.trim()); if (!opts.continuous && e.results[e.results.length-1].isFinal) { try { r.stop(); } catch(x){} } };
+    r.onresult = e => { touch(); let interim = ''; for (let i = e.resultIndex; i < e.results.length; i++){ const t = e.results[i][0].transcript; if (e.results[i].isFinal) fin += t + ' '; else interim += t; } got = true; onInterim && onInterim((fin + interim).trim(), fin.trim()); if (!opts.continuous && e.results[e.results.length-1].isFinal) { try { r.stop(); } catch(x){} } };
     r.onerror = e => { if (e.error === 'no-speech' || e.error === 'aborted') return; end(fin.trim() || null, e.error); };
     r.onend = () => end(fin.trim() || null, got ? null : 'no-speech');
     if (!opts.continuous) setTimeout(() => { if (!done) { try { r.stop(); } catch(x){} } }, 12000);

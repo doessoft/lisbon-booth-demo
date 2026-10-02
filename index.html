@@ -522,7 +522,7 @@ body.kiosk #askrow input,body.kiosk #cap-form{display:none}
 (() => {
 const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
 const IDLE_MS = 45000;
-const API_BASE = (new URLSearchParams(location.search).get('api') || window.UMA_API || 'REPLACE_WITH_WORKER_URL').replace(/\/$/, '');
+const API_BASE = (new URLSearchParams(location.search).get('api') || window.UMA_API || 'https://uma-booth-api.login-604.workers.dev').replace(/\/$/, '');
 const API = { ok:false, voice:false, slack:false, model:'', checked:false };
 const WLED = new URLSearchParams(location.search).get('wled');
 async function apiHealth(){

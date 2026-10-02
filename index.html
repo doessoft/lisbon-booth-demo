@@ -4,6 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex">
+<meta name="description" content="Interactive prototype of Uma's Office, the booth planned for Upwork's Lisbon reception: the Pulse, Ask Uma, and Send some LUV.">
+<meta property="og:title" content="Uma's Office · interactive prototype">
+<meta property="og:description" content="A visitor's view of the booth planned for Upwork's Lisbon reception. Tap the screen, speak to Uma, send some LUV.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='26' fill='%2314a800'/%3E%3Ccircle cx='24' cy='24' r='9' fill='%23d8ffd8' opacity='.6'/%3E%3C/svg%3E">
 <title>Uma's Office</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@200;300;400;600&family=Manrope:wght@400;500;700&display=swap">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -54,6 +59,9 @@ body.kiosk #room{background:#000}
 body.kiosk .led,body.kiosk #floor,body.kiosk #frost,body.kiosk #hint{display:none}
 body.kiosk #device{height:100vh;width:auto;max-width:100vw;aspect-ratio:9/16;padding:0;border-radius:0;box-shadow:none}
 body.kiosk #screen{border-radius:0}
+@supports (height:1dvh){#device{height:min(88dvh,158vw)}body.kiosk #device{height:100dvh}}
+@media (max-width:900px){#frost{display:none}}
+@media (max-width:640px){#room{background:#000}.led,#floor,#frost,#hint{display:none}#device{height:100vh;width:auto;max-width:100vw;aspect-ratio:9/16;padding:0;border-radius:0;box-shadow:none}#screen{border-radius:0}@supports (height:1dvh){#device{height:100dvh}}}
 
 #globe{position:absolute;inset:0;width:100%;height:100%}
 #fx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:5}
@@ -73,7 +81,7 @@ h1{font-size:11cqw}h2{font-size:8.4cqw}
 .grow{flex:1;min-height:0}
 .stack{display:flex;flex-direction:column;gap:2.8cqw}
 .big{display:block;position:relative;text-align:left;width:100%;padding:5.6cqw 15cqw 5.6cqw 6cqw;border-radius:4cqw;
-  font-family:var(--display);font-size:5.6cqw;font-weight:400;background:rgba(16,23,15,.78);backdrop-filter:blur(10px);
+  font-family:var(--display);font-size:5.6cqw;font-weight:400;background:rgba(16,23,15,.78);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
   border:1px solid var(--line);transition:transform .15s,border-color .3s,background .3s}
 .big:hover{border-color:#36483e}
 .big:active{transform:scale(.98)}
@@ -89,7 +97,7 @@ h1{font-size:11cqw}h2{font-size:8.4cqw}
 .chip{padding:2.6cqw 4.2cqw;border-radius:99px;border:1px solid var(--line);background:rgba(16,23,15,.8);font-size:3.7cqw;text-align:left;transition:border-color .2s,background .2s}
 .chip[aria-pressed="true"]{border-color:var(--luv);background:rgba(192,140,255,.14)}
 .chip:hover{border-color:#36483e}
-.card{background:rgba(16,23,15,.86);backdrop-filter:blur(12px);border:1px solid var(--line);border-radius:4.4cqw;padding:6cqw;display:flex;flex-direction:column;gap:3.2cqw;overflow:hidden;position:relative}
+.card{background:rgba(16,23,15,.86);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border:1px solid var(--line);border-radius:4.4cqw;padding:6cqw;display:flex;flex-direction:column;gap:3.2cqw;overflow:hidden;position:relative}
 .card .art{position:absolute;inset:0;z-index:0;opacity:.35;pointer-events:none}
 .card>*:not(.art){position:relative;z-index:1}
 .kicker{font-size:3.1cqw;letter-spacing:.1em;text-transform:uppercase;color:var(--uma2)}
@@ -213,9 +221,9 @@ textarea{width:100%;min-height:24cqw;background:rgba(16,23,15,.9);border:1px sol
 #transcript{max-height:12cqw;overflow:hidden;font-size:3.5cqw;color:var(--muted);line-height:1.4;text-align:center;padding:0 2cqw}
 #transcript b{color:var(--fg);font-weight:500}
 #spot .kicker.luvk{color:var(--luv)}
-.posted div:nth-child(4){animation-delay:1.8s}
+.posted div:nth-child(4){animation-delay:1.8s}.posted div:nth-child(5){animation-delay:2.4s}
 /* behind the glass */
-#glass{position:fixed;inset:0;z-index:60;background:rgba(4,6,4,.95);backdrop-filter:blur(14px);display:none;overflow:auto;padding:4vh 4vw 6vh;font-size:13px;color:var(--muted)}
+#glass{position:fixed;inset:0;z-index:60;background:rgba(4,6,4,.95);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);display:none;overflow:auto;padding:4vh 4vw 6vh;font-size:13px;color:var(--muted)}
 #glass.on{display:block}
 #glass .head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:22px;padding-right:48px}
 #glass .head h2{font-size:30px;color:var(--fg)}
@@ -265,9 +273,24 @@ textarea{width:100%;min-height:24cqw;background:rgba(16,23,15,.9);border:1px sol
 .qr .code canvas,.qr .code img{width:100%!important;height:100%!important;display:block}
 .qr span{font-size:3.2cqw;color:var(--muted);line-height:1.35}
 /* presenter overlay + hint */
-#hint{position:fixed;right:2vw;bottom:2vh;font-size:12px;color:var(--dim);letter-spacing:.06em;transition:opacity 1s}
-#hint kbd{font-family:ui-monospace,monospace;border:1px solid var(--line);border-radius:4px;padding:1px 5px;color:var(--muted)}
-#panel{position:fixed;right:2vw;top:2vh;width:300px;background:rgba(8,12,9,.92);backdrop-filter:blur(14px);border:1px solid var(--line);border-radius:14px;padding:18px 18px 16px;
+#hint{position:fixed;right:2vw;bottom:2vh;display:flex;gap:8px;opacity:.75;transition:opacity .3s;z-index:40}
+#hint:hover{opacity:1}
+#hint button{display:inline-flex;align-items:center;gap:6px;padding:7px 11px;border-radius:99px;border:1px solid var(--line);background:rgba(16,23,15,.9);color:var(--muted);font-size:12px}
+#hint button:hover{color:var(--fg)}
+#hint kbd{font-family:ui-monospace,monospace;font-size:10.5px;border:1px solid var(--line);border-radius:4px;padding:0 5px;color:var(--fg)}
+#intro{position:fixed;inset:0;z-index:70;display:grid;place-items:center;background:rgba(4,6,4,.86);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);padding:24px}
+#intro[hidden]{display:none}
+#intro .card-i{max-width:440px;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:28px 28px 22px;display:flex;flex-direction:column;gap:14px;color:var(--muted);font-size:14px;line-height:1.5}
+#intro .eyebrow{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--uma2)}
+#intro h2{font-size:34px;color:var(--fg)}
+#intro p{margin:0}
+#intro .keys{display:flex;flex-wrap:wrap;gap:10px 16px;font-size:12.5px}
+#intro kbd{font-family:ui-monospace,monospace;font-size:11px;border:1px solid var(--line);border-radius:5px;padding:2px 6px;color:var(--fg);background:#0d130f;margin-right:4px}
+#intro-go{align-self:flex-start;background:var(--uma);color:#031106;font-family:var(--display);font-weight:600;font-size:15px;padding:12px 22px;border-radius:99px;transition:transform .15s}
+#intro-go:active{transform:scale(.97)}
+#intro .fine-i{font-size:11.5px;color:var(--dim);line-height:1.45;border-top:1px solid var(--line);padding-top:12px}
+@media (max-width:640px){#intro .keys{display:none}#intro .card-i{padding:22px 20px 18px}}
+#panel{position:fixed;right:2vw;top:2vh;width:300px;background:rgba(8,12,9,.92);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border:1px solid var(--line);border-radius:14px;padding:18px 18px 16px;
   font-size:13px;color:var(--muted);display:none;flex-direction:column;gap:14px;z-index:50}
 #panel.on{display:flex}
 #panel h3{margin:0;font-family:var(--display);font-weight:600;font-size:14px;color:var(--fg)}
@@ -295,7 +318,7 @@ textarea{width:100%;min-height:24cqw;background:rgba(16,23,15,.9);border:1px sol
     <section class="view on" id="v-ambient">
       <button id="tap" aria-label="Wake Uma" data-go="home"></button>
       <div id="live"><i></i>Posted on Upwork · Oct 2</div>
-      <div id="count"><b id="counter">0</b><span>contracts active now</span></div>
+      <div id="count"><b id="clock">--:--</b><span>Lisbon · <span id="clockdate"></span></span></div>
       <div id="feed"></div>
       <div id="spot"><div class="kicker" id="spot-k"></div><div class="h" id="spot-h"></div><div class="d" id="spot-d"></div></div>
       <div id="invite"><div><b>What can Uma help you get done today?</b><br>Tap anywhere to begin</div><div class="pulse">→</div></div>
@@ -367,7 +390,7 @@ textarea{width:100%;min-height:24cqw;background:rgba(16,23,15,.9);border:1px sol
       <div class="steps"><i class="on"></i><i class="on"></i><i></i><i></i></div>
       <h2>What did <span id="luv-name">they</span> do?</h2>
       <textarea id="what" placeholder="One or two sentences is plenty."></textarea>
-      <div class="sub">Which Upwork value does this live?</div>
+      <div class="sub">Which Upwork value does this live? <span style="color:var(--dim)">Placeholder list until Upwork shares the LUV set.</span></div>
       <div class="chips" id="values"></div>
       <div class="grow"></div>
       <button class="big flat luvbtn" id="luv2next" disabled>Continue</button>
@@ -397,23 +420,24 @@ textarea{width:100%;min-height:24cqw;background:rgba(16,23,15,.9);border:1px sol
       <div class="sub" style="text-align:center;margin:0 auto" id="luv-summary"></div>
       <div class="grow"></div>
       <div class="posted" id="posted">
-        <div><b>✓</b> Posted to #luv on Slack</div>
-        <div><b>✓</b> Logged on Haystack for quarterly LUV awards</div>
-        <div><b>✓</b> Video saved to the recipient's inbox</div>
-        <div><b>✓</b> Transcript attached for the awards log</div>
+        <div><b>✓</b> Recognition recorded for this demo session</div>
+        <div><b>✓</b> Video kept for the recipient · demo only</div>
+        <div><b>✓</b> Transcript attached</div>
+        <div><b>→</b> Slack #luv post · planned integration</div>
+        <div><b>→</b> Haystack log for quarterly awards · planned integration</div>
       </div>
     </section>
   </div></div>
 </div>
 
-<div id="hint">Press <kbd>?</kbd> for presenter controls · <kbd>F</kbd> fullscreen</div>
+<div id="hint"><button data-act="notes">Notes <kbd>?</kbd></button><button data-act="glass">How it's built <kbd>B</kbd></button><button data-act="full">Full screen <kbd>F</kbd></button></div>
 <aside id="panel">
-  <h3>Presenter controls</h3>
+  <h3>Notes &amp; controls</h3>
   <div class="st">
     <span>Mode</span><b><i class="lamp"></i><span id="s-mode">The Pulse</span></b>
     <span>Idle return</span><b id="s-idle">—</b>
     <span>Voice</span><b id="s-voice">on</b>
-    <span>Answers</span><b id="s-ai">canned</b>
+    <span>Answers</span><b id="s-ai">guided</b>
   </div>
   <div class="k">
     <kbd>1</kbd><span>The Pulse (ambient)</span>
@@ -429,15 +453,25 @@ textarea{width:100%;min-height:24cqw;background:rgba(16,23,15,.9);border:1px sol
     <kbd>Esc</kbd><span>Leave kiosk · close this panel</span>
   </div>
   <div class="ai">
-    <h3 style="font-size:12px">Live answers</h3>
-    <input id="aikey" type="password" placeholder="Paste an OpenAI or Anthropic key" autocomplete="off">
+    <h3 style="font-size:12px">Live answers (optional)</h3>
+    <input id="aikey" type="password" placeholder="Your own OpenAI or Anthropic key" autocomplete="off">
     <div class="r"><input id="aimodel" placeholder="Model (optional)" autocomplete="off"><button id="aisave">Use</button><button id="aiforget">Forget</button></div>
     <div class="r"><select id="aitts" aria-label="Uma voice"><option value="system">System voice</option><option value="nova">Uma voice · nova (OpenAI)</option><option value="coral">Uma voice · coral (OpenAI)</option><option value="sage">Uma voice · sage (OpenAI)</option></select></div>
-    <div class="s" id="aistatus">Canned answers. Paste a key to go live.</div>
+    <div class="s" id="aistatus">Guided answers. Add your own model key to make Uma answer live; it stays in this browser.</div>
   </div>
-  <div class="fine">The three people in Find great talent, the three projects in What businesses are building, and the ambient ticker are real public Upwork profiles and postings, pulled Oct 2 2026 (times shown in Lisbon time). The counter, success stories, spotlight stats and teammates are illustrative. Value names are placeholders until Upwork shares the LUV list. A pasted key stays in this browser only and never leaves with the file.</div>
+  <div class="fine">Real public Upwork data, pulled Oct 2 2026: the people in Find great talent and Surprise me, the three projects in What businesses are building, and the ambient ticker (Lisbon time). Spotlight figures cite Upwork's own publications. Teammates and success-story details are illustrative. Value names are placeholders until Upwork shares the LUV list. A pasted key stays in this browser only. Prototype by SoftDoes · softdoes.com.</div>
 </aside>
 <div id="glass" role="dialog" aria-label="Behind the glass"></div>
+<div id="intro" role="dialog" aria-modal="true" aria-labelledby="intro-h">
+  <div class="card-i">
+    <div class="eyebrow">Interactive prototype · Upwork Lisbon reception</div>
+    <h2 id="intro-h">Uma's Office</h2>
+    <p>A visitor's view of the booth: the Pulse when idle, Ask Uma by voice or touch, and Send some LUV for employees. Tap the screen the way a guest would.</p>
+    <div class="keys"><span><kbd>?</kbd> notes</span><span><kbd>B</kbd> how it's built</span><span><kbd>V</kbd> talk to Uma</span><span><kbd>F</kbd> full screen</span></div>
+    <button id="intro-go">Step inside</button>
+    <div class="fine-i">Best in Chrome with sound on. Talent and postings shown are real public Upwork pages; other figures cite Upwork's publications or are marked illustrative. Nothing you do here is stored. Prototype by SoftDoes.</div>
+  </div>
+</div>
 
 <script>
 (() => {
@@ -483,16 +517,16 @@ const stories = [
   {k:"Success story", t:"A nonprofit translated its curriculum into nine languages", p:"Translators in nine countries worked from one shared brief. Launched for the school year.", s:[["9","languages"],["1","shared brief"]]}
 ];
 const surprises = [
-  {k:"Unexpected connection", t:"A marine biologist who writes Rust", p:"She models fisheries by day and builds simulation tooling for game studios on Upwork by night.", s:[["2","careers"],["1","profile"]]},
-  {k:"Skill spotlight", t:"Fado vocals, hired 31 times this year", p:"Lisbon's own sound is a global category. Most clients: ad agencies in the US and Japan.", s:[["31","hires"],["7","countries"]]},
-  {k:"Marketplace moment", t:"The most-hired skill at 3 a.m. Lisbon time is bookkeeping", p:"Because it's end of day in California. The marketplace never really sleeps.", s:[["3 a.m.","Lisbon"],["6 p.m.","California"]]}
+  {k:"Unexpected combination · live on Upwork", n:"Hande A.", u:"https://www.upwork.com/freelancers/~01c1666491bb906143", i:"HA", m:"Watercolor illustrator, tattoo artist, editor, marine biologist · Turkey · $35/hr", t:["Watercolor","Translation","Photography"], p:"100% job success. One profile, four crafts: the marketplace rewards range as much as depth."},
+  {k:"Unexpected combination · live on Upwork", n:"Ali J.", u:"https://www.upwork.com/freelancers/~01cdeca95ab52bbe30", i:"AJ", m:"Astrophysicist who draws scientific diagrams · Pakistan · $21/hr", t:["Astrophysics","Data viz","LaTeX"], p:"Top Rated, 100% job success. Turns research into figures, diagrams and clean LaTeX."},
+  {k:"Unexpected combination · live on Upwork", n:"Dylan O.", u:"https://www.upwork.com/freelancers/~0190c0ebe9ae7c1446", i:"DO", m:"PhD physicist doing medical imaging and data science · Australia · $39.80/hr", t:["Medical imaging","Computer vision","Python"], p:"Top Rated, 100% job success. Physics training applied to AI-enhanced medical imaging."}
 ];
 const faqs = [
   {q:"How can Upwork help my business?", a:"Upwork gives you access to independent talent in nearly every skill, from a single freelancer to a full managed team. You post what you need, review proposals, and pay only for work delivered.", card:building[2]},
   {q:"Help me hire a designer.", a:"Tell me what you're making, a budget range, and when you need it. I'll draft the job post and suggest a shortlist. Here's the kind of person I'd start with, live on Upwork right now.", card:talent[0]},
-  {q:"What's the fastest way to hire?", a:"Project Catalog, for fixed-scope work with a set price, often starts same day. For custom work, a well-scoped post with a clear budget usually gets its first proposals within a couple of hours.", card:building[1]},
+  {q:"What's the fastest way to hire?", a:"Project Catalog, for fixed-scope work with a set price, is the fastest start. For custom work, post a clear brief with a budget, review proposals as they come in, and invite the people you like. I can draft the post for you.", card:building[1]},
   {q:"Show me an example project.", a:"Here's one posted today: a software consultancy in Ireland is hiring a senior engineer to ship agentic AI on Google Cloud, full time for six months or more.", card:building[0]},
-  {q:"What skills are trending?", a:"This quarter the fastest-growing requests are AI agent development, Webflow, data engineering and short-form video editing. Here's someone doing that work right now.", card:talent[2]}
+  {q:"What skills are trending?", a:"By Upwork's own In-Demand Skills 2026 report, demand for AI skills more than doubled in a year. The fastest growing: AI video generation and editing, AI integration, and AI data annotation. Here's someone doing that work right now.", card:talent[2]}
 ];
 const people = [["Taylor Robinson","Design Lead"],["Avery Kim","Account Manager"],["Jordan Lee","Software Engineer"],["Morgan Patel","People Ops"],["Sofia Almeida","Office Lead, Lisbon"],["Noah Fischer","Product Marketing"],["Priya Nair","Data Science"],["Lucas Mendes","Customer Success"]];
 const values = ["Put community first","Have a bias toward action","Build amazing teams","Think boldly","Do the right thing"];
@@ -513,6 +547,10 @@ function go(m){
   if (m === 'luv3') startCam(); else stopCam();
   if (m === 'luv4'){ confetti(); say("LUV sent. Thanks for making Upwork amazing."); setTimeout(() => { if (mode==='luv4') go('ambient'); }, 7000); }
 }
+const intro = $('#intro');
+(() => { let done = false; try { done = sessionStorage.getItem('uma.intro') === '1'; } catch(e){} if (done || location.hash === '#kiosk') intro.hidden = true; })();
+$('#intro-go').onclick = () => { intro.hidden = true; try { sessionStorage.setItem('uma.intro', '1'); } catch(e){} try { speechSynthesis.getVoices(); } catch(e){} };
+$('#hint').addEventListener('click', e => { const b = e.target.closest('[data-act]'); if (!b) return; if (b.dataset.act === 'notes') $('#panel').classList.toggle('on'); else if (b.dataset.act === 'glass') toggleGlass(); else { document.body.classList.add('kiosk'); document.documentElement.requestFullscreen?.().catch(()=>{}); } });
 let toastT = null;
 function toast(t){ const el = $('#toast'); el.textContent = t; el.classList.add('on'); clearTimeout(toastT); toastT = setTimeout(() => el.classList.remove('on'), 3500); }
 function touch(){ if (mode==='ambient') return; clearTimeout(idleT); idleDeadline = Date.now()+IDLE_MS; idleT = setTimeout(() => go('ambient'), IDLE_MS); }
@@ -522,6 +560,7 @@ document.addEventListener('click', e => { const b = e.target.closest('[data-go]'
 $('#screen').addEventListener('input', touch);
 document.addEventListener('keydown', e => {
   if (e.target.closest?.('input,textarea,select')) { touch(); return; }
+  if (!intro.hidden) $('#intro-go').click();
   const k = e.key.toLowerCase();
   if (k==='?' || k==='h') $('#panel').classList.toggle('on');
   else if (k==='escape'){ if ($('#glass').classList.contains('on')) { $('#glass').classList.remove('on'); return; } $('#panel').classList.remove('on'); document.body.classList.remove('kiosk'); if (document.fullscreenElement) document.exitFullscreen?.(); }
@@ -532,7 +571,6 @@ document.addEventListener('keydown', e => {
   else if (k==='m'){ voice = !voice; $('#s-voice').textContent = voice?'on':'off'; if (!voice) stopSpeech(); }
   else if (k==='v'){ const sim = e.shiftKey; if (mode!=='ask') go('ask'); setTimeout(() => listen(sim), 400); }
 });
-setTimeout(() => { $('#hint').style.opacity = 0; }, 9000);
 
 /* ---------------- voice ---------------- */
 let orbs = () => $$('.orb');
@@ -633,18 +671,18 @@ function addEvent(a,b){
   const line = `<em>${country}</em> · ${what} · ${props} proposal${props === 1 ? '' : 's'}`;
   const el = document.createElement('div'); el.className='ev'; el.innerHTML = `<span class="t">${t}</span><span class="r">${line}</span>`;
   feed.appendChild(el); while (feed.children.length>3) feed.firstChild.remove();
-  counter += 1 + (Math.random()*3|0);
 }
-setInterval(() => { const el=$('#counter'); const cur=+el.textContent.replace(/\D/g,'')||counterBase-900; const nx = cur + Math.ceil((counter-cur)*.15); el.textContent = nx.toLocaleString(); }, 120);
+function tickClock(){ const now = new Date(); $('#clock').textContent = now.toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit', timeZone:'Europe/Lisbon'}); $('#clockdate').textContent = now.toLocaleDateString('en-GB', {weekday:'short', day:'numeric', month:'short', timeZone:'Europe/Lisbon'}); }
+tickClock(); setInterval(tickClock, 10000);
 
 /* ---------------- ambient spotlight (stories, trends, insights, featured projects) ---------------- */
 const spots = [
-  {k:"Customer story", h:"A two-person startup shipped its first app with a team it met here.", d:"12 weeks · 3 countries · now 14 people"},
-  {k:"Hiring trend", h:"AI agent development requests tripled this quarter.", d:"Fastest-growing skill across Europe"},
-  {k:"Business insight", h:"Posts with a budget range get their first proposal twice as fast.", d:"Median: under 2 hours"},
+  {k:"From Upwork’s In-Demand Skills 2026 report", h:"Demand for AI skills more than doubled in a year: up 109%, against 23% for other high-demand skills.", d:"Published February 2026 · investors.upwork.com"},
+  {k:"Fastest-growing skill · same report", h:"AI video generation and editing: up 329% year over year.", d:"Then AI integration +178%, AI data annotation +154%, e-commerce management +130%"},
+  {k:"From upwork.com/reviews", h:"Clients rate talent 4.8 out of 5 across 2.9 million reviews. 95% rehire.", d:"Talent rates clients 4.9 out of 5"},
+  {k:"Still the most in-demand", h:"Full-stack development, virtual assistance, data analytics and graphic design hold steady year over year.", d:"Upwork In-Demand Skills 2026"},
   {k:"Featured project · live on Upwork", h:"A consultancy in Ireland is hiring a senior agentic-AI engineer for Google Cloud.", d:"$45–50/hr · six months and more · 53 proposals in today"},
-  {k:"Platform statistic", h:"Most-hired skill in Lisbon this month: Webflow development.", d:"Followed by brand identity and voiceover"},
-  {k:"Customer story", h:"An enterprise support team cut its backlog by 60% with a six-person pod.", d:"Staffed in 13 days"}
+  {k:"Companies hiring on Upwork", h:"Microsoft, Airbnb, Automattic, Bissell and Nasdaq.", d:"As listed on upwork.com"}
 ];
 let si = 0;
 function spotCycle(){ if (mode!=='ambient') return; const v=$('#v-ambient'), it=spots[si++ % spots.length], kk=$('#spot-k'); kk.textContent=it.k; kk.classList.toggle('luvk', !!it.luv); $('#spot-h').textContent=it.h; $('#spot-d').textContent=it.d; v.classList.add('spot'); setTimeout(()=>v.classList.remove('spot'), 9000); }
@@ -749,7 +787,7 @@ async function finishLuv(){
   clearInterval(recT); clearInterval(waveT); stopReal();
   const snap = {...luv};
   $('#luv-summary').textContent = `${snap.who} · ${snap.value}${snap.rec?` · ${snap.rec}s video`:''}`;
-  const posted = $('#posted').children; posted[2].style.display = snap.rec ? '' : 'none'; posted[3].style.display = snap.transcript ? '' : 'none';
+  const posted = $('#posted').children; posted[1].style.display = snap.rec ? '' : 'none'; posted[2].style.display = snap.transcript ? '' : 'none';
   go('luv4');
   const first = snap.who.split(' ')[0];
   let h = `${first} got LUV for “${snap.value}”.`;
@@ -786,10 +824,10 @@ const AI = {key:'', model:'', provider:null};
 const UMA_SYSTEM = `You are Uma, Upwork's AI companion, speaking aloud inside a small booth in the reception of Upwork's Lisbon office. Visitors and employees talk to you by voice.
 Answer in at most two short spoken sentences. Plain words, no lists, no markdown, no emoji. Be warm and specific.
 Scope: Upwork, hiring independent talent, freelancing, the marketplace, work trends, the Lisbon office. If asked something outside that, say in one sentence what you can help with instead. Never ask for or repeat personal data. Reply in the language the person used.
-Illustrative facts you may use: Project Catalog work often starts the same day; a well-scoped post with a budget range usually gets its first proposals within about two hours; the fastest-growing requests this quarter are AI agent development, Webflow, data engineering and short-form video editing.
+Facts from Upwork's own publications you may use: the In-Demand Skills 2026 report says demand for AI skills more than doubled year over year, up 109 percent, with AI video generation and editing up 329 percent, AI integration up 178 percent and AI data annotation up 154 percent; full-stack development, virtual assistance, data analytics and graphic design remain the most in-demand skills; upwork.com reports clients rate talent 4.8 out of 5 across 2.9 million reviews and 95 percent rehire. Project Catalog is the fastest way to start fixed-scope work. Do not invent other statistics.
 Real examples live on Upwork today, October 2 2026, that you may mention: a software consultancy in Ireland hiring a senior agentic-AI engineer for Google Cloud at 45 to 50 dollars an hour with 53 proposals in; a golf app going from MVP to production with a React Native team; a 50-year-old US construction firm rebuilding its website on Webflow. Talent you may mention without full names: a Top Rated Plus, Expert-Vetted brand identity designer in Portugal at 70 dollars an hour; a Top Rated Plus web designer in Portugal with 600 thousand dollars earned; a Top Rated Plus AI engineer who ships agents and RAG pipelines at 40 dollars an hour.`;
 function loadAI(){ try { AI.key = localStorage.getItem('uma.key') || ''; AI.model = localStorage.getItem('uma.model') || ''; AI.tts = localStorage.getItem('uma.tts') || 'system'; } catch(e){} AI.tts = AI.tts || 'system'; AI.provider = !AI.key ? null : (AI.key.startsWith('sk-ant-') ? 'anthropic' : 'openai'); $('#aimodel').value = AI.model; $('#aitts').value = AI.tts; renderAI(); }
-function renderAI(msg, cls){ const s = $('#aistatus'); if (msg){ s.textContent = msg; s.className = 's ' + (cls || ''); } else if (!AI.provider){ s.textContent = 'Canned answers. Paste a key to go live.'; s.className = 's'; } else { s.textContent = `Live · ${AI.provider} · ${AI.model || (AI.provider === 'anthropic' ? 'claude-opus-5-5' : 'gpt-5.4-mini')}` + (AI.provider === 'openai' && AI.tts !== 'system' ? ' · voice ' + AI.tts : '') + (AI.lastMs ? ' · ' + (AI.lastMs / 1000).toFixed(1) + ' s' : ''); s.className = 's ok'; } $('#s-ai').textContent = AI.provider ? 'live' : 'canned'; }
+function renderAI(msg, cls){ const s = $('#aistatus'); if (msg){ s.textContent = msg; s.className = 's ' + (cls || ''); } else if (!AI.provider){ s.textContent = 'Guided answers. Add your own model key to make Uma answer live; it stays in this browser.'; s.className = 's'; } else { s.textContent = `Live · ${AI.provider} · ${AI.model || (AI.provider === 'anthropic' ? 'claude-opus-5-5' : 'gpt-5.4-mini')}` + (AI.provider === 'openai' && AI.tts !== 'system' ? ' · voice ' + AI.tts : '') + (AI.lastMs ? ' · ' + (AI.lastMs / 1000).toFixed(1) + ' s' : ''); s.className = 's ok'; } $('#s-ai').textContent = AI.provider ? 'live' : 'guided'; }
 $('#aisave').onclick = () => { const k = $('#aikey').value.trim(), m = $('#aimodel').value.trim(); try { if (k) localStorage.setItem('uma.key', k); if (k || AI.key) localStorage.setItem('uma.model', m); } catch(e){} $('#aikey').value = ''; loadAI(); };
 $('#aikey').onkeydown = $('#aimodel').onkeydown = e => { if (e.key === 'Enter') $('#aisave').click(); };
 $('#aiforget').onclick = () => { try { localStorage.removeItem('uma.key'); localStorage.removeItem('uma.model'); } catch(e){} loadAI(); };
@@ -878,7 +916,7 @@ function confetti(){
   requestAnimationFrame(step);
 }
 
-const applyHash = () => { if (location.hash === '#kiosk') document.body.classList.add('kiosk'); };
+const applyHash = () => { if (location.hash === '#kiosk'){ document.body.classList.add('kiosk'); intro.hidden = true; } };
 applyHash(); addEventListener('hashchange', applyHash);
 })();
 </script>

@@ -91,6 +91,9 @@ h1{font-size:11cqw}h2{font-size:8.4cqw}
 .big.primary small{color:#0d3f1a}
 .big.luv{border-color:rgba(192,140,255,.45)}
 .big.flat::after{display:none}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:2.4cqw}
+.grid2 .big{padding:4cqw 4cqw;font-size:4.4cqw}
+.grid2 .big small{font-size:3cqw;margin-top:.8cqw}
 .ghost{color:var(--muted);font-size:3.8cqw;text-align:left;transition:color .2s}
 .ghost:hover{color:var(--fg)}
 .chips{display:flex;flex-wrap:wrap;gap:2.2cqw}
@@ -187,7 +190,8 @@ textarea{width:100%;min-height:24cqw;background:rgba(16,23,15,.9);border:1px sol
 .row{display:flex;align-items:center;gap:3.6cqw;padding:2.8cqw 3.6cqw;border-radius:3cqw;text-align:left;border:1px solid transparent;transition:background .2s,border-color .2s}
 .row:hover{background:rgba(255,255,255,.03)}
 .row[aria-pressed="true"]{border-color:var(--luv);background:rgba(192,140,255,.14)}
-.row .avatar{width:10.5cqw;height:10.5cqw;font-size:3.6cqw;background:linear-gradient(135deg,var(--luv),#5a3fa8)}
+.row .avatar{width:10.5cqw;height:10.5cqw;font-size:3.6cqw;background:linear-gradient(135deg,var(--luv),#5a3fa8);position:relative;overflow:hidden}
+.row .avatar img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .row .nm{font-size:4.2cqw}.row .rl{font-size:3.2cqw;color:var(--muted)}
 .luvbtn{background:var(--luv)!important;border-color:var(--luv)!important;color:#1a0b3a!important}
 .luvbtn:disabled{opacity:.35;cursor:default}
@@ -218,6 +222,14 @@ textarea{width:100%;min-height:24cqw;background:rgba(16,23,15,.9);border:1px sol
 /* live voice + transcript */
 .listen .heard.live{color:var(--fg)}
 .listen .mic.real{background:var(--rec)}
+#cap-mic,#who-mic{width:24cqw;height:24cqw;border-radius:50%;background:var(--uma);display:grid;place-items:center;font-size:9cqw;animation:ringp 2.4s ease-out infinite;cursor:pointer}
+#who-mic{background:var(--luv);width:18cqw;height:18cqw;font-size:7cqw}
+#cap-mic.live,#who-mic.live{background:var(--rec);animation:ringp 1s ease-out infinite}
+#cap-form button{background:var(--uma);color:#031106}
+#cap-heard,#who-heard{min-height:1.2em}
+body.kiosk #askrow input,body.kiosk #cap-form{display:none}
+#who-confirm{display:flex;flex-direction:column;gap:3cqw}
+#who-confirm[hidden]{display:none}
 #transcript{max-height:12cqw;overflow:hidden;font-size:3.5cqw;color:var(--muted);line-height:1.4;text-align:center;padding:0 2cqw}
 #transcript b{color:var(--fg);font-weight:500}
 #spot .kicker.luvk{color:var(--luv)}
@@ -225,6 +237,15 @@ textarea{width:100%;min-height:24cqw;background:rgba(16,23,15,.9);border:1px sol
 /* behind the glass */
 #glass{position:fixed;inset:0;z-index:60;background:rgba(4,6,4,.95);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);display:none;overflow:auto;padding:4vh 4vw 6vh;font-size:13px;color:var(--muted)}
 #glass.on{display:block}
+#ops{position:fixed;inset:0;z-index:60;background:rgba(4,6,4,.95);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);display:none;overflow:auto;padding:4vh 4vw 6vh;font-size:13px;color:var(--muted)}
+#ops.on{display:block}
+#ops .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:16px}
+#ops .tile{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px}
+#ops .tile b{display:block;font-family:var(--display);font-weight:600;font-size:30px;color:var(--fg);font-variant-numeric:tabular-nums}
+#ops .tile span{font-size:11px;letter-spacing:.08em;text-transform:uppercase}
+#ops table{border-collapse:collapse;width:100%;max-width:560px}
+#ops td{padding:6px 10px 6px 0;border-bottom:1px solid var(--line);color:var(--fg);font-size:13px}
+#ops td:last-child{text-align:right;color:var(--muted);font-variant-numeric:tabular-nums}
 #glass .head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:22px;padding-right:48px}
 #glass .head h2{font-size:30px;color:var(--fg)}
 #glass .head p{margin:6px 0 0;max-width:62ch;line-height:1.5}
@@ -332,7 +353,7 @@ textarea{width:100%;min-height:24cqw;background:rgba(16,23,15,.9);border:1px sol
       <h1>What can Uma help you get done today?</h1>
       <div class="stack">
         <button class="big primary" data-go="explore">Explore Upwork<small>Talent, live projects, success stories. 30 seconds each.</small></button>
-        <button class="big luv" data-go="luv1">Send some LUV<small>Recognize a teammate. Living Upwork Values.</small></button>
+        <button class="big luv" data-go="luv0">Send some LUV<small>Recognize a teammate. Living Upwork Values.</small></button>
       </div>
       <button class="ghost" data-go="ask">Or just ask Uma anything →</button>
     </section>
@@ -340,14 +361,29 @@ textarea{width:100%;min-height:24cqw;background:rgba(16,23,15,.9);border:1px sol
     <!-- EXPLORE MENU -->
     <section class="view" id="v-explore">
       <div class="bar"><span class="brand"><i class="orb"></i>Uma</span><button class="ghost" data-go="home">← Back</button></div>
-      <h2>What are you curious about?</h2>
+      <h2>What can Uma help you get done?</h2>
       <div class="stack">
-        <button class="big" data-topic="talent">Find great talent<small>A few people worth meeting</small></button>
-        <button class="big" data-topic="building">See what businesses are building<small>Real work moving through Upwork right now</small></button>
-        <button class="big" data-topic="stories">Explore success stories<small>Short, impressive outcomes</small></button>
-        <button class="big" data-topic="surprise">Surprise me<small>An unexpected connection</small></button>
+        <button class="big primary" data-path="talent">Find talent for what I need<small>Say what you're building. Uma finds real people for it.</small></button>
+        <button class="big" data-path="challenge">Solve a business challenge<small>Describe it. Uma answers with a story and a live posting.</small></button>
+      </div>
+      <div class="sub" style="font-size:3.2cqw;letter-spacing:.08em;text-transform:uppercase;color:var(--dim)">Or browse</div>
+      <div class="grid2">
+        <button class="big flat" data-topic="talent">Find great talent<small>A few people worth meeting</small></button>
+        <button class="big flat" data-topic="building">What businesses are building<small>Real work moving today</small></button>
+        <button class="big flat" data-topic="stories">Explore success stories<small>Published by Upwork</small></button>
+        <button class="big flat" data-topic="surprise">Surprise me<small>An unexpected connection</small></button>
       </div>
       <div class="grow"></div>
+    </section>
+
+    <!-- CAPTURE (voice-first need) -->
+    <section class="view" id="v-capture">
+      <div class="bar"><span class="brand"><i class="orb"></i>Uma</span><button class="ghost" data-go="explore">← Back</button></div>
+      <h2 id="cap-h">What do you need?</h2>
+      <div class="sub" id="cap-sub">Tap the mic and say it in a sentence.</div>
+      <div class="listen" id="cap-listen" style="padding:3cqw 0"><button class="mic" id="cap-mic" aria-label="Speak">🎤</button><div class="heard" id="cap-heard"></div><div class="sub" id="cap-state">Tap to talk</div></div>
+      <div class="chips" id="cap-chips"></div>
+      <form id="cap-form" class="ask-row" style="margin-top:auto"><input id="cap-input" placeholder="Or type it here" autocomplete="off"><button type="submit" aria-label="Go" id="cap-go">↑</button></form>
     </section>
 
     <!-- EXPLORE PLAYBACK -->
@@ -376,10 +412,20 @@ textarea{width:100%;min-height:24cqw;background:rgba(16,23,15,.9);border:1px sol
       </form>
     </section>
 
+    <!-- LUV 0: nominator -->
+    <section class="view" id="v-luv0">
+      <div class="bar"><span class="brand"><i class="orb" style="background:var(--luv);box-shadow:0 0 16px var(--luv)"></i>Send some LUV</span><button class="ghost" data-go="home">← Back</button></div>
+      <div class="steps"><i class="on"></i><i></i><i></i><i></i><i></i></div>
+      <h2>First, who are you?</h2>
+      <div class="sub">Say your name or tap it. Every quarterly LUV award records who gave it.</div>
+      <div class="listen" style="padding:2cqw 0"><button class="mic" id="who-mic" aria-label="Say your name">🎤</button><div class="heard" id="who-heard"></div><div class="sub" id="who-state">Tap to say your name</div></div>
+      <div id="who-confirm" class="card" hidden><div class="sub">Is this you?</div><div class="person" id="who-match"></div><div class="btnrow"><button class="big flat luvbtn" id="who-yes">Yes, that's me</button><button class="big flat" id="who-no">No</button></div></div>
+      <div class="list grow" id="who-list"></div>
+    </section>
     <!-- LUV 1 -->
     <section class="view" id="v-luv1">
-      <div class="bar"><span class="brand"><i class="orb" style="background:var(--luv);box-shadow:0 0 16px var(--luv)"></i>Send some LUV</span><button class="ghost" data-go="home">← Back</button></div>
-      <div class="steps"><i class="on"></i><i></i><i></i><i></i></div>
+      <div class="bar"><span class="brand"><i class="orb" style="background:var(--luv);box-shadow:0 0 16px var(--luv)"></i>Send some LUV</span><button class="ghost" data-go="luv0">← Back</button></div>
+      <div class="steps"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></div>
       <h2>Who deserves some LUV?</h2>
       <input class="search" id="who" placeholder="Search a teammate" autocomplete="off">
       <div class="list grow" id="people"></div>
@@ -388,7 +434,7 @@ textarea{width:100%;min-height:24cqw;background:rgba(16,23,15,.9);border:1px sol
     <!-- LUV 2 -->
     <section class="view" id="v-luv2">
       <div class="bar"><span class="brand"><i class="orb" style="background:var(--luv);box-shadow:0 0 16px var(--luv)"></i>Send some LUV</span><button class="ghost" data-go="luv1">← Back</button></div>
-      <div class="steps"><i class="on"></i><i class="on"></i><i></i><i></i></div>
+      <div class="steps"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></div>
       <h2>What did <span id="luv-name">they</span> do?</h2>
       <textarea id="what" placeholder="One or two sentences is plenty."></textarea>
       <div class="sub">Which Upwork value does this live? <span style="color:var(--dim)">Placeholder list until Upwork shares the LUV set.</span></div>
@@ -399,7 +445,7 @@ textarea{width:100%;min-height:24cqw;background:rgba(16,23,15,.9);border:1px sol
     <!-- LUV 3 -->
     <section class="view" id="v-luv3">
       <div class="bar"><span class="brand"><i class="orb" style="background:var(--luv);box-shadow:0 0 16px var(--luv)"></i>Send some LUV</span><button class="ghost" data-go="luv2">← Back</button></div>
-      <div class="steps"><i class="on"></i><i class="on"></i><i class="on"></i><i></i></div>
+      <div class="steps"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></div>
       <h2>Say it on camera</h2>
       <div id="cam"><video id="video" autoplay muted playsinline hidden></video><div class="sim" id="sim"><div class="sil"></div></div><div class="recdot"><i></i>REC</div><div class="timer" id="timer">00:00</div></div>
       <div id="wave"></div>
@@ -414,24 +460,18 @@ textarea{width:100%;min-height:24cqw;background:rgba(16,23,15,.9);border:1px sol
     <!-- LUV 4 -->
     <section class="view" id="v-luv4">
       <div class="bar"><span class="brand"><i class="orb" style="background:var(--luv);box-shadow:0 0 16px var(--luv)"></i>Send some LUV</span><span></span></div>
-      <div class="steps"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></div>
+      <div class="steps"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></div>
       <div class="grow"></div>
       <div class="heart">♥</div>
       <h2 style="text-align:center">LUV sent.</h2>
       <div class="sub" style="text-align:center;margin:0 auto" id="luv-summary"></div>
       <div class="grow"></div>
-      <div class="posted" id="posted">
-        <div><b>✓</b> Recognition recorded for this demo session</div>
-        <div><b>✓</b> Video kept for the recipient · demo only</div>
-        <div><b>✓</b> Transcript attached</div>
-        <div><b>→</b> Slack #luv post · planned integration</div>
-        <div><b>→</b> Haystack log for quarterly awards · planned integration</div>
-      </div>
+      <div class="posted" id="posted"></div>
     </section>
   </div></div>
 </div>
 
-<div id="hint"><button data-act="notes">Notes <kbd>?</kbd></button><button data-act="glass">How it's built <kbd>B</kbd></button><button data-act="full">Full screen <kbd>F</kbd></button></div>
+<div id="hint"><button data-act="notes">Notes <kbd>?</kbd></button><button data-act="glass">How it's built <kbd>B</kbd></button><button data-act="ops">Operations <kbd>O</kbd></button><button data-act="full">Full screen <kbd>F</kbd></button></div>
 <aside id="panel">
   <h3>Notes &amp; controls</h3>
   <div class="st">
@@ -439,6 +479,7 @@ textarea{width:100%;min-height:24cqw;background:rgba(16,23,15,.9);border:1px sol
     <span>Idle return</span><b id="s-idle">—</b>
     <span>Voice</span><b id="s-voice">on</b>
     <span>Answers</span><b id="s-ai">guided</b>
+    <span>Presence</span><b id="s-presence">off</b>
   </div>
   <div class="k">
     <kbd>1</kbd><span>The Pulse (ambient)</span>
@@ -446,8 +487,10 @@ textarea{width:100%;min-height:24cqw;background:rgba(16,23,15,.9);border:1px sol
     <kbd>3</kbd><span>Explore Upwork</span>
     <kbd>4</kbd><span>Ask Uma</span>
     <kbd>5</kbd><span>Send some LUV</span>
+    <kbd>P</kbd><span>Presence detection: wake when someone walks in</span>
     <kbd>V</kbd><span>Uma listens through the mic (Shift+V = scripted question)</span>
     <kbd>B</kbd><span>Behind the glass: the architecture, live vs planned</span>
+    <kbd>O</kbd><span>Booth operations: live counts from the API</span>
     <kbd>I</kbd><span>Simulate 45 s of nobody there</span>
     <kbd>M</kbd><span>Mute / unmute spoken responses</span>
     <kbd>F</kbd><span>Kiosk fullscreen (what the Elo shows)</span>
@@ -457,12 +500,13 @@ textarea{width:100%;min-height:24cqw;background:rgba(16,23,15,.9);border:1px sol
     <h3 style="font-size:12px">Live answers (optional)</h3>
     <input id="aikey" type="password" placeholder="Your own OpenAI or Anthropic key" autocomplete="off">
     <div class="r"><input id="aimodel" placeholder="Model (optional)" autocomplete="off"><button id="aisave">Use</button><button id="aiforget">Forget</button></div>
-    <div class="r"><select id="aitts" aria-label="Uma voice"><option value="system">System voice</option><option value="nova">Uma voice · nova (OpenAI)</option><option value="coral">Uma voice · coral (OpenAI)</option><option value="sage">Uma voice · sage (OpenAI)</option></select></div>
+    <div class="r"><select id="aitts" aria-label="Uma voice"><option value="nova">Uma voice · nova</option><option value="coral">Uma voice · coral</option><option value="sage">Uma voice · sage</option><option value="system">System voice</option></select></div>
     <div class="s" id="aistatus">Guided answers. Add your own model key to make Uma answer live; it stays in this browser.</div>
   </div>
-  <div class="fine">Real public Upwork data, pulled Oct 2 2026: the people in Find great talent and Surprise me, the three projects in What businesses are building, and the ambient ticker (Lisbon time). Spotlight figures and the success stories cite Upwork's own publications. Teammates are illustrative. Value names are placeholders until Upwork shares the LUV list. A pasted key stays in this browser only. Prototype by SoftDoes · softdoes.com.</div>
+  <div class="fine">Real public Upwork data, refreshed by a scheduled job: the talent index behind Find talent, the people in Surprise me, the postings in the ticker and in What businesses are building (Lisbon time). Spotlight figures and the success stories cite Upwork's own publications. Teammates are illustrative. Value names are placeholders until Upwork shares the LUV list. A pasted key stays in this browser only. Prototype by SoftDoes · softdoes.com.</div>
 </aside>
 <div id="glass" role="dialog" aria-label="Behind the glass"></div>
+<div id="ops" role="dialog" aria-label="Booth operations"></div>
 <div id="intro" role="dialog" aria-modal="true" aria-labelledby="intro-h">
   <div class="card-i">
     <div class="eyebrow">Interactive prototype · Upwork Lisbon reception</div>
@@ -470,7 +514,7 @@ textarea{width:100%;min-height:24cqw;background:rgba(16,23,15,.9);border:1px sol
     <p>A visitor's view of the booth: the Pulse when idle, Ask Uma by voice or touch, and Send some LUV for employees. Tap the screen the way a guest would.</p>
     <div class="keys"><span><kbd>?</kbd> notes</span><span><kbd>B</kbd> how it's built</span><span><kbd>V</kbd> talk to Uma</span><span><kbd>F</kbd> full screen</span></div>
     <button id="intro-go">Step inside</button>
-    <div class="fine-i">Best in Chrome with sound on. Talent and postings are real public Upwork pages; stories and figures cite Upwork's own publications; teammates are illustrative. Nothing you do here is stored. Prototype by SoftDoes.</div>
+    <div class="fine-i">Best in Chrome with sound on. Talent and postings are real public Upwork pages; stories and figures cite Upwork's own publications; teammates are illustrative. LUV sends are kept for the shared recognition feed and expire after 90 days; analytics are anonymous counts. Prototype by SoftDoes.</div>
   </div>
 </div>
 
@@ -478,6 +522,17 @@ textarea{width:100%;min-height:24cqw;background:rgba(16,23,15,.9);border:1px sol
 (() => {
 const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
 const IDLE_MS = 45000;
+const API_BASE = (new URLSearchParams(location.search).get('api') || window.UMA_API || 'REPLACE_WITH_WORKER_URL').replace(/\/$/, '');
+const API = { ok:false, voice:false, slack:false, model:'', checked:false };
+const WLED = new URLSearchParams(location.search).get('wled');
+async function apiHealth(){
+  if (!/^https?:/.test(API_BASE)) { API.checked = true; return; }
+  try { const r = await fetch(API_BASE + '/health', { cache:'no-store' }); const j = await r.json(); API.ok = !!j.ok; API.voice = !!j.voice; API.slack = !!j.slack; API.model = j.model || ''; } catch(e){ API.ok = false; }
+  API.checked = true; renderAI(); if (API.ok){ pullLuvFeed(); setInterval(pullLuvFeed, 90000); }
+}
+function track(type, detail){ if (!API.ok) return; try { fetch(API_BASE + '/event', { method:'POST', keepalive:true, headers:{'content-type':'application/json'}, body: JSON.stringify({ type, detail }) }).catch(()=>{}); } catch(e){} }
+function setLights(rgb){ if (!WLED) return; const [r,g,b] = rgb.split(',').map(Number); try { fetch(WLED.replace(/\/$/, '') + '/json/state', { method:'POST', mode:'no-cors', headers:{'content-type':'application/json'}, body: JSON.stringify({ on:true, bri:170, transition:7, seg:[{ col:[[r,g,b]] }] }) }).catch(()=>{}); } catch(e){} }
+const HEADLINE_SYSTEM = 'You write one short recognition headline for an office screen: at most 12 words, third person, present tense, warm, no quotes, no emoji, no hashtags. Output only the headline.';
 let mode = 'ambient', idleT = null, idleDeadline = 0, voice = true, storyT = null, sayTimer = null, luvPending = false, askHist = [];
 
 /* ---------------- sample content ---------------- */
@@ -485,7 +540,7 @@ const cities = {Lisbon:[38.72,-9.14],Porto:[41.15,-8.61],London:[51.5,-.12],Berl
 const skills = ["brand identity","AI agent build","Webflow site","data pipeline","Portuguese voiceover","Shopify migration","UX research","motion design","bookkeeping","Flutter app","SEO audit","LLM evaluation","3D product render","React dashboard","copywriting"];
 const roles = ["a designer","a developer","an ML engineer","a copywriter","a video editor","a data analyst","a marketer","a translator"];
 const counterBase = 12400;
-const livePosts = [
+let livePosts = [
   ["2026-10-02T16:55:53Z","United States","Custom AI agent and RAG system for a small business",31],
   ["2026-10-02T16:37:30Z","Kuwait","Mobile attribution expert for AppsFlyer, Meta and TikTok",2],
   ["2026-10-02T16:17:00Z","United States","Senior team to take a GPS golf app from MVP to production",22],
@@ -502,22 +557,22 @@ const livePosts = [
   ["2026-10-02T00:29:34Z","Canada","Webflow website for a barber shop",10]
 ];
 let liveIdx = 0;
-const talent = [
+let talent = [
   {k:"Live on Upwork · Expert-Vetted", n:"Luis Sousa T.", u:"https://www.upwork.com/freelancers/~01d2ee6dec906f1cdf", i:"LT", m:"Senior brand identity designer · Portugal · $70/hr", t:["Brand identity","Brand strategy","Art direction"], p:"Top Rated Plus and Expert-Vetted. 100% job success, $90K+ earned on Upwork. Visual systems for brands and digital products."},
   {k:"Live on Upwork", n:"Mykola L.", u:"https://www.upwork.com/freelancers/~010745e80bc4b9a85f", i:"ML", m:"Web and landing-page designer · Portugal · $45/hr", t:["UX/UI","Webflow","CRO"], p:"Top Rated Plus. 100% job success across 18 contracts, $600K+ earned. Landing pages built to convert, not just to look good."},
   {k:"Live on Upwork", n:"Goga K.", u:"https://www.upwork.com/freelancers/~01eac91067d86ae7b8", i:"GK", m:"AI and machine learning engineer · Georgia · $40/hr", t:["AI agents","RAG","LangChain"], p:"Top Rated Plus. 100% job success across 20 contracts, $100K+ earned. Ships agents and retrieval pipelines on AWS and Google Cloud."}
 ];
-const building = [
+let building = [
   {k:"Live on Upwork · posted Oct 2", u:"https://www.upwork.com/jobs/~022106006818305458580", t:"A software consultancy in Ireland is hiring a senior agentic-AI engineer for Google Cloud", p:"Full time, six months and more, expert level. The client has spent $448K on Upwork and holds a 5.0 rating from 75 freelancers.", s:[["$45–50/hr","posted rate"],["53","proposals in"]]},
   {k:"Live on Upwork · posted Oct 2", u:"https://www.upwork.com/jobs/~022106055706765299533", t:"A golf app is going from MVP to production with a React Native team", p:"A senior full-stack developer or small team to take a working GPS golf app the last mile to launch. Part time, one to three months.", s:[["1–3 mo","timeline"],["22","proposals in"]]},
   {k:"Live on Upwork · posted Oct 2", u:"https://www.upwork.com/jobs/~022106051509705641805", t:"A 50-year-old US construction firm is replacing its website on Webflow", p:"Template site already built, information architecture finished, a designer needed to finish and polish it. Part time for one to three months.", s:[["52","proposals in"],["4.8","client rating"]]}
 ];
-const stories = [
+let stories = [
   {k:"Customer story · upwork.com", story:true, u:"https://www.upwork.com/success-stories/thumbtack", t:"Thumbtack lowered the cost of customer interactions 5× with independent talent", p:"Customer satisfaction rose to 92% along the way. Published by Upwork as a customer story.", s:[["5×","lower cost"],["92%","satisfaction"]]},
   {k:"Customer story · upwork.com", story:true, u:"https://www.upwork.com/success-stories/how-shutterstock-expanded-content-operations-partnering-with-upwork", t:"Shutterstock expanded content operations with freelance writers", p:"About 40 articles published every month, with an average of five business days to hire.", s:[["~40","articles a month"],["5 days","average to hire"]]},
   {k:"Customer story · upwork.com", story:true, u:"https://www.upwork.com/success-stories/compuvision", t:"CompuVision tripled output by adopting flexible talent company-wide", p:"Saved 70% compared with local rates while productivity tripled. Published by Upwork as a customer story.", s:[["3×","output"],["70%","saved vs local rates"]]}
 ];
-const surprises = [
+let surprises = [
   {k:"Unexpected combination · live on Upwork", n:"Hande A.", u:"https://www.upwork.com/freelancers/~01c1666491bb906143", i:"HA", m:"Watercolor illustrator, tattoo artist, editor, marine biologist · Turkey · $35/hr", t:["Watercolor","Translation","Photography"], p:"100% job success. One profile, four crafts: the marketplace rewards range as much as depth."},
   {k:"Unexpected combination · live on Upwork", n:"Ali J.", u:"https://www.upwork.com/freelancers/~01cdeca95ab52bbe30", i:"AJ", m:"Astrophysicist who draws scientific diagrams · Pakistan · $21/hr", t:["Astrophysics","Data viz","LaTeX"], p:"Top Rated, 100% job success. Turns research into figures, diagrams and clean LaTeX."},
   {k:"Unexpected combination · live on Upwork", n:"Dylan O.", u:"https://www.upwork.com/freelancers/~0190c0ebe9ae7c1446", i:"DO", m:"PhD physicist doing medical imaging and data science · Australia · $39.80/hr", t:["Medical imaging","Computer vision","Python"], p:"Top Rated, 100% job success. Physics training applied to AI-enhanced medical imaging."}
@@ -529,29 +584,46 @@ const faqs = [
   {q:"Show me an example project.", a:"Here's one posted today: a software consultancy in Ireland is hiring a senior engineer to ship agentic AI on Google Cloud, full time for six months or more.", card:building[0]},
   {q:"What skills are trending?", a:"By Upwork's own In-Demand Skills 2026 report, demand for AI skills more than doubled in a year. The fastest growing: AI video generation and editing, AI integration, and AI data annotation. Here's someone doing that work right now.", card:talent[2]}
 ];
-const people = [["Taylor Robinson","Design Lead"],["Avery Kim","Account Manager"],["Jordan Lee","Software Engineer"],["Morgan Patel","People Ops"],["Sofia Almeida","Office Lead, Lisbon"],["Noah Fischer","Product Marketing"],["Priya Nair","Data Science"],["Lucas Mendes","Customer Success"]];
+let people = [["Taylor Robinson","Design Lead"],["Avery Kim","Account Manager"],["Jordan Lee","Software Engineer"],["Morgan Patel","People Ops"],["Sofia Almeida","Office Lead, Lisbon"],["Noah Fischer","Product Marketing"],["Priya Nair","Data Science"],["Lucas Mendes","Customer Success"]];
 const values = ["Put community first","Have a bias toward action","Build amazing teams","Think boldly","Do the right thing"];
 
 /* ---------------- navigation, idle, glow ---------------- */
-const theme = {ambient:['#14a800','20,168,0'], home:['#14a800','20,168,0'], explore:['#14a800','20,168,0'], story:['#14a800','20,168,0'], ask:['#4cc9f0','76,201,240'], luv1:['#c08cff','192,140,255'], luv2:['#c08cff','192,140,255'], luv3:['#c08cff','192,140,255'], luv4:['#c08cff','192,140,255']};
-const names = {ambient:'The Pulse', home:'Prompt', explore:'Explore Upwork', story:'Explore · playing', ask:'Ask Uma', luv1:'LUV · 1 of 4', luv2:'LUV · 2 of 4', luv3:'LUV · 3 of 4', luv4:'LUV · sent'};
+const theme = {ambient:['#14a800','20,168,0'], home:['#14a800','20,168,0'], explore:['#14a800','20,168,0'], capture:['#14a800','20,168,0'], story:['#14a800','20,168,0'], ask:['#4cc9f0','76,201,240'], luv0:['#c08cff','192,140,255'], luv1:['#c08cff','192,140,255'], luv2:['#c08cff','192,140,255'], luv3:['#c08cff','192,140,255'], luv4:['#c08cff','192,140,255']};
+const names = {ambient:'The Pulse', home:'Prompt', explore:'Explore Upwork', capture:'Explore · listening', story:'Explore · playing', ask:'Ask Uma', luv0:'LUV · who are you', luv1:'LUV · who deserves it', luv2:'LUV · what they did', luv3:'LUV · say it', luv4:'LUV · sent'};
 function go(m){
   const prev = mode; clearInterval(storyT); stopSpeech(); stopReal(); mode = m; const sc=$('#screen'); sc.scrollLeft=0; sc.scrollTop=0;
   $$('.view').forEach(v => v.classList.toggle('on', v.id === 'v-'+m));
   document.documentElement.style.setProperty('--glow', theme[m][0]);
-  document.documentElement.style.setProperty('--glow-rgb', theme[m][1]);
+  document.documentElement.style.setProperty('--glow-rgb', theme[m][1]); setLights(theme[m][1]);
+  if (prev === 'ambient' && m !== 'ambient') track('session'); if (m !== 'ambient' && m !== prev) track('mode', m);
   $('#s-mode').textContent = names[m];
   globeTarget = m === 'ambient' ? {s:1,y:0,a:1} : {s:1.9,y:.9,a:.22};
   if (m === 'ambient'){ clearTimeout(idleT); idleDeadline = 0; resetLuv(); resetAsk(); if (prev !== 'ambient') toast('Session ended · nothing left behind'); if (luvPending){ luvPending = false; si = 0; setTimeout(spotCycle, 7000); } }
   else touch();
   if (m === 'home') say("Hi, I'm Uma. What can I help you get done today?");
   if (m === 'luv3') startCam(); else stopCam();
-  if (m === 'luv4'){ confetti(); say("LUV sent. Thanks for making Upwork amazing."); setTimeout(() => { if (mode==='luv4') go('ambient'); }, 7000); }
+  if (m === 'luv4'){ confetti(); say("LUV sent. Thanks for making Upwork amazing."); setTimeout(() => { if (mode==='luv4') go('ambient'); }, 9000); }
 }
 const intro = $('#intro');
 (() => { let done = false; try { done = sessionStorage.getItem('uma.intro') === '1'; } catch(e){} if (done || location.hash === '#kiosk') intro.hidden = true; })();
 $('#intro-go').onclick = () => { intro.hidden = true; try { sessionStorage.setItem('uma.intro', '1'); } catch(e){} try { speechSynthesis.getVoices(); } catch(e){} };
-$('#hint').addEventListener('click', e => { const b = e.target.closest('[data-act]'); if (!b) return; if (b.dataset.act === 'notes') $('#panel').classList.toggle('on'); else if (b.dataset.act === 'glass') toggleGlass(); else { document.body.classList.add('kiosk'); document.documentElement.requestFullscreen?.().catch(()=>{}); } });
+$('#hint').addEventListener('click', e => { const b = e.target.closest('[data-act]'); if (!b) return; if (b.dataset.act === 'notes') $('#panel').classList.toggle('on'); else if (b.dataset.act === 'glass') toggleGlass(); else if (b.dataset.act === 'ops') toggleOps(); else { document.body.classList.add('kiosk'); document.documentElement.requestFullscreen?.().catch(()=>{}); } });
+let presence = false, presT = null, presStream = null, presPrev = null, presHits = 0;
+function presenceWanted(){ try { const v = localStorage.getItem('uma.presence'); if (v) return v === '1'; } catch(e){} return document.body.classList.contains('kiosk') || new URLSearchParams(location.search).get('presence') === '1'; }
+function renderPresence(state){ const el = $('#s-presence'); if (el) el.textContent = state; }
+async function presenceStart(){
+  if (presence) return;
+  try { presStream = await navigator.mediaDevices.getUserMedia({ video:{ width:{ ideal:160 }, height:{ ideal:120 }, facingMode:'user' }, audio:false }); } catch(e){ renderPresence('blocked'); return; }
+  const v = document.createElement('video'); v.srcObject = presStream; v.muted = true; v.playsInline = true; await v.play().catch(()=>{});
+  const c = document.createElement('canvas'); c.width = 32; c.height = 24; const cx2 = c.getContext('2d', { willReadFrequently:true });
+  presence = true; presPrev = null; presHits = 0; renderPresence('on');
+  presT = setInterval(() => {
+    if (v.readyState < 2) return; cx2.drawImage(v, 0, 0, 32, 24); const d = cx2.getImageData(0, 0, 32, 24).data;
+    if (presPrev){ let diff = 0; for (let i = 0; i < d.length; i += 4) diff += Math.abs(d[i] - presPrev[i]) + Math.abs(d[i+1] - presPrev[i+1]) + Math.abs(d[i+2] - presPrev[i+2]); const score = diff / (d.length / 4) / 3; presHits = score > 16 ? presHits + 1 : 0; if (presHits >= 2 && mode === 'ambient'){ presHits = 0; go('home'); } }
+    presPrev = new Uint8ClampedArray(d);
+  }, 350);
+}
+function presenceStop(){ presence = false; clearInterval(presT); if (presStream){ presStream.getTracks().forEach(t => t.stop()); presStream = null; } presPrev = null; renderPresence('off'); }
 let toastT = null;
 function toast(t){ const el = $('#toast'); el.textContent = t; el.classList.add('on'); clearTimeout(toastT); toastT = setTimeout(() => el.classList.remove('on'), 3500); }
 function touch(){ if (mode==='ambient') return; clearTimeout(idleT); idleDeadline = Date.now()+IDLE_MS; idleT = setTimeout(() => go('ambient'), IDLE_MS); }
@@ -564,10 +636,12 @@ document.addEventListener('keydown', e => {
   if (!intro.hidden) $('#intro-go').click();
   const k = e.key.toLowerCase();
   if (k==='?' || k==='h') $('#panel').classList.toggle('on');
-  else if (k==='escape'){ if ($('#glass').classList.contains('on')) { $('#glass').classList.remove('on'); return; } $('#panel').classList.remove('on'); document.body.classList.remove('kiosk'); if (document.fullscreenElement) document.exitFullscreen?.(); }
+  else if (k==='escape'){ if ($('#ops').classList.contains('on')) { toggleOps(); return; } if ($('#glass').classList.contains('on')) { $('#glass').classList.remove('on'); return; } $('#panel').classList.remove('on'); document.body.classList.remove('kiosk'); if (document.fullscreenElement) document.exitFullscreen?.(); }
   else if (k==='f'){ document.body.classList.add('kiosk'); document.documentElement.requestFullscreen?.().catch(()=>{}); }
   else if (k==='b') toggleGlass();
-  else if (k==='1') go('ambient'); else if (k==='2') go('home'); else if (k==='3') go('explore'); else if (k==='4') go('ask'); else if (k==='5') go('luv1');
+  else if (k==='o') toggleOps();
+  else if (k==='p'){ if (presence) { presenceStop(); try { localStorage.setItem('uma.presence','0'); } catch(x){} } else { presenceStart(); try { localStorage.setItem('uma.presence','1'); } catch(x){} } }
+  else if (k==='1') go('ambient'); else if (k==='2') go('home'); else if (k==='3') go('explore'); else if (k==='4') go('ask'); else if (k==='5') go('luv0');
   else if (k==='i'){ if (mode!=='ambient') go('ambient'); }
   else if (k==='m'){ voice = !voice; $('#s-voice').textContent = voice?'on':'off'; if (!voice) stopSpeech(); }
   else if (k==='v'){ const sim = e.shiftKey; if (mode!=='ask') go('ask'); setTimeout(() => listen(sim), 400); }
@@ -578,7 +652,8 @@ let orbs = () => $$('.orb');
 let sayGen = 0, curAudio = null;
 function say(t, onEnd){
   if (!voice) { onEnd && setTimeout(onEnd, 400); return; }
-  if (AI.provider === 'openai' && AI.tts && AI.tts !== 'system') return speakOpenAI(t, onEnd);
+  const pref = AI.tts || 'nova';
+  if (pref !== 'system'){ if (API.ok && API.voice) return speakRemote(t, onEnd, () => fetch(API_BASE + '/speak', { method:'POST', headers:{ 'content-type':'application/json' }, body: JSON.stringify({ text: t, voice: pref }) })); if (AI.provider === 'openai') return speakRemote(t, onEnd, () => fetch('https://api.openai.com/v1/audio/speech', { method:'POST', headers:{ 'content-type':'application/json', 'authorization':'Bearer ' + AI.key }, body: JSON.stringify({ model:'gpt-4o-mini-tts', voice: pref, input: t, response_format:'mp3', instructions:'A warm, calm, unhurried host in a quiet office lobby. Clear and concise.' }) })); }
   speakSystem(t, onEnd);
 }
 function speakSystem(t, onEnd){
@@ -594,13 +669,11 @@ function speakSystem(t, onEnd){
     speechSynthesis.speak(u);
   } catch(e){ onEnd && onEnd(); }
 }
-async function speakOpenAI(t, onEnd){
+async function speakRemote(t, onEnd, getAudio){
   const g = ++sayGen; const ctrl = new AbortController(); const to = setTimeout(() => ctrl.abort(), 9000);
   try {
     try { speechSynthesis.cancel(); } catch(e){}
-    const r = await fetch('https://api.openai.com/v1/audio/speech', { method:'POST', signal:ctrl.signal, headers:{ 'content-type':'application/json', 'authorization':'Bearer ' + AI.key },
-      body: JSON.stringify({ model:'gpt-4o-mini-tts', voice: AI.tts, input: t, response_format:'mp3', instructions:'A warm, calm, unhurried host in a quiet office lobby. Clear and concise.' }) });
-    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const r = await getAudio(); if (!r.ok) throw new Error('HTTP ' + r.status);
     const blob = await r.blob(); if (g !== sayGen) return;
     const url = URL.createObjectURL(blob), a = new Audio(url); curAudio = a;
     a.onplay = () => orbs().forEach(o => o.classList.add('talk'));
@@ -623,7 +696,9 @@ function slerp(a,b,t){ const d=Math.max(-1,Math.min(1,a[0]*b[0]+a[1]*b[1]+a[2]*b
 function proj(v, R, cx, cy){ const c=Math.cos(rot), s=Math.sin(rot), x=v[0]*c - v[2]*s, z=v[0]*s + v[2]*c, y=v[1]; const tilt=-.35, y2=y*Math.cos(tilt)-z*Math.sin(tilt), z2=y*Math.sin(tilt)+z*Math.cos(tilt); return [cx+x*R, cy-y2*R, z2]; }
 function sizeGlobe(){ const r=gc.getBoundingClientRect(); W=gc.width=r.width*devicePixelRatio; H=gc.height=r.height*devicePixelRatio; }
 new ResizeObserver(sizeGlobe).observe(gc); sizeGlobe();
-function newArc(){ const a=cityList[Math.random()*cityList.length|0]; let b=cityList[Math.random()*cityList.length|0]; if (b===a) return; arcs.push({a,b,t:0,life:0}); if (arcs.length>7) arcs.shift(); addEvent(a.n,b.n); }
+const COUNTRY = {"United States":[39,-98],"USA":[39,-98],"Kuwait":[29.4,47.9],"KWT":[29.4,47.9],"Ireland":[53.3,-6.3],"Philippines":[14.6,121],"Jordan":[31.9,35.9],"United Kingdom":[51.5,-.1],"Pakistan":[33.7,73],"Bangladesh":[23.8,90.4],"Canada":[45.4,-75.7],"Germany":[52.5,13.4],"France":[48.9,2.3],"Spain":[40.4,-3.7],"Australia":[-33.9,151.2],"India":[19.1,72.9],"United Arab Emirates":[25.2,55.3],"Netherlands":[52.4,4.9],"Singapore":[1.35,103.8],"Brazil":[-23.5,-46.6],"Portugal":[38.7,-9.1],"Turkey":[39.9,32.9],"Georgia":[41.7,44.8],"Israel":[32.1,34.8],"Italy":[41.9,12.5],"Poland":[52.2,21],"Ukraine":[50.45,30.5],"Mexico":[19.4,-99.1],"Japan":[35.7,139.7],"Switzerland":[47.4,8.5],"Sweden":[59.3,18.1],"Denmark":[55.7,12.6],"Norway":[59.9,10.8],"Nigeria":[6.5,3.4],"South Africa":[-26.2,28],"Egypt":[30,31.2],"Saudi Arabia":[24.7,46.7],"New Zealand":[-36.8,174.8],"Argentina":[-34.6,-58.4],"Colombia":[4.7,-74.1],"Vietnam":[21,105.8],"Indonesia":[-6.2,106.8],"Hong Kong":[22.3,114.2],"South Korea":[37.6,127],"Austria":[48.2,16.4],"Belgium":[50.8,4.4],"Czechia":[50.1,14.4],"Romania":[44.4,26.1],"Greece":[38,23.7],"Finland":[60.2,24.9],"Estonia":[59.4,24.7],"Lithuania":[54.7,25.3],"Latvia":[56.9,24.1],"Serbia":[44.8,20.5],"Croatia":[45.8,16],"Hungary":[47.5,19]};
+const LISBON = {n:'Lisbon', v: ll(38.72, -9.14)};
+function newArc(){ const post = livePosts[Math.random()*livePosts.length|0]; const c = post && COUNTRY[post[1]]; if (!c) return; const a = {n: post[1], v: ll(c[0], c[1])}; arcs.push({a, b: LISBON, t:0, life:0}); if (arcs.length>7) arcs.shift(); addEvent(a.n, 'Lisbon'); }
 function drawGlobe(now){
   const dt=Math.min(50, now-t0); t0=now; rot += dt*0.00009;
   for (const k in globeCur) globeCur[k] += (globeTarget[k]-globeCur[k])*.04;
@@ -690,24 +765,84 @@ let si = 0;
 function spotCycle(){ if (mode!=='ambient') return; const v=$('#v-ambient'), it=spots[si++ % spots.length], kk=$('#spot-k'); kk.textContent=it.k; kk.classList.toggle('luvk', !!it.luv); $('#spot-h').textContent=it.h; $('#spot-d').textContent=it.d; v.classList.add('spot'); setTimeout(()=>v.classList.remove('spot'), 9000); }
 setTimeout(spotCycle, 11000); setInterval(spotCycle, 24000);
 
+/* ---------------- live data files (refreshed by the scheduled Upwork task) ---------------- */
+(async () => {
+  try {
+    const r = await fetch('live.json', { cache:'no-store' }); if (!r.ok) throw 0; const d = await r.json();
+    if (Array.isArray(d.talent) && d.talent.length) talent = d.talent;
+    if (Array.isArray(d.building) && d.building.length) building = d.building;
+    if (Array.isArray(d.surprises) && d.surprises.length) surprises = d.surprises;
+    if (Array.isArray(d.livePosts) && d.livePosts.length) livePosts = d.livePosts;
+    faqs[0].card = building[2] || building[0]; faqs[1].card = talent[0]; faqs[2].card = building[1] || building[0]; faqs[3].card = building[0]; faqs[4].card = talent[2] || talent[0];
+    if (d.updatedLabel) $('#live').lastChild.textContent = 'Posted on Upwork · ' + d.updatedLabel;
+  } catch(e){}
+  try { const r = await fetch('people.json', { cache:'no-store' }); if (!r.ok) throw 0; const d = await r.json(); if (Array.isArray(d) && d.length){ people = d; renderPeople(); renderWhoList(); } } catch(e){}
+})();
+
 /* ---------------- explore ---------------- */
-const topics = {talent:{label:'Find great talent', items:talent}, building:{label:"What businesses are building", items:building}, stories:{label:'Success stories', items:stories}, surprise:{label:'Surprise me', items:surprises}};
+const topics = () => ({talent:{label:'Find great talent', items:talent}, building:{label:"What businesses are building", items:building}, stories:{label:'Success stories', items:stories}, surprise:{label:'Surprise me', items:surprises}});
 $$('[data-topic]').forEach(b => b.onclick = () => playStory(b.dataset.topic));
 function art(seed){ const h1 = 110+((seed*47)%40), h2=140+((seed*31)%60); return `<div class="art" style="background:radial-gradient(70% 80% at ${20+(seed*37)%60}% ${10+(seed*53)%50}%, hsl(${h1} 80% 35% / .9), transparent 70%), radial-gradient(50% 60% at ${60+(seed*17)%30}% 90%, hsl(${h2} 70% 30% / .8), transparent 70%)"></div>`; }
 const qrBlock = it => it.u ? `<div class="qr"><div class="code" data-qr="${it.u}"></div><span>Scan to open this ${it.n ? 'profile' : it.story ? 'story' : 'posting'} on Upwork</span></div>` : '';
 function drawQRs(root){ root.querySelectorAll('[data-qr]').forEach(el => { if (el.dataset.done) return; el.dataset.done = 1; if (!window.QRCode){ el.closest('.qr')?.remove(); return; } try { new QRCode(el, { text: el.dataset.qr, width: 128, height: 128, colorDark: '#0b100c', colorLight: '#ffffff', correctLevel: QRCode.CorrectLevel.M }); } catch(e){ el.closest('.qr')?.remove(); } }); }
 function renderItem(it, i){
+  if (it.say) return `<div class="card">${art(i+11)}<div class="kicker">Uma</div><div class="title" style="font-size:6.2cqw">${esc(it.say)}</div></div>`;
   if (it.n) return `<div class="card">${art(i+3)}${it.k ? `<div class="kicker">${it.k}</div>` : ''}<div class="person"><div class="avatar">${it.i}</div><div><div class="name">${it.n}</div><div class="meta">${it.m}</div></div></div><div class="tags">${it.t.map(x=>`<span class="tag">${x}</span>`).join('')}</div><p>${it.p}</p>${qrBlock(it)}</div>`;
   return `<div class="card">${art(i+7)}<div class="kicker">${it.k}</div><div class="title">${it.t}</div><p>${it.p}</p><div class="stats">${it.s.map(([b,l])=>`<div class="stat"><b>${b}</b><span>${l}</span></div>`).join('')}</div>${qrBlock(it)}</div>`;
 }
-function playStory(topic){
-  const {label, items} = topics[topic]; go('story'); $('#story-label').textContent = label;
+let talentIndex = [];
+(async () => { try { const r = await fetch('talent-index.json', { cache:'no-store' }); if (r.ok){ const d = await r.json(); if (Array.isArray(d) && d.length) talentIndex = d; } } catch(e){} })();
+const CATS = {web:['website','web','site','landing','page','redesign','wordpress','squarespace','framer','ux','ui'], webflow:['webflow'], shopify:['shopify','store','ecommerce','e-commerce','shop','storefront','sell','online store','products'], mobile:['app','mobile','ios','android','iphone','flutter','react native'], brand:['brand','branding','logo','identity','packaging','label','rebrand'], ml:['ai','agent','chatbot','bot','machine learning','llm','automation','automate','rag','phone agent','voice agent','model'], data:['data','dashboard','analytics','excel','power bi','sql','report','spreadsheet','kpi'], video:['video','reel','reels','youtube','tiktok','edit','editing','ads','commercial','footage'], copy:['copy','copywriter','write','writing','blog','email','newsletter','content','words','tagline','story'], social:['social','instagram','facebook','linkedin','community','posts','followers'], bookkeeping:['bookkeeping','bookkeeper','books','accounting','invoices','quickbooks','xero','taxes','payroll'], voice:['voice','singer','sing','jingle','narration','voiceover','podcast','music'], translation:['translate','translation','portuguese','italian','french','subtitles']};
+const tokens = t => t.toLowerCase().replace(/[^a-z0-9À-ɏ ]/g, ' ').split(/\s+/).filter(w => w.length > 2);
+function matchTalent(need, n = 3){
+  const words = tokens(need), low = ' ' + need.toLowerCase() + ' ';
+  const catHits = {}; let maxHits = 0; for (const [cat, keys] of Object.entries(CATS)){ const h = keys.filter(k => low.includes(' ' + k) || low.includes(k + ' ')).length; if (h){ catHits[cat] = h; maxHits = Math.max(maxHits, h); } }
+  const pool = talentIndex.length ? talentIndex : [];
+  const scored = pool.map(f => { let sc = 0; if (catHits[f.cat]) sc += 4 * (catHits[f.cat] / maxHits); const hay = (f.t + ' ' + f.k.join(' ')).toLowerCase(); for (const w of words) if (hay.includes(w)) sc += 1; sc += (f.j || 0) / 100; if (/plus/i.test(f.b)) sc += .6; if (/vetted/i.test(f.b)) sc += .8; if (/\$(\d+)K/.test(f.e || '')) sc += Math.min(1, parseInt(RegExp.$1, 10) / 300); return [sc, f]; }).filter(([sc]) => sc > 0).sort((a, b) => b[0] - a[0]);
+  const seen = new Set(); const picks = [];
+  for (const [, f] of scored){ if (seen.has(f.n)) continue; seen.add(f.n); picks.push(f); if (picks.length >= n) break; }
+  return picks.map(f => ({ k:'Live on Upwork · matched for you', n:f.n, u:f.u, i:f.n.split(' ').map(x=>x[0]).slice(0,2).join(''), m:`${f.t} · ${f.c} · ${f.r}`, t:f.k.slice(0, 3), p:`${f.b || 'Freelancer'}. ${f.j}% job success${f.jobs ? `, ${f.jobs} contracts` : ''}${f.e ? `, ${f.e} earned on Upwork` : ''}.` }));
+}
+function pickBy(list, need){ const words = tokens(need); let best = null, bs = 0; for (const it of list){ const hay = ((it.t || '') + ' ' + (it.p || '') + ' ' + (it.k || '') + ' ' + ((it.s || []).flat().join(' '))).toLowerCase(); let sc = 0; for (const w of words) if (hay.includes(w)) sc++; if (sc > bs){ bs = sc; best = it; } } return best; }
+const postCards = () => livePosts.map(([iso, country, what, props]) => ({ k:'Live on Upwork · posted ' + new Date(iso).toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit', timeZone:'Europe/Lisbon'}) + ' Lisbon', t: what, p:`A client in ${country} posted this today. ${props} proposal${props === 1 ? '' : 's'} in so far.`, s:[[String(props), 'proposals in'], [country, 'client']] }));
+let capPath = null;
+const CAP = { talent:{ h:"What do you need?", sub:"Say what you're building. Uma finds real people for it.", chips:["A designer for my ice cream brand's website", "Someone to build an AI phone agent for reservations", "A Shopify developer to relaunch our store", "A video editor for short-form ads", "A bookkeeper who knows QuickBooks"] }, challenge:{ h:"What's the challenge?", sub:"Describe it in a sentence. Uma answers with a story and a live posting.", chips:["We need more leads without hiring a sales team", "Our support backlog keeps growing", "We want to launch an app in three months", "Our brand looks dated next to competitors"] } };
+function startCapture(path){ capPath = path; const c = CAP[path]; $('#cap-h').textContent = c.h; $('#cap-sub').textContent = c.sub; $('#cap-chips').innerHTML = c.chips.map(t => `<button class="chip" data-cap="${esc(t)}">${esc(t)}</button>`).join(''); $('#cap-heard').textContent = ''; $('#cap-state').textContent = 'Tap to talk'; $('#cap-mic').classList.remove('live'); go('capture'); say(path === 'talent' ? 'Tell me what you need.' : 'Tell me the challenge.'); }
+$$('[data-path]').forEach(b => b.onclick = () => startCapture(b.dataset.path));
+$('#cap-chips').onclick = e => { const b = e.target.closest('[data-cap]'); if (b) runCapture(b.dataset.cap); };
+$('#cap-form').onsubmit = e => { e.preventDefault(); const v = $('#cap-input').value.trim(); if (v){ $('#cap-input').value = ''; runCapture(v); } };
+$('#cap-mic').onclick = () => {
+  const mic = $('#cap-mic'), heard = $('#cap-heard'), st = $('#cap-state');
+  if (mic.classList.contains('live')){ stopReal(); mic.classList.remove('live'); st.textContent = 'Tap to talk'; return; }
+  stopSpeech();
+  const ok = listenReal((text, err) => { mic.classList.remove('live'); if (text) runCapture(text); else st.textContent = err === 'not-allowed' ? 'Microphone blocked. Tap an example instead.' : 'Didn’t catch that. Try again or tap an example.'; }, all => { heard.textContent = all; st.textContent = 'Listening…'; });
+  if (ok){ mic.classList.add('live'); st.textContent = 'Listening… speak now'; } else st.textContent = 'No microphone here. Tap an example instead.';
+};
+async function runCapture(need){
+  track('prompt', (capPath === 'talent' ? 'talent: ' : 'challenge: ') + need.slice(0, 70));
+  if (capPath === 'talent'){
+    const picks = matchTalent(need, 3);
+    if (!picks.length){ $('#cap-state').textContent = 'Nothing in the index matches that yet. Try other words or tap an example.'; say("I didn't find a match for that. Try other words."); return; }
+    playItems('Talent for: ' + need.slice(0, 40), picks, `Here are three people I'd start with for ${need}.`);
+  } else {
+    $('#cap-state').textContent = 'Uma is thinking…'; $('#cap-heard').textContent = need; orbs().forEach(o => o.classList.add('talk'));
+    const canned = 'Businesses bring this to Upwork every day: post a clear brief, hire a specialist or a small team, and keep the work moving while you watch results. Here is a company that did, and a posting like it from today.';
+    const a = (await askModel([{ role:'user', content:`A visitor in the Lisbon booth says their business challenge is: "${need}". In two short spoken sentences, say how they could tackle it with independent talent on Upwork.` }])) || canned;
+    if (mode !== 'capture') return;
+    const story = pickBy(stories, need) || stories[Math.random()*stories.length|0];
+    const post = pickBy(building.concat(postCards()), need) || building[Math.random()*building.length|0];
+    playItems('Challenge: ' + need.slice(0, 40), [{ say:a }, story, post], null);
+  }
+}
+function playStory(topic){ const {label, items} = topics()[topic]; playItems(label, items, null); }
+function playItems(label, items, intro){
+  go('story'); $('#story-label').textContent = label;
   const per = 10000, total = items.length*per, start = Date.now(); let idx = -1;
   $('#story-dots').innerHTML = items.map(()=> '<i></i>').join('');
   storyT = setInterval(() => {
     const el = Date.now()-start, i = Math.min(items.length-1, Math.floor(el/per)), left = Math.max(0, Math.ceil((total-el)/1000));
     $('#ringfg').style.strokeDashoffset = 100.5*(1-Math.min(1,el/total)); $('#ringtxt').textContent = left;
-    if (i !== idx){ idx = i; const slot=$('#story-slot'); slot.innerHTML = renderItem(items[i], i); drawQRs(slot); slot.firstChild.animate([{opacity:0,transform:'translateY(14px) scale(.98)'},{opacity:1,transform:'none'}],{duration:600,easing:'cubic-bezier(.2,.9,.3,1)'}); $$('#story-dots i').forEach((d,k)=>d.classList.toggle('on',k===i)); const it = items[i]; say(it.n ? `${it.n}. ${it.m.split('·')[0]}. ${it.p}` : `${it.t}. ${it.p}`); $('#story-voice').style.visibility='visible'; }
+    if (i !== idx){ idx = i; const slot=$('#story-slot'); slot.innerHTML = renderItem(items[i], i); drawQRs(slot); slot.firstChild.animate([{opacity:0,transform:'translateY(14px) scale(.98)'},{opacity:1,transform:'none'}],{duration:600,easing:'cubic-bezier(.2,.9,.3,1)'}); $$('#story-dots i').forEach((d,k)=>d.classList.toggle('on',k===i)); const it = items[i]; say(it.say ? it.say : it.n ? `${i === 0 && intro ? intro + ' ' : ''}${it.n}. ${it.m.split('·')[0]}. ${it.p}` : `${it.t}. ${it.p}`); $('#story-voice').style.visibility='visible'; }
     if (el >= total){ clearInterval(storyT); $('#story-slot').innerHTML = `<div class="card"><div class="title">Want to explore something else?</div><p>Or just walk away. Uma returns to the Pulse on her own.</p></div>`; $('#story-voice').style.visibility='hidden'; say("Want to explore something else?"); }
   }, 150);
 }
@@ -742,7 +877,7 @@ async function answer(q){
   const um = document.createElement('div'); um.className='uma'; um.innerHTML = `<i class="orb talk"></i><div class="txt"><span class="caret"></span></div>`; thread.appendChild(um); thread.scrollTop = 1e9;
   const ql = q.toLowerCase();
   const hit = faqs.find(f => f.q.toLowerCase()===ql) || faqs.find(f => ql.split(/\W+/).filter(w=>w.length>3).some(w => f.q.toLowerCase().includes(w)));
-  askHist.push({role:'user', content:q});
+  askHist.push({role:'user', content:q}); track('prompt', q.slice(0, 80));
   let a = await askModel(askHist.slice(-6));
   if (!a) a = hit ? hit.a : "I can help with hiring, finding work, pricing, and how Upwork works. For anything about your own account, the team at reception can set you up. Want to try one of the suggested questions?";
   askHist.push({role:'assistant', content:a});
@@ -762,45 +897,82 @@ async function answer(q){
 }
 
 /* ---------------- LUV ---------------- */
-let luv = {who:null, what:'', value:null, rec:0, transcript:''}, stream=null, recT=null, recS=0, waveT=null;
-function renderPeople(q=''){ $('#people').innerHTML = people.filter(([p])=>p.toLowerCase().includes(q.toLowerCase())).slice(0,6).map(([p,r])=>`<button class="row" data-p="${p}" aria-pressed="${luv.who===p}"><span class="avatar">${p.split(' ').map(x=>x[0]).join('')}</span><span><div class="nm">${p}</div><div class="rl">${r}</div></span></button>`).join(''); }
+let luv = {from:null, who:null, what:'', value:null, rec:0, transcript:'', video:null}, stream=null, recT=null, recS=0, waveT=null, recorder=null, chunks=[];
+const personOf = e => Array.isArray(e) ? {name:e[0], role:e[1]} : e;
+function renderPeople(q=''){ $('#people').innerHTML = people.map(personOf).filter(p => p.name !== luv.from).filter(p => (p.name + ' ' + (p.role||'')).toLowerCase().includes(q.toLowerCase())).slice(0, 14).map(p => `<button class="row" data-p="${esc(p.name)}" aria-pressed="${luv.who===p.name}"><span class="avatar">${p.photo ? `<img src="${esc(p.photo)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">` : ''}${p.name.split(' ').map(x=>x[0]).slice(0,2).join('')}</span><span><div class="nm">${esc(p.name)}</div><div class="rl">${esc(p.role||'')}</div></span></button>`).join(''); }
 renderPeople();
 $('#who').oninput = e => renderPeople(e.target.value);
 $('#people').onclick = e => { const b = e.target.closest('[data-p]'); if (!b) return; luv.who = b.dataset.p; renderPeople($('#who').value); $('#luv1next').disabled = false; };
 $('#luv1next').onclick = () => { $('#luv-name').textContent = luv.who.split(' ')[0]; go('luv2'); say(`What did ${luv.who.split(' ')[0]} do?`); };
+/* nominator */
+const personCard = p => `<span class="avatar">${p.photo ? `<img src="${esc(p.photo)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">` : ''}${p.name.split(' ').map(x=>x[0]).slice(0,2).join('')}</span><span><div class="nm">${esc(p.name)}</div><div class="rl">${esc(p.role||'')}</div></span>`;
+function renderWhoList(){ const el = $('#who-list'); if (el) el.innerHTML = people.map(personOf).map(p => `<button class="row" data-w="${esc(p.name)}">${personCard(p)}</button>`).join(''); }
+renderWhoList();
+function setFrom(name){ luv.from = name; renderPeople(); go('luv1'); say(`Hi ${name.split(' ')[0]}. Who deserves some LUV?`); }
+$('#who-list').onclick = e => { const b = e.target.closest('[data-w]'); if (b) setFrom(b.dataset.w); };
+function matchPerson(text){ const t = text.toLowerCase().replace(/[^a-zÀ-ɏ ]/g, ' ').split(/\s+/).filter(Boolean); let best = null, bs = 0; for (const p of people.map(personOf)){ const parts = p.name.toLowerCase().split(/\s+/); let sc = 0; parts.forEach((part, i) => { if (t.includes(part)) sc += i === 0 ? 2 : 1; else if (t.some(w => w.length > 3 && (part.startsWith(w) || w.startsWith(part)))) sc += 0.6; }); if (sc > bs){ bs = sc; best = p; } } return bs >= 1 ? best : null; }
+$('#who-mic').onclick = () => {
+  const mic = $('#who-mic'), heard = $('#who-heard'), st = $('#who-state');
+  if (mic.classList.contains('live')){ stopReal(); mic.classList.remove('live'); st.textContent = 'Tap to say your name'; return; }
+  $('#who-confirm').hidden = true;
+  const ok = listenReal((text, err) => { mic.classList.remove('live'); if (!text){ st.textContent = err === 'not-allowed' ? 'Microphone blocked. Tap your name below.' : 'Didn’t catch that. Try again or tap your name.'; return; } const p = matchPerson(text); if (p){ $('#who-match').innerHTML = personCard(p); $('#who-confirm').hidden = false; $('#who-yes').onclick = () => setFrom(p.name); $('#who-no').onclick = () => { $('#who-confirm').hidden = true; st.textContent = 'Tap your name below, or try again.'; }; st.textContent = 'Is this you?'; say(`${p.name.split(' ')[0]}, is that you?`); } else st.textContent = 'I couldn’t find that name. Tap it below.'; }, all => { heard.textContent = all; st.textContent = 'Listening…'; });
+  if (ok){ mic.classList.add('live'); st.textContent = 'Listening… say your name'; } else st.textContent = 'No microphone here. Tap your name below.';
+};
 $('#values').innerHTML = values.map(v=>`<button class="chip" data-v="${v}" aria-pressed="false">${v}</button>`).join('');
 $('#values').onclick = e => { const b = e.target.closest('[data-v]'); if (!b) return; luv.value = b.dataset.v; $$('#values .chip').forEach(c=>c.setAttribute('aria-pressed', c===b)); check2(); };
 $('#what').oninput = e => { luv.what = e.target.value; check2(); };
 function check2(){ $('#luv2next').disabled = !(luv.what.trim() && luv.value); }
 $('#luv2next').onclick = () => go('luv3');
 $('#wave').innerHTML = Array.from({length:30},()=>'<i></i>').join('');
-async function startCam(){ try { stream = await navigator.mediaDevices.getUserMedia({video:{facingMode:'user'}, audio:false}); const v=$('#video'); v.srcObject = stream; v.hidden=false; $('#sim').hidden = true; } catch(e){ $('#video').hidden=true; $('#sim').hidden=false; } }
+async function startCam(){ const v=$('#video'); if (v.src){ try { URL.revokeObjectURL(v.src); } catch(e){} v.removeAttribute('src'); v.loop = false; } try { stream = await navigator.mediaDevices.getUserMedia({video:{facingMode:'user'}, audio:true}); } catch(e){ try { stream = await navigator.mediaDevices.getUserMedia({video:{facingMode:'user'}, audio:false}); } catch(e2){ stream = null; } } if (stream){ v.srcObject = stream; v.muted = true; v.hidden=false; $('#sim').hidden = true; } else { v.hidden=true; $('#sim').hidden=false; } }
 function stopCam(){ if (stream){ stream.getTracks().forEach(t=>t.stop()); stream=null; } $('#video').hidden=true; $('#sim').hidden=false; }
 $('#recbtn').onclick = () => {
   const live = $('#recbtn').classList.toggle('live'); $('#cam').classList.toggle('live', live);
   if (live){ recS=0; recT = setInterval(()=>{ recS++; $('#timer').textContent='00:'+String(recS).padStart(2,'0'); if (recS>=30) $('#recbtn').click(); }, 1000);
     waveT = setInterval(()=>{ $$('#wave i').forEach(b => b.style.height = (10+Math.random()*90)+'%'); }, 120);
-    luv.transcript = '';
+    luv.transcript = ''; luv.video = null; chunks = [];
+    if (stream && window.MediaRecorder){ try { const mime = ['video/webm;codecs=vp9,opus','video/webm;codecs=vp8,opus','video/webm','video/mp4'].find(m => MediaRecorder.isTypeSupported(m)); recorder = new MediaRecorder(stream, mime ? { mimeType: mime, videoBitsPerSecond: 1200000 } : undefined); recorder.ondataavailable = e => { if (e.data && e.data.size) chunks.push(e.data); }; recorder.onstop = () => { luv.video = new Blob(chunks, { type: recorder.mimeType || 'video/webm' }); const v = $('#video'); v.srcObject = null; v.src = URL.createObjectURL(luv.video); v.loop = true; v.muted = true; v.play().catch(()=>{}); $('#timer').textContent = (luv.video.size/1048576).toFixed(1) + ' MB'; }; recorder.start(250); } catch(e){ recorder = null; } }
     const started = listenReal((t) => { if (t) luv.transcript = t; }, (all, fin) => { luv.transcript = fin || all; $('#transcript').innerHTML = '<b>Live transcript</b> · ' + esc(all); }, {continuous:true});
     $('#transcript').innerHTML = started ? '<b>Live transcript</b> · listening…' : ''; }
-  else { clearInterval(recT); clearInterval(waveT); stopReal(); $$('#wave i').forEach(b => b.style.height='15%'); luv.rec = recS; $('#transcript').innerHTML = luv.transcript ? '<b>Transcript</b> · ' + esc(luv.transcript) : ''; }
+  else { clearInterval(recT); clearInterval(waveT); stopReal(); if (recorder && recorder.state !== 'inactive'){ try { recorder.stop(); } catch(e){} } $$('#wave i').forEach(b => b.style.height='15%'); luv.rec = recS; $('#transcript').innerHTML = luv.transcript ? '<b>Transcript</b> · ' + esc(luv.transcript) : ''; }
 };
+const seenLuv = new Set();
+function relTime(ts){ const m = Math.round((Date.now() - ts) / 60000); if (m < 1) return 'just now'; if (m < 60) return m + ' min ago'; const h = Math.round(m / 60); if (h < 24) return h + ' h ago'; const d = Math.round(h / 24); return d === 1 ? 'yesterday' : d + ' days ago'; }
+function luvSpot(it){ return {k:'Living Upwork Values · ' + relTime(it.ts), h: it.headline || `${(it.to || '').split(' ')[0]} got LUV for “${it.value}”.`, d:`${(it.what || '').slice(0, 96)} · tagged “${it.value}”`, luv:true, id: it.id}; }
+async function pullLuvFeed(){ if (!API.ok) return; try { const r = await fetch(API_BASE + '/luv/recent?limit=5', { cache:'no-store' }); const j = await r.json(); for (const it of (j.items || []).slice().reverse()){ if (seenLuv.has(it.id)) continue; seenLuv.add(it.id); spots.unshift(luvSpot(it)); } if (spots.length > 16) spots.length = 16; } catch(e){} }
+function renderPosted(lines){ $('#posted').innerHTML = lines.map(([ok, t]) => `<div><b>${ok ? '✓' : '→'}</b> ${t}</div>`).join(''); }
 async function finishLuv(){
-  clearInterval(recT); clearInterval(waveT); stopReal();
+  clearInterval(recT); clearInterval(waveT); stopReal(); if (recorder && recorder.state !== 'inactive'){ try { recorder.stop(); } catch(e){} }
+  await new Promise(r => setTimeout(r, 350));
   const snap = {...luv};
-  $('#luv-summary').textContent = `${snap.who} · ${snap.value}${snap.rec?` · ${snap.rec}s video`:''}`;
-  const posted = $('#posted').children; posted[1].style.display = snap.rec ? '' : 'none'; posted[2].style.display = snap.transcript ? '' : 'none';
+  $('#luv-summary').textContent = `${snap.from ? snap.from.split(' ')[0] + ' → ' : ''}${snap.who} · ${snap.value}${snap.rec ? ` · ${snap.rec}s video` : ''}`;
+  renderPosted([[true, API.ok ? 'Sending to the booth backend…' : 'Recorded in this browser (backend offline)']]);
   go('luv4');
   const first = snap.who.split(' ')[0];
   let h = `${first} got LUV for “${snap.value}”.`;
-  const ai = await askModel([{role:'user', content:`Teammate: ${snap.who}. Value: ${snap.value}. What they did: ${snap.what}${snap.transcript ? ` Spoken message: ${snap.transcript}` : ''}`}],
-    'You write one short recognition headline for an office screen: at most 12 words, third person, present tense, warm, no quotes, no emoji, no hashtags. Output only the headline.');
+  const ai = await askModel([{role:'user', content:`Teammate: ${snap.who}. Value: ${snap.value}. What they did: ${snap.what}${snap.transcript ? ` Spoken message: ${snap.transcript}` : ''}`}], 'headline');
   if (ai) h = ai.split('\n')[0].replace(/^["“]+|["”.]+$/g, '').trim() || h;
-  spots.unshift({k:'Living Upwork Values · just now', h, d:`${snap.what.length>96 ? snap.what.slice(0,96)+'…' : snap.what} · tagged “${snap.value}”`, luv:true});
+  const lines = []; let id = null, uploaded = null;
+  if (API.ok){
+    try {
+      const r = await fetch(API_BASE + '/luv', { method:'POST', headers:{ 'content-type':'application/json' }, body: JSON.stringify({ from: snap.from, to: snap.who, what: snap.what, value: snap.value, transcript: snap.transcript, headline: h }) });
+      const j = await r.json(); if (!r.ok) throw new Error(j.error || r.status); id = j.id; seenLuv.add(id);
+      lines.push([true, 'Recognition stored in the booth backend · shared feed updated']);
+      if (snap.video){ try { const u = await fetch(API_BASE + '/luv/' + id + '/video', { method:'PUT', headers:{ 'content-type': snap.video.type || 'video/webm' }, body: snap.video }); const uj = await u.json(); if (!u.ok) throw new Error(uj.error || u.status); uploaded = uj.bytes; lines.push([true, `Video uploaded · ${(uploaded/1048576).toFixed(1)} MB · kept 30 days`]); } catch(e){ lines.push([false, 'Video upload failed: ' + String(e.message).slice(0, 60)]); } }
+      lines.push([API.slack, API.slack ? 'Posted to Slack' : 'Slack post · add a webhook to the booth API to enable']);
+    } catch(e){ lines.push([false, 'Backend rejected the send: ' + String(e.message).slice(0, 60) + ' · kept in this browser']); }
+  } else {
+    lines.push([true, 'Recorded in this browser (backend offline)']);
+    if (snap.video) lines.push([true, `Video recorded · ${(snap.video.size/1048576).toFixed(1)} MB · kept locally`]);
+  }
+  if (snap.transcript) lines.push([true, 'Transcript attached']);
+  lines.push([false, 'Haystack awards log · needs Upwork’s intranet API']);
+  renderPosted(lines);
+  spots.unshift({k:'Living Upwork Values · just now', h, d:`${snap.what.length>96 ? snap.what.slice(0,96)+'…' : snap.what} · tagged “${snap.value}”`, luv:true, id});
   if (mode === 'ambient'){ si = 0; setTimeout(spotCycle, 1500); } else luvPending = true;
 }
 $('#sendluv').onclick = finishLuv; $('#skiprec').onclick = () => { luv.rec=0; finishLuv(); };
-function resetLuv(){ luv = {who:null, what:'', value:null, rec:0, transcript:''}; $('#who').value=''; $('#what').value=''; renderPeople(); $('#luv1next').disabled = true; $('#luv2next').disabled = true; $$('#values .chip').forEach(c=>c.setAttribute('aria-pressed','false')); clearInterval(recT); clearInterval(waveT); $('#recbtn').classList.remove('live'); $('#cam').classList.remove('live'); $('#timer').textContent='00:00'; $('#transcript').innerHTML=''; stopCam(); }
+function resetLuv(){ luv = {from:null, who:null, what:'', value:null, rec:0, transcript:'', video:null}; $('#who-confirm').hidden = true; $('#who-heard').textContent=''; $('#who-state').textContent='Tap to say your name'; $('#who-mic').classList.remove('live'); renderWhoList(); chunks = []; if (recorder && recorder.state !== 'inactive'){ try { recorder.stop(); } catch(e){} } recorder = null; $('#who').value=''; $('#what').value=''; renderPeople(); $('#luv1next').disabled = true; $('#luv2next').disabled = true; $$('#values .chip').forEach(c=>c.setAttribute('aria-pressed','false')); clearInterval(recT); clearInterval(waveT); $('#recbtn').classList.remove('live'); $('#cam').classList.remove('live'); $('#timer').textContent='00:00'; $('#transcript').innerHTML=''; stopCam(); }
 
 /* ---------------- real voice in (browser speech recognition) ---------------- */
 const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -828,18 +1000,24 @@ Answer in at most two short spoken sentences. Plain words, no lists, no markdown
 Scope: Upwork, hiring independent talent, freelancing, the marketplace, work trends, the Lisbon office. If asked something outside that, say in one sentence what you can help with instead. Never ask for or repeat personal data. Reply in the language the person used.
 Facts from Upwork's own publications you may use: the In-Demand Skills 2026 report says demand for AI skills more than doubled year over year, up 109 percent, with AI video generation and editing up 329 percent, AI integration up 178 percent and AI data annotation up 154 percent; full-stack development, virtual assistance, data analytics and graphic design remain the most in-demand skills; upwork.com reports clients rate talent 4.8 out of 5 across 2.9 million reviews and 95 percent rehire. Project Catalog is the fastest way to start fixed-scope work. Do not invent other statistics.
 Real examples live on Upwork today, October 2 2026, that you may mention: a software consultancy in Ireland hiring a senior agentic-AI engineer for Google Cloud at 45 to 50 dollars an hour with 53 proposals in; a golf app going from MVP to production with a React Native team; a 50-year-old US construction firm rebuilding its website on Webflow. Talent you may mention without full names: a Top Rated Plus, Expert-Vetted brand identity designer in Portugal at 70 dollars an hour; a Top Rated Plus web designer in Portugal with 600 thousand dollars earned; a Top Rated Plus AI engineer who ships agents and RAG pipelines at 40 dollars an hour.`;
-function loadAI(){ try { AI.key = localStorage.getItem('uma.key') || ''; AI.model = localStorage.getItem('uma.model') || ''; AI.tts = localStorage.getItem('uma.tts') || 'system'; } catch(e){} AI.tts = AI.tts || 'system'; AI.provider = !AI.key ? null : (AI.key.startsWith('sk-ant-') ? 'anthropic' : 'openai'); $('#aimodel').value = AI.model; $('#aitts').value = AI.tts; renderAI(); }
-function renderAI(msg, cls){ const s = $('#aistatus'); if (msg){ s.textContent = msg; s.className = 's ' + (cls || ''); } else if (!AI.provider){ s.textContent = 'Guided answers. Add your own model key to make Uma answer live; it stays in this browser.'; s.className = 's'; } else { s.textContent = `Live · ${AI.provider} · ${AI.model || (AI.provider === 'anthropic' ? 'claude-opus-5-5' : 'gpt-5.4-mini')}` + (AI.provider === 'openai' && AI.tts !== 'system' ? ' · voice ' + AI.tts : '') + (AI.lastMs ? ' · ' + (AI.lastMs / 1000).toFixed(1) + ' s' : ''); s.className = 's ok'; } $('#s-ai').textContent = AI.provider ? 'live' : 'guided'; }
+function loadAI(){ try { AI.key = localStorage.getItem('uma.key') || ''; AI.model = localStorage.getItem('uma.model') || ''; AI.tts = localStorage.getItem('uma.tts') || 'nova'; } catch(e){} AI.tts = AI.tts || 'nova'; AI.provider = !AI.key ? null : (AI.key.startsWith('sk-ant-') ? 'anthropic' : 'openai'); $('#aimodel').value = AI.model; $('#aitts').value = AI.tts; renderAI(); }
+function renderAI(msg, cls){ const s = $('#aistatus'); if (msg){ s.textContent = msg; s.className = 's ' + (cls || ''); } else if (!AI.provider && API.ok){ s.textContent = `Live · booth API · ${API.model}` + (API.voice ? ' · voice ' + (AI.tts || 'nova') : '') + (AI.lastMs ? ' · ' + (AI.lastMs / 1000).toFixed(1) + ' s' : ''); s.className = 's ok'; } else if (!AI.provider){ s.textContent = API.checked && /^https?:/.test(API_BASE) ? 'Booth API unreachable. Guided answers until it is back; your own key still works.' : 'Guided answers. Add your own model key to make Uma answer live; it stays in this browser.'; s.className = 's'; } else { s.textContent = `Live · ${AI.provider} · ${AI.model || (AI.provider === 'anthropic' ? 'claude-opus-5-5' : 'gpt-5.4-mini')}` + (AI.provider === 'openai' && AI.tts !== 'system' ? ' · voice ' + AI.tts : '') + (AI.lastMs ? ' · ' + (AI.lastMs / 1000).toFixed(1) + ' s' : ''); s.className = 's ok'; } $('#s-ai').textContent = AI.provider ? 'live · key' : API.ok ? 'live · API' : 'guided'; }
 $('#aisave').onclick = () => { const k = $('#aikey').value.trim(), m = $('#aimodel').value.trim(); try { if (k) localStorage.setItem('uma.key', k); if (k || AI.key) localStorage.setItem('uma.model', m); } catch(e){} $('#aikey').value = ''; loadAI(); };
 $('#aikey').onkeydown = $('#aimodel').onkeydown = e => { if (e.key === 'Enter') $('#aisave').click(); };
 $('#aiforget').onclick = () => { try { localStorage.removeItem('uma.key'); localStorage.removeItem('uma.model'); } catch(e){} loadAI(); };
 $('#aitts').onchange = e => { AI.tts = e.target.value; try { localStorage.setItem('uma.tts', AI.tts); } catch(x){} renderAI(); };
-loadAI();
-async function askModel(history, system = UMA_SYSTEM){
-  if (!AI.provider) return null;
-  const ctrl = new AbortController(); const to = setTimeout(() => ctrl.abort(), 20000); const t0 = performance.now();
+loadAI(); apiHealth();
+async function askModel(history, mode = 'uma'){
+  const system = mode === 'headline' ? HEADLINE_SYSTEM : UMA_SYSTEM;
+  if (!AI.provider && !API.ok) return null;
+  const ctrl = new AbortController(); const to = setTimeout(() => ctrl.abort(), 25000); const t0 = performance.now();
   try {
     let text = '';
+    if (!AI.provider && API.ok){
+      const r = await fetch(API_BASE + '/chat', { method:'POST', signal:ctrl.signal, headers:{ 'content-type':'application/json' }, body: JSON.stringify({ messages: history, mode }) });
+      const j = await r.json(); if (!r.ok) throw new Error(j.error || ('HTTP ' + r.status));
+      text = (j.text || '').trim(); if (text){ AI.lastMs = performance.now() - t0; renderAI(); } return text || null;
+    }
     if (AI.provider === 'anthropic'){
       const r = await fetch('https://api.anthropic.com/v1/messages', { method:'POST', signal:ctrl.signal,
         headers: { 'content-type':'application/json', 'x-api-key':AI.key, 'anthropic-version':'2023-06-01', 'anthropic-dangerous-direct-browser-access':'true', 'anthropic-beta':'server-side-fallback-2026-07-01' },
@@ -855,7 +1033,7 @@ async function askModel(history, system = UMA_SYSTEM){
       text = j.choices?.[0]?.message?.content || '';
     }
     text = text.trim(); if (text){ AI.lastMs = performance.now() - t0; renderAI(); } return text || null;
-  } catch(e){ const why = e.name === 'AbortError' ? 'timed out' : /Failed to fetch/i.test(e.message) ? 'the key was rejected or has no access to that model' : e.message; renderAI('Live answer failed: ' + String(why).slice(0, 90) + '. Used the canned answer.', 'err'); return null; }
+  } catch(e){ const viaApi = !AI.provider && API.ok; const why = e.name === 'AbortError' ? 'timed out' : /Failed to fetch/i.test(e.message) ? (viaApi ? 'booth API unreachable' : 'the key was rejected or has no access to that model') : e.message; renderAI((viaApi ? 'Booth API answer failed: ' : 'Live answer failed: ') + String(why).slice(0, 90) + '. Used the guided answer.', 'err'); return null; }
   finally { clearTimeout(to); }
 }
 
@@ -865,30 +1043,31 @@ const G = {
   {t:'Touch display',d:'Primary interaction surface',s:'live',n:'<b>Demo:</b> this screen, 9:16 like the Elo 5554L. <b>Booth:</b> Chrome in kiosk mode at 2160×3840 portrait.'},
   {t:'Voice (mic)',d:'Captures voice input',s:'live',n:'<b>Demo:</b> browser speech recognition. <b>Booth:</b> the Backpack’s USB mic through the same API in Android Chrome.'},
   {t:'Speakers',d:'Delivers voice responses',s:'live',n:'<b>Demo:</b> on-device speech synthesis. <b>Booth:</b> Uma’s production voice, generated once per answer and cached.'},
-  {t:'Ambient lighting',d:'LED system for visual cues',s:'sim',n:'<b>Demo:</b> the room glow and strips follow the mode. <b>Booth:</b> a WLED or DMX bridge on the booth network; one call per mode change.'},
-  {t:'Camera',d:'Required for LUV mode',s:'live',n:'<b>Demo:</b> laptop camera, mirrored preview. <b>Booth:</b> USB camera; clips encrypted at rest and deleted after upload.'}],
+  {t:'Ambient lighting',d:'LED system for visual cues',s:()=>WLED?'live':'sim',n:'<b>Demo:</b> the room glow and strips follow the mode. <b>Booth:</b> a WLED or DMX bridge on the booth network; one call per mode change.'},
+  {t:'Camera',d:'Required for LUV mode',s:'live',n:'<b>Now:</b> records the LUV video and, when presence detection is on, wakes the booth when someone walks in (frames compared in memory, never stored). <b>Booth:</b> USB camera.'}],
  app:{t:'Experience application',d:'Orchestrates the entire experience',s:'live',n:'One web app and one state machine: ambient → prompt → mode → ambient. 45 s idle return, nothing left behind for the next guest. Ships to the booth as a URL.'},
  modes:[
   {t:'The Pulse',d:'Ambient content when idle',s:'live',n:'Globe, live feed, counter and rotating story / trend / insight / project cards. <b>Booth:</b> content from the CMS, cached offline so the Pulse never goes dark.'},
   {t:'Ask Uma',d:'Guided conversation with Uma',s:'live',n:'Voice or text, suggested prompts, spoken and visual answers. <b>Demo:</b> a model stand-in with a bounded Uma persona. <b>Booth:</b> Uma APIs.'},
   {t:'LUV mode',d:'Employee recognition',s:'live',n:'Pick, describe, tag a value, record, send, with live transcription while recording. <b>Booth:</b> Internal APIs → Slack and Haystack.'}],
  backend:[
-  {t:'Uma APIs',d:'Conversational AI, knowledge, capabilities',s:'sim',n:'<b>Demo:</b> stand-in model plus guided answers. <b>Build:</b> a thin proxy so no key ever lives on the device; streamed replies for sub-second first words.'},
-  {t:'Content APIs / CMS',d:'Pulse content, stories, insights, media',s:'sim',n:'<b>Demo:</b> sample content inline. <b>Build:</b> headless CMS with publish windows; the booth polls every 5 min and keeps the last good copy.'},
-  {t:'Internal APIs',d:'Employee data, recognition, values, Slack',s:'sim',n:'<b>Demo:</b> inline teammate list and value tags. <b>Build:</b> directory search, Slack #luv post, Haystack log for quarterly awards.'},
+  {t:'Uma APIs',d:'Conversational AI, knowledge, capabilities',s:()=>API.ok?'live':'sim',n:'<b>Now:</b> the booth API answers through a model behind a rate-limited proxy; no key ever reaches the device. <b>Build:</b> swap the proxy target to Uma’s own endpoint.'},
+  {t:'Content APIs / CMS',d:'Pulse content, stories, insights, media',s:'live',n:'<b>Now:</b> talent, postings and the ticker come from live.json, refreshed from the Upwork marketplace by a scheduled job. <b>Build:</b> headless CMS with publish windows.'},
+  {t:'Internal APIs',d:'Employee data, recognition, values, Slack',s:()=>API.ok?'live':'sim',n:'<b>Now:</b> LUV is stored by the booth API with video and transcript, feeds every booth’s Pulse, and posts to Slack when a webhook is set. <b>Build:</b> Upwork directory and Haystack.'},
   {t:'Auth service',d:'Public vs employee authentication',s:'plan',n:'Visitors never sign in. Employees unlock LUV with a badge tap or a short SSO code; the session expires with the idle timer.'}],
  infra:[
   {t:'Device management',s:'plan',n:'EloView: lockdown, provisioning, remote reboot, OTA updates.'},
   {t:'Remote monitoring',s:'plan',n:'Heartbeat every 60 s plus a remote screenshot; alert after three misses.'},
-  {t:'Analytics & usage',s:'plan',n:'Anonymous events: sessions, mode, prompt, duration. No faces, no voices stored.'},
+  {t:'Analytics & usage',s:()=>API.ok?'live':'plan',n:'Anonymous counts: sessions, modes, prompts (press O). No faces, no voices stored.'},
   {t:'Logging & alerting',s:'plan',n:'Client errors to a log sink; Slack alert on crash loops or a dark screen.'},
   {t:'Content scheduling',s:'plan',n:'Publish windows in the CMS; campaign content by date and office.'},
-  {t:'Updates & maintenance',s:'plan',n:'Deploy = publish the URL. Nightly reload, watchdog restart, offline fallback.'}]
+  {t:'Updates & maintenance',s:'live',n:'Deploy = publish the URL (done many times today). Nightly reload and watchdog restart: on the device.'}]
 };
 const scl = {live:'Live in this demo', sim:'Simulated here', plan:'Planned'};
-const gnode = (x, cls='') => `<div class="node ${cls}"><div class="t"><span>${x.t}</span><span class="sc ${x.s}">${scl[x.s]}</span></div>${x.d ? `<div class="d">${x.d}</div>` : ''}<div class="n">${x.n}</div></div>`;
+const st = x => typeof x.s === 'function' ? x.s() : x.s;
+const gnode = (x, cls='') => `<div class="node ${cls}"><div class="t"><span>${x.t}</span><span class="sc ${st(x)}">${scl[st(x)]}</span></div>${x.d ? `<div class="d">${x.d}</div>` : ''}<div class="n">${x.n}</div></div>`;
 function renderGlass(){
-  const all = [...G.physical, G.app, ...G.modes, ...G.backend, ...G.infra], cnt = k => all.filter(x => x.s === k).length;
+  const all = [...G.physical, G.app, ...G.modes, ...G.backend, ...G.infra], cnt = k => all.filter(x => st(x) === k).length;
   $('#glass').innerHTML = `<button class="x" id="glassx" aria-label="Close">×</button>
   <div class="head"><div><h2>Behind the glass</h2><p>Your architecture diagram, mapped onto what is running on this screen. Every box marked “simulated” sits behind one interface, so the real service drops in without touching the experience.</p></div>
   <div class="legend"><span class="sc live">${cnt('live')} live</span><span class="sc sim">${cnt('sim')} simulated</span><span class="sc plan">${cnt('plan')} planned</span></div></div>
@@ -897,15 +1076,32 @@ function renderGlass(){
     <div class="col"><h3>Experience application</h3>${gnode(G.app, 'app')}<div class="modes">${G.modes.map(x => gnode(x)).join('')}</div></div>
     <div class="col"><h3>Backend services</h3>${G.backend.map(x => gnode(x)).join('')}</div>
   </div>
-  <div class="infra"><h3>Infrastructure &amp; management</h3><div class="row">${G.infra.map(x => `<div><span class="it">${x.t}<i class="sc ${x.s}">${scl[x.s]}</i></span><span class="n">${x.n}</span></div>`).join('')}</div></div>
+  <div class="infra"><h3>Infrastructure &amp; management</h3><div class="row">${G.infra.map(x => `<div><span class="it">${x.t}<i class="sc ${st(x)}">${scl[st(x)]}</i></span><span class="n">${x.n}</span></div>`).join('')}</div></div>
   <div class="ship">
     <div><b>Runs on the Backpack 5</b>Android 14, Qualcomm 6490, 8 GB RAM. Chrome in kiosk mode pointed at the URL; EloView for lockdown and updates. The 5554L is the touch surface.</div>
     <div><b>Works when the network doesn’t</b>The app and the last content pull are cached on the device. The Pulse keeps running, Ask Uma falls back to guided answers, LUV queues and sends later.</div>
-    <div><b>Built for November 6</b>What is live here is the MVP list from the brief. The simulated boxes are integrations, each landing on its own without touching the experience.</div>
+    <div><b>Built for November 6</b>What is live here is the MVP list from the brief plus what you asked for on the call: voice-first paths, the nominator step, presence wake-up. The remaining boxes are integrations, each landing on its own.</div>
+    <div><b>Data and GDPR</b>Analytics are anonymous counts. LUV records keep nominator, recipient, value and message for 90 days, video for 30 (both configurable, or wipe after each session). Presence detection stores nothing. The shared feed shows only name and value.</div>
   </div>`;
   $('#glassx').onclick = toggleGlass;
 }
-function toggleGlass(){ const g = $('#glass'); if (!g.innerHTML) renderGlass(); g.classList.toggle('on'); }
+function toggleGlass(){ const g = $('#glass'); renderGlass(); g.classList.toggle('on'); }
+let opsT = null;
+async function renderOps(){
+  const o = $('#ops');
+  if (!API.ok){ o.innerHTML = `<button class="x" id="opsx" aria-label="Close">×</button><div class="head"><div><h2>Booth operations</h2><p>The booth API is not reachable from this page, so there are no live counts to show. Sessions, questions and LUV sends are counted server-side when it is.</p></div></div>`; $('#opsx').onclick = toggleOps; return; }
+  let d = null; try { d = await (await fetch(API_BASE + '/stats', { cache:'no-store' })).json(); } catch(e){}
+  if (!d){ o.innerHTML = `<button class="x" id="opsx" aria-label="Close">×</button><div class="head"><div><h2>Booth operations</h2><p>Could not load stats.</p></div></div>`; $('#opsx').onclick = toggleOps; return; }
+  const modes = Object.entries(d.modes || {}).sort((a,b) => b[1]-a[1]);
+  o.innerHTML = `<button class="x" id="opsx" aria-label="Close">×</button>
+  <div class="head"><div><h2>Booth operations</h2><p>Live counts from the booth API for ${d.day} (UTC day). Anonymous: no faces, no voices, no names are stored for analytics.</p></div><div class="legend"><span class="sc live">API up · ${API.model}</span></div></div>
+  <div class="tiles"><div class="tile"><b>${d.sessions}</b><span>sessions today</span></div><div class="tile"><b>${d.asks}</b><span>questions answered</span></div><div class="tile"><b>${d.luvsToday}</b><span>LUV sent today</span></div><div class="tile"><b>${d.luvsStored}</b><span>LUV in the feed</span></div></div>
+  <div class="grid"><div class="col"><h3>Modes opened today</h3><table>${modes.length ? modes.map(([k,v]) => `<tr><td>${names[k] || k}</td><td>${v}</td></tr>`).join('') : '<tr><td>No interactions yet</td><td></td></tr>'}</table></div>
+  <div class="col"><h3>Top questions today</h3><table>${d.topPrompts.length ? d.topPrompts.map(p => `<tr><td>${esc(p.q)}</td><td>${p.n}</td></tr>`).join('') : '<tr><td>No questions yet</td><td></td></tr>'}</table></div>
+  <div class="col"><h3>Health</h3><table><tr><td>Answers</td><td>${API.model}</td></tr><tr><td>Uma voice</td><td>${API.voice ? 'on' : 'off'}</td></tr><tr><td>Slack</td><td>${API.slack ? 'connected' : 'not configured'}</td></tr><tr><td>Lighting</td><td>${WLED ? 'WLED at ' + esc(WLED) : 'simulated'}</td></tr></table></div></div>`;
+  $('#opsx').onclick = toggleOps;
+}
+function toggleOps(){ const o = $('#ops'); const on = !o.classList.contains('on'); o.classList.toggle('on', on); clearInterval(opsT); if (on){ renderOps(); opsT = setInterval(renderOps, 30000); } }
 
 /* ---------------- confetti ---------------- */
 const fx = $('#fx'), fc = fx.getContext('2d');
@@ -920,6 +1116,7 @@ function confetti(){
 
 const applyHash = () => { if (location.hash === '#kiosk'){ document.body.classList.add('kiosk'); intro.hidden = true; } };
 applyHash(); addEventListener('hashchange', applyHash);
+if (presenceWanted()) presenceStart();
 })();
 </script>
 </body>

@@ -8,7 +8,7 @@
 <meta property="og:title" content="Uma's Office · interactive prototype">
 <meta property="og:description" content="A visitor's view of the booth planned for Upwork's Lisbon reception. Tap the screen, speak to Uma, send some LUV.">
 <meta property="og:type" content="website">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='26' fill='%2314a800'/%3E%3Ccircle cx='24' cy='24' r='9' fill='%23d8ffd8' opacity='.6'/%3E%3C/svg%3E">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg height=%222500%22 viewBox=%22.26 -.21 500 500%22 width=%222498%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cpath d=%22m92.38-.21c-50.88 0-92.12 41.44-92.12 92.56v314.88c0 51.12 41.25 92.56 92.13 92.56h315.74c50.88 0 92.13-41.44 92.13-92.56v-314.88c0-51.12-41.25-92.56-92.13-92.56h-315.75z%22 fill=%22%2314a800%22/%3E%3Cpath d=%22m359.92 303.51c-31.11 0-51.69-24.01-57.45-33.35 7.36-59.01 28.93-77.61 57.45-77.61 28.18 0 50.13 22.53 50.13 55.48s-21.95 55.48-50.13 55.48m0-147.18c-50.71 0-79.13 33.07-87.25 67.12-9.24-17.34-16.04-40.54-21.4-62.1h-70.09v87.24c0 31.7-14.38 55.07-42.59 55.07s-44.37-23.37-44.37-55.06l.3-87.25h-40.4v87.24c0 25.47 8.26 48.56 23.26 65.04 15.48 16.98 36.64 25.95 61.19 25.95 48.78 0 82.81-37.41 82.81-90.96v-58.62c5.14 19.29 17.2 56.39 40.41 88.92l-21.68 123.44h41.08l14.31-87.52c4.7 3.89 9.68 7.41 14.9 10.55a90.604 90.604 0 0 0 45.69 14.09h.08c1.21 0 2.44.07 3.69.07 50.29 0 90.34-38.94 90.34-91.43.01-52.52-40-91.79-90.28-91.79%22 fill=%22%23fff%22/%3E%3C/svg%3E">
 <title>Uma's Office</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@200;300;400;600&family=Manrope:wght@400;500;700&display=swap">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -287,19 +287,19 @@ textarea{width:100%;min-height:24cqw;background:rgba(16,23,15,.9);border:1px sol
 #ops table{border-collapse:collapse;width:100%;max-width:560px}
 #ops td{padding:6px 10px 6px 0;border-bottom:1px solid var(--line);color:var(--fg);font-size:13px}
 #ops td:last-child{text-align:right;color:var(--muted);font-variant-numeric:tabular-nums}
-#glass .head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:22px;padding-right:48px}
-#glass .head h2{font-size:30px;color:var(--fg)}
-#glass .head p{margin:6px 0 0;max-width:62ch;line-height:1.5}
-#glass .legend{display:flex;gap:8px;flex-wrap:wrap}
-#glass .x{position:fixed;top:2vh;right:2vw;width:36px;height:36px;border-radius:50%;border:1px solid var(--line);background:var(--panel);color:var(--fg);font-size:18px;display:grid;place-items:center}
+#glass .head,#ops .head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:22px;padding-right:48px}
+#glass .head h2,#ops .head h2{font-size:30px;color:var(--fg)}
+#glass .head p,#ops .head p{margin:6px 0 0;max-width:62ch;line-height:1.5}
+#glass .legend,#ops .legend{display:flex;gap:8px;flex-wrap:wrap}
+#glass .x,#ops .x{position:fixed;top:14px;right:14px;width:44px;height:44px;z-index:2;border-radius:50%;border:1px solid var(--line);background:var(--panel);color:var(--fg);font-size:18px;display:grid;place-items:center}
 .sc{display:inline-flex;align-items:center;gap:6px;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border-radius:99px;border:1px solid var(--line);color:var(--muted);white-space:nowrap;font-style:normal;font-family:var(--body)}
 .sc::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--dim)}
 .sc.live{border-color:rgba(43,227,90,.5);color:var(--uma2)}.sc.live::before{background:var(--uma2);box-shadow:0 0 8px var(--uma2)}
 .sc.sim{border-color:rgba(255,255,255,.22);color:#d5ded7}.sc.sim::before{background:#d5ded7}
 .sc.plan{border-style:dashed}
-#glass .grid{display:grid;grid-template-columns:minmax(240px,1fr) minmax(320px,1.5fr) minmax(240px,1fr);gap:16px;align-items:start}
-@media (max-width:1100px){#glass .grid{grid-template-columns:1fr 1fr}}
-#glass .col h3,#glass .infra h3{margin:0 0 10px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--uma2);font-weight:600;font-family:var(--body)}
+#glass .grid,#ops .grid{display:grid;grid-template-columns:minmax(240px,1fr) minmax(320px,1.5fr) minmax(240px,1fr);gap:16px;align-items:start}
+@media (max-width:1100px){#glass .grid,#ops .grid{grid-template-columns:1fr 1fr}}
+#glass .col h3,#glass .infra h3,#ops .col h3{margin:0 0 10px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--uma2);font-weight:600;font-family:var(--body)}
 #glass .node{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:6px;margin-bottom:10px;min-width:0}
 #glass .node .t{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:6px 10px;color:var(--fg);font-size:14px;font-family:var(--display)}
 #glass .node .t>span:first-child{flex:1 1 auto;min-width:0}
@@ -337,7 +337,7 @@ textarea{width:100%;min-height:24cqw;background:rgba(16,23,15,.9);border:1px sol
 #mute.off .on-icon{display:none}
 #mute.off .off-icon{display:block}
 .bar{padding-right:12cqw}
-#live{max-width:60cqw}
+#live{max-width:68cqw}
 .sugg.next{margin-left:7.6cqw;gap:1.6cqw}
 .sugg.next .kicker{color:var(--dim);font-size:2.9cqw;margin-bottom:.4cqw}
 .sugg.next button{font-size:3.6cqw;padding:2.8cqw 4cqw}
@@ -376,9 +376,18 @@ textarea{width:100%;min-height:24cqw;background:rgba(16,23,15,.9);border:1px sol
 #panel .lamp{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--glow);box-shadow:0 0 8px var(--glow);margin-right:6px;vertical-align:1px}
 #panel .fine{font-size:11.5px;line-height:1.45;color:var(--dim);border-top:1px solid var(--line);padding-top:10px}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.up{display:inline-block;width:1em;height:1em;vertical-align:-.18em;flex:none;border-radius:22%}
+.bar .upl{display:inline-flex;align-items:center;gap:1.6cqw}.bar .up{width:4.6cqw;height:4.6cqw}
+.kicker .up{width:4cqw;height:4cqw;margin-right:1.4cqw;vertical-align:-.9cqw}
+#live .up{width:5cqw;height:5cqw}
+#intro .intro-up{width:42px;height:42px;margin-bottom:-2px}
+#glass .head h2 .up,#ops .head h2 .up{width:.78em;height:.78em;vertical-align:-.06em;margin-right:.32em}
+#glass .x:hover,#ops .x:hover{border-color:var(--uma2)}
+#ops .head{padding-right:64px}#ops .grid{margin-top:4px}
 </style>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><symbol id="upwork-mark" viewBox=".26 -.21 500 500"><path d="m92.38-.21c-50.88 0-92.12 41.44-92.12 92.56v314.88c0 51.12 41.25 92.56 92.13 92.56h315.74c50.88 0 92.13-41.44 92.13-92.56v-314.88c0-51.12-41.25-92.56-92.13-92.56h-315.75z" fill="#14a800"/><path d="m359.92 303.51c-31.11 0-51.69-24.01-57.45-33.35 7.36-59.01 28.93-77.61 57.45-77.61 28.18 0 50.13 22.53 50.13 55.48s-21.95 55.48-50.13 55.48m0-147.18c-50.71 0-79.13 33.07-87.25 67.12-9.24-17.34-16.04-40.54-21.4-62.1h-70.09v87.24c0 31.7-14.38 55.07-42.59 55.07s-44.37-23.37-44.37-55.06l.3-87.25h-40.4v87.24c0 25.47 8.26 48.56 23.26 65.04 15.48 16.98 36.64 25.95 61.19 25.95 48.78 0 82.81-37.41 82.81-90.96v-58.62c5.14 19.29 17.2 56.39 40.41 88.92l-21.68 123.44h41.08l14.31-87.52c4.7 3.89 9.68 7.41 14.9 10.55a90.604 90.604 0 0 0 45.69 14.09h.08c1.21 0 2.44.07 3.69.07 50.29 0 90.34-38.94 90.34-91.43.01-52.52-40-91.79-90.28-91.79" fill="#fff"/></symbol></svg>
 <div id="room">
   <i class="led l"></i><i class="led r"></i><i class="led top"></i>
   <div id="floor"></div>
@@ -393,7 +402,7 @@ textarea{width:100%;min-height:24cqw;background:rgba(16,23,15,.9);border:1px sol
     <!-- THE PULSE -->
     <section class="view on" id="v-ambient">
       <button id="tap" aria-label="Wake Uma" data-go="home"></button>
-      <div id="live"><i></i>Posted on Upwork · Oct 2</div>
+      <div id="live"><svg class="up" aria-hidden="true"><use href="#upwork-mark"/></svg><i></i>Posted on Upwork · Oct 2</div>
       <div id="count"><b id="clock">--:--</b><span>Lisbon · <span id="clockdate"></span></span></div>
       <div id="feed"></div>
       <div id="spot"><div class="kicker" id="spot-k"></div><div class="h" id="spot-h"></div><div class="d" id="spot-d"></div></div>
@@ -403,7 +412,7 @@ textarea{width:100%;min-height:24cqw;background:rgba(16,23,15,.9);border:1px sol
     <!-- PROMPT -->
     <section class="view" id="v-home">
       <div class="hero-orb" aria-hidden="true"></div>
-      <div class="bar"><span class="brand"><i class="orb"></i>Uma</span><span>Lisbon · Reception</span></div>
+      <div class="bar"><span class="brand"><i class="orb"></i>Uma</span><span class="upl"><svg class="up" aria-hidden="true"><use href="#upwork-mark"/></svg>Upwork · Lisbon</span></div>
       <div class="grow"></div>
       <h1>What can Uma help you get done today?</h1>
       <div class="stack">
@@ -560,6 +569,7 @@ textarea{width:100%;min-height:24cqw;background:rgba(16,23,15,.9);border:1px sol
 <div id="ops" role="dialog" aria-label="Booth operations"></div>
 <div id="intro" role="dialog" aria-modal="true" aria-labelledby="intro-h">
   <div class="card-i">
+    <svg class="up intro-up" aria-hidden="true"><use href="#upwork-mark"/></svg>
     <div class="eyebrow">Interactive prototype · Upwork Lisbon reception</div>
     <h2 id="intro-h">Uma's Office</h2>
     <p>A visitor's view of the booth: the Pulse when idle, Ask Uma by voice or touch, and Send some LUV for employees. Tap the screen the way a guest would.</p>
@@ -570,6 +580,7 @@ textarea{width:100%;min-height:24cqw;background:rgba(16,23,15,.9);border:1px sol
 </div>
 
 <script>
+const UP = '<svg class="up" aria-hidden="true"><use href="#upwork-mark"/></svg>', kick = k => (/upwork/i.test(k) ? UP : '') + k;
 (() => {
 const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
 const IDLE_MS = 45000;
@@ -587,6 +598,8 @@ const kiosk = () => document.body.classList.contains('kiosk');
 const clean = t => String(t || '').replace(/[*_#`>]+/g, '').replace(/^\s*[-•]\s+/gm, '').replace(/\s+/g, ' ').trim();
 const HEADLINE_SYSTEM = 'You write one short recognition headline for an office screen: at most 12 words, third person, present tense, warm, no quotes, no emoji, no hashtags. Output only the headline.';
 let mode = 'ambient', idleT = null, idleDeadline = 0, voice = true, storyT = null, sayTimer = null, luvPending = false, askHist = [];
+let storyCardT = null, storyGen = 0;
+function stopStory(){ clearInterval(storyT); clearTimeout(storyCardT); storyT = storyCardT = null; }
 
 /* ---------------- sample content ---------------- */
 const cities = {Lisbon:[38.72,-9.14],Porto:[41.15,-8.61],London:[51.5,-.12],Berlin:[52.52,13.4],Madrid:[40.42,-3.7],Austin:[30.27,-97.74],"New York":[40.71,-74],"San Francisco":[37.77,-122.42],Toronto:[43.65,-79.38],"São Paulo":[-23.55,-46.63],"Buenos Aires":[-34.6,-58.38],Lagos:[6.52,3.38],Nairobi:[-1.29,36.82],Cairo:[30.04,31.24],Dubai:[25.2,55.27],Mumbai:[19.08,72.88],Bengaluru:[12.97,77.59],Singapore:[1.35,103.82],Manila:[14.6,120.98],Tokyo:[35.68,139.69],Sydney:[-33.87,151.21],Kraków:[50.06,19.94],Kyiv:[50.45,30.52],Copenhagen:[55.68,12.57]};
@@ -644,7 +657,7 @@ const values = ["Put community first","Have a bias toward action","Build amazing
 const theme = {ambient:['#14a800','20,168,0'], home:['#14a800','20,168,0'], explore:['#14a800','20,168,0'], capture:['#14a800','20,168,0'], story:['#14a800','20,168,0'], ask:['#4cc9f0','76,201,240'], luv0:['#c08cff','192,140,255'], luv1:['#c08cff','192,140,255'], luv2:['#c08cff','192,140,255'], luv3:['#c08cff','192,140,255'], luv4:['#c08cff','192,140,255']};
 const names = {ambient:'The Pulse', home:'Prompt', explore:'Explore Upwork', capture:'Explore · listening', story:'Explore · playing', ask:'Ask Uma', luv0:'LUV · who are you', luv1:'LUV · who deserves it', luv2:'LUV · what they did', luv3:'LUV · say it', luv4:'LUV · sent'};
 function go(m){
-  const prev = mode; clearInterval(storyT); stopSpeech(); stopReal(); mode = m; const sc=$('#screen'); sc.scrollLeft=0; sc.scrollTop=0;
+  const prev = mode; stopStory(); stopSpeech(); stopReal(); mode = m; const sc=$('#screen'); sc.scrollLeft=0; sc.scrollTop=0;
   $$('.view').forEach(v => v.classList.toggle('on', v.id === 'v-'+m));
   document.documentElement.style.setProperty('--glow', theme[m][0]);
   document.documentElement.style.setProperty('--glow-rgb', theme[m][1]); setLights(theme[m][1]);
@@ -708,14 +721,16 @@ document.addEventListener('keydown', e => {
 /* ---------------- voice ---------------- */
 let orbs = () => $$('.orb');
 let sayGen = 0, curAudio = null; const audioCache = new Map();
+const audioPending = new Map(); // text -> in-flight blob promise, so a prefetch and a say() never fetch the same line twice
 let audioCtx = null, ampRaf = null, ampSim = null;
 const setAmp = v => document.documentElement.style.setProperty('--amp', v.toFixed(3));
 function ctx(){ try { audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)(); if (audioCtx.state === 'suspended') audioCtx.resume(); return audioCtx; } catch(e){ return null; } }
 function attachAmp(a){ const ac = ctx(); if (!ac) return; try { const src = ac.createMediaElementSource(a), an = ac.createAnalyser(); an.fftSize = 256; src.connect(an); an.connect(ac.destination); const buf = new Uint8Array(an.frequencyBinCount); cancelAnimationFrame(ampRaf); const loop = () => { if (a.paused || a.ended){ setAmp(0); return; } an.getByteFrequencyData(buf); let sum = 0; for (let i = 2; i < 40; i++) sum += buf[i]; setAmp(Math.min(1, (sum / 38) / 140)); ampRaf = requestAnimationFrame(loop); }; a.addEventListener('play', () => { cancelAnimationFrame(ampRaf); loop(); }, { once:true }); } catch(e){} }
 function simAmp(on){ clearInterval(ampSim); if (!on){ setAmp(0); return; } ampSim = setInterval(() => setAmp(0.25 + Math.random() * 0.55), 90); }
 function chime(kind){ const ac = ctx(); if (!ac || !voice) return; try { const t0 = ac.currentTime + 0.02; const notes = kind === 'wake' ? [523.25, 783.99] : [523.25, 659.25, 783.99]; notes.forEach((f, i) => { const o = ac.createOscillator(), g = ac.createGain(); o.type = 'sine'; o.frequency.value = f; g.gain.setValueAtTime(0.0001, t0 + i * 0.13); g.gain.exponentialRampToValueAtTime(0.07, t0 + i * 0.13 + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, t0 + i * 0.13 + 0.6); o.connect(g).connect(ac.destination); o.start(t0 + i * 0.13); o.stop(t0 + i * 0.13 + 0.65); }); } catch(e){} }
-const FIXED_LINES = ["Hi, I'm Uma. What can I help you get done today?", 'Ask me anything about Upwork.', 'Tell me what you need.', 'Tell me the challenge.', 'First, who are you?', 'Who deserves some LUV?', 'LUV sent. Thanks for making Upwork amazing.', 'Want to explore something else?'];
-async function prefetchVoice(){ if (!(API.ok && API.voice)) return; const voice = AI.tts || 'nova'; if (voice === 'system') return; for (const raw of FIXED_LINES){ const t = speakable(raw); const k = voice + '|' + t; if (audioCache.has(k)) continue; try { const r = await fetch(API_BASE + '/speak', { method:'POST', headers:{ 'content-type':'application/json' }, body: JSON.stringify({ text: t, voice }) }); if (r.ok) audioCache.set(k, await r.blob()); } catch(e){} } }
+const FIXED_LINES = ["Hi, I'm Uma. What can I help you get done today?", 'Ask me anything about Upwork.', 'Tell me what you need.', 'Tell me the challenge.', 'First, who are you?', 'Who deserves some LUV?', 'LUV sent. Thanks for making Upwork amazing.', 'Want to explore something else?', "Here are three people I'd start with."];
+function prefetchLines(lines){ if (!(API.ok && API.voice) || !voice) return Promise.resolve(); const v = AI.tts || 'nova'; if (v === 'system') return Promise.resolve(); return Promise.all(lines.map(raw => { const t = speakable(raw); const k = v + '|' + t; if (audioCache.has(k)) return null; if (audioPending.has(k)) return audioPending.get(k); const pr = (async () => { try { const r = await fetch(API_BASE + '/speak', { method:'POST', headers:{ 'content-type':'application/json' }, body: JSON.stringify({ text: t, voice: v }) }); if (!r.ok) return null; const b = await r.blob(); if (b.size < 200000) audioCache.set(k, b); return b; } catch(e){ return null; } finally { audioPending.delete(k); } })(); audioPending.set(k, pr); return pr; })); }
+function prefetchVoice(){ return prefetchLines(FIXED_LINES); }
 function stopAudio(){ if (curAudio){ try { curAudio.onended = curAudio.onerror = null; curAudio.pause(); curAudio.removeAttribute('src'); } catch(e){} curAudio = null; } try { speechSynthesis.cancel(); } catch(e){} simAmp(false); setAmp(0); orbs().forEach(o => o.classList.remove('talk')); }
 const speakable = t => String(t).replace(/\bLUV\b/g, 'love').replace(/\bLUV's\b/g, "love's");
 function say(t, onEnd){
@@ -744,6 +759,7 @@ async function speakRemote(t, onEnd, getAudio){
   try {
     try { speechSynthesis.cancel(); } catch(e){}
     let blob = audioCache.get(ck);
+    if (!blob && audioPending.has(ck)) blob = await Promise.race([audioPending.get(ck), new Promise(res => setTimeout(() => res(null), 15000))]);
     if (!blob){ const r = await getAudio(); if (!r.ok) throw new Error('HTTP ' + r.status); blob = await r.blob(); if (blob.size < 200000) audioCache.set(ck, blob); }
     if (g !== sayGen) return;
     const url = URL.createObjectURL(blob), a = new Audio(url); curAudio = a; attachAmp(a);
@@ -858,8 +874,8 @@ const qrBlock = it => it.u ? `<div class="qr"><div class="code" data-qr="${it.u}
 function drawQRs(root){ root.querySelectorAll('[data-qr]').forEach(el => { if (el.dataset.done) return; el.dataset.done = 1; if (!window.QRCode){ el.closest('.qr')?.remove(); return; } try { new QRCode(el, { text: el.dataset.qr, width: 128, height: 128, colorDark: '#0b100c', colorLight: '#ffffff', correctLevel: QRCode.CorrectLevel.M }); } catch(e){ el.closest('.qr')?.remove(); } }); }
 function renderItem(it, i){
   if (it.say) return `<div class="card">${art(i+11)}<div class="kicker">Uma</div><div class="title" style="font-size:6.2cqw">${esc(it.say)}</div></div>`;
-  if (it.n) return `<div class="card">${art(i+3)}${it.k ? `<div class="kicker">${it.k}</div>` : ''}<div class="person"><div class="avatar">${it.i}</div><div><div class="name">${it.n}</div><div class="meta">${it.m}</div></div></div><div class="tags">${it.t.map(x=>`<span class="tag">${x}</span>`).join('')}</div><p>${it.p}</p>${it.why && it.why.length ? `<div class="why">Matched on ${it.why.map(esc).join(', ')}</div>` : ''}${qrBlock(it)}</div>`;
-  return `<div class="card">${art(i+7)}<div class="kicker">${it.k}</div><div class="title">${it.t}</div><p>${it.p}</p><div class="stats">${it.s.map(([b,l])=>`<div class="stat"><b>${b}</b><span>${l}</span></div>`).join('')}</div>${qrBlock(it)}</div>`;
+  if (it.n) return `<div class="card">${art(i+3)}${it.k ? `<div class="kicker">${kick(it.k)}</div>` : ''}<div class="person"><div class="avatar">${it.i}</div><div><div class="name">${it.n}</div><div class="meta">${it.m}</div></div></div><div class="tags">${it.t.map(x=>`<span class="tag">${x}</span>`).join('')}</div><p>${it.p}</p>${it.why && it.why.length ? `<div class="why">Matched on ${it.why.map(esc).join(', ')}</div>` : ''}${qrBlock(it)}</div>`;
+  return `<div class="card">${art(i+7)}<div class="kicker">${kick(it.k)}</div><div class="title">${it.t}</div><p>${it.p}</p><div class="stats">${it.s.map(([b,l])=>`<div class="stat"><b>${b}</b><span>${l}</span></div>`).join('')}</div>${qrBlock(it)}</div>`;
 }
 let talentIndex = [], storyNext = null, storyGoto = null;
 $('#story-dots').addEventListener('click', e => { const b = e.target.closest('[data-i]'); if (b && storyGoto){ storyGoto(+b.dataset.i); touch(); } });
@@ -890,12 +906,13 @@ $('#cap-mic').onclick = () => {
   const ok = listenReal((text, err) => { mic.classList.remove('live'); if (text) runCapture(text); else st.textContent = err === 'not-allowed' ? 'Microphone blocked. Tap an example instead.' : 'Didn’t catch that. Try again or tap an example.'; }, all => { heard.textContent = all; st.textContent = 'Listening…'; });
   if (ok){ mic.classList.add('live'); st.textContent = 'Listening… speak now'; } else st.textContent = 'No microphone here. Tap an example instead.';
 };
+const shortLabel = (t, n = 30) => t.length > n ? t.slice(0, n).replace(/\s+\S*$/, '') + '…' : t;
 async function runCapture(need){
   track('prompt', (capPath === 'talent' ? 'talent: ' : 'challenge: ') + need.slice(0, 70));
   if (capPath === 'talent'){
     const picks = matchTalent(need, 3);
     if (!picks.length){ $('#cap-state').textContent = 'Nothing in the index matches that yet. Try other words or tap an example.'; say("I didn't find a match for that. Try other words."); return; }
-    playItems('Talent for: ' + need.slice(0, 40), picks, `Here are three people I'd start with for ${need}.`);
+    playItems('Talent for: ' + shortLabel(need), picks, "Here are three people I'd start with.");
   } else {
     $('#cap-state').textContent = 'Uma is thinking…'; $('#cap-heard').textContent = need; orbs().forEach(o => o.classList.add('talk'));
     const canned = 'Businesses bring this to Upwork every day: post a clear brief, hire a specialist or a small team, and keep the work moving while you watch results. Here is a company that did, and a posting like it from today.';
@@ -903,24 +920,52 @@ async function runCapture(need){
     if (mode !== 'capture') return;
     const story = pickBy(stories, need) || stories[Math.random()*stories.length|0];
     const post = pickBy(building.concat(postCards()), need) || building[Math.random()*building.length|0];
-    playItems('Challenge: ' + need.slice(0, 40), [{ say:a }, story, post], null);
+    playItems('Challenge: ' + shortLabel(need), [{ say:a }, story, post], null);
   }
 }
 function playStory(topic){ const {label, items} = topics()[topic]; playItems(label, items, null); }
 function playItems(label, items, intro){
   go('story'); $('#story-label').textContent = label;
-  const per = 10000, total = items.length*per; let start = Date.now(); let idx = -1; let ended = false;
-  const resume = () => { if (ended){ ended = false; idx = -1; $('#story-voice').style.visibility = 'visible'; clearInterval(storyT); storyT = setInterval(tick, 150); } };
-  storyNext = () => { const el = Date.now() - start; const i = Math.floor(el / per); if (i < items.length - 1){ start = Date.now() - (i + 1) * per; resume(); } };
-  storyGoto = i => { start = Date.now() - Math.max(0, Math.min(items.length - 1, i)) * per; resume(); };
-  $('#story-dots').innerHTML = items.map((_, k) => `<button data-i="${k}" aria-label="Card ${k + 1} of ${items.length}"></button>`).join('');
+  // Each card stays up until Uma has finished saying it plus a short beat. The ring shows that card's progress and holds while her voice is still loading.
+  const sg = ++storyGen, n = items.length, dwell = 2400, maxPer = 45000;
+  const alive = () => sg === storyGen && mode === 'story';
+  const lineFor = it => it.say ? it.say : it.n ? `${it.n.replace(/\.$/, '')}. ${it.m.split('·')[0].trim()}. ${it.p}` : `${it.t}. ${it.p}`;
+  const partsFor = i => (i === 0 && intro ? [intro] : []).concat([lineFor(items[i])]);
+  const estFor = t => Math.min(maxPer, Math.max(9000, 1800 + t.length * 62));
+  const remoteVoice = () => voice && API.ok && API.voice && (AI.tts || 'nova') !== 'system';
+  let idx = -1, ended = false, cardStart = 0, cardEst = 0, deadline = 0, spoken = false, ringFrom = 0;
+  prefetchLines(items.map(lineFor).concat(intro ? [intro] : []));
+  $('#story-dots').innerHTML = items.map((_, k) => `<button data-i="${k}" aria-label="Card ${k + 1} of ${n}"></button>`).join('');
+  const speakParts = (parts, mine, done) => { const [h, ...rest] = parts; say(h, () => { if (!alive() || cardStart !== mine || ended) return; if (rest.length) speakParts(rest, mine, done); else done(); }); };
+  const show = i => {
+    i = Math.max(0, Math.min(n - 1, i)); clearTimeout(storyCardT); idx = i; ended = false; spoken = false; ringFrom = 0; cardStart = Date.now(); touch();
+    const parts = partsFor(i); cardEst = estFor(parts.join(' ')); deadline = cardStart + cardEst;
+    const slot = $('#story-slot'); slot.innerHTML = renderItem(items[i], i); drawQRs(slot); slot.scrollTop = 0;
+    slot.firstChild.animate([{opacity:0,transform:'translateY(14px) scale(.98)'},{opacity:1,transform:'none'}],{duration:600,easing:'cubic-bezier(.2,.9,.3,1)'});
+    $$('#story-dots button').forEach((d,k)=>d.classList.toggle('on',k===i)); $('#ringfg').style.strokeDashoffset = 100.5; $('#ringtxt').textContent = Math.ceil(cardEst / 1000); $('#story-voice').style.visibility = 'visible';
+    const mine = cardStart;
+    speakParts(parts, mine, () => { spoken = true; if (!ringFrom) ringFrom = cardStart; deadline = Math.max(Date.now() + dwell, cardStart + cardEst); clearTimeout(storyCardT); storyCardT = setTimeout(() => { if (alive() && cardStart === mine && !ended) advance(); }, deadline - Date.now()); });
+  };
+  const advance = () => { if (idx < n - 1) show(idx + 1); else finish(); };
+  const finish = () => {
+    ended = true; clearTimeout(storyCardT); touch(); $('#ringfg').style.strokeDashoffset = 0; $('#ringtxt').textContent = '0';
+    $$('#story-dots button').forEach(d => d.classList.remove('on')); $('#story-voice').style.visibility = 'hidden';
+    $('#story-slot').innerHTML = `<div class="card"><div class="title">Want to explore something else?</div><p>Tap a dot to hear one again, or just walk away. Uma returns to the Pulse on her own.</p></div>`;
+    say("Want to explore something else?");
+  };
+  storyNext = () => { if (!alive()) return; if (ended) show(0); else advance(); };
+  storyGoto = i => { if (alive()) show(i); };
   const tick = () => {
-    const el = Date.now()-start, i = Math.min(items.length-1, Math.floor(el/per)), left = Math.max(0, Math.ceil((total-el)/1000));
-    $('#ringfg').style.strokeDashoffset = 100.5*(1-Math.min(1,el/total)); $('#ringtxt').textContent = left;
-    if (i !== idx){ idx = i; const slot=$('#story-slot'); slot.innerHTML = renderItem(items[i], i); drawQRs(slot); slot.firstChild.animate([{opacity:0,transform:'translateY(14px) scale(.98)'},{opacity:1,transform:'none'}],{duration:600,easing:'cubic-bezier(.2,.9,.3,1)'}); $$('#story-dots button').forEach((d,k)=>d.classList.toggle('on',k===i)); const it = items[i]; say(it.say ? it.say : it.n ? `${i === 0 && intro ? intro + ' ' : ''}${it.n}. ${it.m.split('·')[0]}. ${it.p}` : `${it.t}. ${it.p}`); $('#story-voice').style.visibility='visible'; }
-    if (el >= total){ clearInterval(storyT); ended = true; $('#story-slot').innerHTML = `<div class="card"><div class="title">Want to explore something else?</div><p>Or just walk away. Uma returns to the Pulse on her own.</p></div>`; $('#story-voice').style.visibility='hidden'; say("Want to explore something else?"); }
+    if (!alive() || ended || idx < 0) return;
+    const now = Date.now(), a = curAudio;
+    if (now - cardStart > maxPer){ advance(); return; }
+    if (!spoken && a && isFinite(a.duration) && a.duration > 0){ if (!ringFrom) ringFrom = now - a.currentTime * 1000; deadline = Math.max(now + Math.max(0, a.duration - a.currentTime) * 1000 + dwell, cardStart + cardEst); }
+    if (!ringFrom){ if (remoteVoice()) return; ringFrom = cardStart; }
+    const frac = Math.min(1, (now - ringFrom) / Math.max(1, deadline - ringFrom));
+    $('#ringfg').style.strokeDashoffset = 100.5 * (1 - frac); $('#ringtxt').textContent = Math.max(0, Math.ceil((deadline - now) / 1000));
   };
   storyT = setInterval(tick, 150);
+  show(0);
 }
 
 /* ---------------- ask uma ---------------- */
@@ -1150,7 +1195,7 @@ const gnode = (x, cls='') => `<div class="node ${cls}"><div class="t"><span>${x.
 function renderGlass(){
   const all = [...G.physical, G.app, ...G.modes, ...G.backend, ...G.infra], cnt = k => all.filter(x => st(x) === k).length;
   $('#glass').innerHTML = `<button class="x" id="glassx" aria-label="Close">×</button>
-  <div class="head"><div><h2>Behind the glass</h2><p>Your architecture diagram, mapped onto what is running on this screen. Every box marked “simulated” sits behind one interface, so the real service drops in without touching the experience.</p></div>
+  <div class="head"><div><h2>${UP}Behind the glass</h2><p>Your architecture diagram, mapped onto what is running on this screen. Every box marked “simulated” sits behind one interface, so the real service drops in without touching the experience.</p></div>
   <div class="legend"><span class="sc live">${cnt('live')} live</span><span class="sc sim">${cnt('sim')} simulated</span><span class="sc plan">${cnt('plan')} planned</span></div></div>
   <div class="grid">
     <div class="col"><h3>Physical experience</h3>${G.physical.map(x => gnode(x)).join('')}</div>
@@ -1170,19 +1215,19 @@ function toggleGlass(){ const g = $('#glass'); renderGlass(); g.classList.toggle
 let opsT = null;
 async function renderOps(){
   const o = $('#ops');
-  if (!API.ok){ o.innerHTML = `<button class="x" id="opsx" aria-label="Close">×</button><div class="head"><div><h2>Booth operations</h2><p>The booth API is not reachable from this page, so there are no live counts to show. Sessions, questions and LUV sends are counted server-side when it is.</p></div></div>`; $('#opsx').onclick = toggleOps; return; }
+  if (!API.ok){ o.innerHTML = `<button class="x" id="opsx" aria-label="Close">×</button><div class="head"><div><h2>${UP}Booth operations</h2><p>The booth API is not reachable from this page, so there are no live counts to show. Sessions, questions and LUV sends are counted server-side when it is.</p></div></div>`; return; }
   let d = null; try { d = await (await fetch(API_BASE + '/stats', { cache:'no-store' })).json(); } catch(e){}
-  if (!d){ o.innerHTML = `<button class="x" id="opsx" aria-label="Close">×</button><div class="head"><div><h2>Booth operations</h2><p>Could not load stats.</p></div></div>`; $('#opsx').onclick = toggleOps; return; }
+  if (!d){ o.innerHTML = `<button class="x" id="opsx" aria-label="Close">×</button><div class="head"><div><h2>${UP}Booth operations</h2><p>Could not load stats.</p></div></div>`; return; }
   const modes = Object.entries(d.modes || {}).sort((a,b) => b[1]-a[1]);
   o.innerHTML = `<button class="x" id="opsx" aria-label="Close">×</button>
-  <div class="head"><div><h2>Booth operations</h2><p>Live counts from the booth API for ${d.day} (UTC day). Anonymous: no faces, no voices, no names are stored for analytics.</p></div><div class="legend"><span class="sc live">API up · ${API.model}</span></div></div>
+  <div class="head"><div><h2>${UP}Booth operations</h2><p>Live counts from the booth API for ${d.day} (UTC day). Anonymous: no faces, no voices, no names are stored for analytics.</p></div><div class="legend"><span class="sc live">API up · ${API.model}</span></div></div>
   <div class="tiles"><div class="tile"><b>${d.sessions}</b><span>sessions today</span></div><div class="tile"><b>${d.asks}</b><span>questions answered</span></div><div class="tile"><b>${d.luvsToday}</b><span>LUV sent today</span></div><div class="tile"><b>${d.luvsStored}</b><span>LUV in the feed</span></div></div>
   <div class="grid"><div class="col"><h3>Modes opened today</h3><table>${modes.length ? modes.map(([k,v]) => `<tr><td>${names[k] || k}</td><td>${v}</td></tr>`).join('') : '<tr><td>No interactions yet</td><td></td></tr>'}</table></div>
   <div class="col"><h3>Top questions today</h3><table>${d.topPrompts.length ? d.topPrompts.map(p => `<tr><td>${esc(p.q)}</td><td>${p.n}</td></tr>`).join('') : '<tr><td>No questions yet</td><td></td></tr>'}</table></div>
   <div class="col"><h3>Health</h3><table><tr><td>Answers</td><td>${API.model}</td></tr><tr><td>Uma voice</td><td>${API.voice ? 'on' : 'off'}</td></tr><tr><td>Slack</td><td>${API.slack ? 'connected' : 'not configured'}</td></tr><tr><td>Lighting</td><td>${WLED ? 'WLED at ' + esc(WLED) : 'simulated'}</td></tr></table></div></div>`;
-  $('#opsx').onclick = toggleOps;
 }
 function toggleOps(){ const o = $('#ops'); const on = !o.classList.contains('on'); o.classList.toggle('on', on); clearInterval(opsT); if (on){ renderOps(); opsT = setInterval(renderOps, 30000); } }
+$('#ops').addEventListener('click', e => { if (e.target.closest('#opsx')) toggleOps(); });
 
 /* ---------------- confetti ---------------- */
 const fx = $('#fx'), fc = fx.getContext('2d');

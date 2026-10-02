@@ -252,6 +252,13 @@ textarea{width:100%;min-height:24cqw;background:rgba(16,23,15,.9);border:1px sol
 #panel .ai button{padding:6px 10px;border-radius:7px;border:1px solid var(--line);background:#0d130f;color:var(--fg);font-size:12px;flex:none}
 #panel .ai .s{font-size:11.5px;color:var(--dim);line-height:1.4}
 #panel .ai .s.ok{color:var(--uma2)}#panel .ai .s.err{color:var(--rec)}
+/* toast + follow-ups + voice select */
+#toast{position:absolute;top:20cqw;left:50%;transform:translateX(-50%) translateY(-8px);z-index:6;background:rgba(16,23,15,.92);border:1px solid var(--line);border-radius:99px;padding:2.6cqw 4.6cqw;font-size:3.4cqw;color:var(--muted);opacity:0;transition:opacity .5s,transform .5s;pointer-events:none;white-space:nowrap}
+#toast.on{opacity:1;transform:translateX(-50%)}
+.sugg.next{margin-left:7.6cqw;gap:1.6cqw}
+.sugg.next .kicker{color:var(--dim);font-size:2.9cqw;margin-bottom:.4cqw}
+.sugg.next button{font-size:3.6cqw;padding:2.8cqw 4cqw}
+#panel .ai select{flex:1;min-width:0;background:#0d130f;border:1px solid var(--line);border-radius:7px;padding:6px 8px;color:var(--fg);font:inherit;font-size:12.5px}
 /* presenter overlay + hint */
 #hint{position:fixed;right:2vw;bottom:2vh;font-size:12px;color:var(--dim);letter-spacing:.06em;transition:opacity 1s}
 #hint kbd{font-family:ui-monospace,monospace;border:1px solid var(--line);border-radius:4px;padding:1px 5px;color:var(--muted)}
@@ -277,6 +284,7 @@ textarea{width:100%;min-height:24cqw;background:rgba(16,23,15,.9);border:1px sol
   <div id="device"><div id="screen">
     <canvas id="globe"></canvas>
     <canvas id="fx"></canvas>
+      <div id="toast" aria-live="polite"></div>
 
     <!-- THE PULSE -->
     <section class="view on" id="v-ambient">
@@ -419,6 +427,7 @@ textarea{width:100%;min-height:24cqw;background:rgba(16,23,15,.9);border:1px sol
     <h3 style="font-size:12px">Live answers</h3>
     <input id="aikey" type="password" placeholder="Paste an OpenAI or Anthropic key" autocomplete="off">
     <div class="r"><input id="aimodel" placeholder="Model (optional)" autocomplete="off"><button id="aisave">Use</button><button id="aiforget">Forget</button></div>
+    <div class="r"><select id="aitts" aria-label="Uma voice"><option value="system">System voice</option><option value="nova">Uma voice · nova (OpenAI)</option><option value="coral">Uma voice · coral (OpenAI)</option><option value="sage">Uma voice · sage (OpenAI)</option></select></div>
     <div class="s" id="aistatus">Canned answers. Paste a key to go live.</div>
   </div>
   <div class="fine">Sample content throughout: people, projects and numbers are illustrative. Value names are placeholders until Upwork shares the LUV list. Mic and camera use whatever this browser allows. A pasted key stays in this browser only and never leaves with the file.</div>
@@ -470,25 +479,27 @@ const values = ["Put community first","Have a bias toward action","Build amazing
 const theme = {ambient:['#14a800','20,168,0'], home:['#14a800','20,168,0'], explore:['#14a800','20,168,0'], story:['#14a800','20,168,0'], ask:['#4cc9f0','76,201,240'], luv1:['#c08cff','192,140,255'], luv2:['#c08cff','192,140,255'], luv3:['#c08cff','192,140,255'], luv4:['#c08cff','192,140,255']};
 const names = {ambient:'The Pulse', home:'Prompt', explore:'Explore Upwork', story:'Explore · playing', ask:'Ask Uma', luv1:'LUV · 1 of 4', luv2:'LUV · 2 of 4', luv3:'LUV · 3 of 4', luv4:'LUV · sent'};
 function go(m){
-  clearInterval(storyT); stopSpeech(); stopReal(); mode = m; const sc=$('#screen'); sc.scrollLeft=0; sc.scrollTop=0;
+  const prev = mode; clearInterval(storyT); stopSpeech(); stopReal(); mode = m; const sc=$('#screen'); sc.scrollLeft=0; sc.scrollTop=0;
   $$('.view').forEach(v => v.classList.toggle('on', v.id === 'v-'+m));
   document.documentElement.style.setProperty('--glow', theme[m][0]);
   document.documentElement.style.setProperty('--glow-rgb', theme[m][1]);
   $('#s-mode').textContent = names[m];
   globeTarget = m === 'ambient' ? {s:1,y:0,a:1} : {s:1.9,y:.9,a:.22};
-  if (m === 'ambient'){ clearTimeout(idleT); idleDeadline = 0; resetLuv(); resetAsk(); if (luvPending){ luvPending = false; si = 0; setTimeout(spotCycle, 7000); } }
+  if (m === 'ambient'){ clearTimeout(idleT); idleDeadline = 0; resetLuv(); resetAsk(); if (prev !== 'ambient') toast('Session ended · nothing left behind'); if (luvPending){ luvPending = false; si = 0; setTimeout(spotCycle, 7000); } }
   else touch();
   if (m === 'home') say("Hi, I'm Uma. What can I help you get done today?");
   if (m === 'luv3') startCam(); else stopCam();
   if (m === 'luv4'){ confetti(); say("LUV sent. Thanks for making Upwork amazing."); setTimeout(() => { if (mode==='luv4') go('ambient'); }, 7000); }
 }
+let toastT = null;
+function toast(t){ const el = $('#toast'); el.textContent = t; el.classList.add('on'); clearTimeout(toastT); toastT = setTimeout(() => el.classList.remove('on'), 3500); }
 function touch(){ if (mode==='ambient') return; clearTimeout(idleT); idleDeadline = Date.now()+IDLE_MS; idleT = setTimeout(() => go('ambient'), IDLE_MS); }
 setInterval(() => { $('#s-idle').textContent = idleDeadline ? Math.max(0,Math.ceil((idleDeadline-Date.now())/1000))+' s' : '—'; }, 250);
 document.addEventListener('pointerdown', e => { const b = e.target.closest('[data-go]'); if (!b) touch(); });
 document.addEventListener('click', e => { const b = e.target.closest('[data-go]'); if (b) go(b.dataset.go); });
 $('#screen').addEventListener('input', touch);
 document.addEventListener('keydown', e => {
-  if (e.target.closest?.('input,textarea')) { touch(); return; }
+  if (e.target.closest?.('input,textarea,select')) { touch(); return; }
   const k = e.key.toLowerCase();
   if (k==='?' || k==='h') $('#panel').classList.toggle('on');
   else if (k==='escape'){ if ($('#glass').classList.contains('on')) { $('#glass').classList.remove('on'); return; } $('#panel').classList.remove('on'); document.body.classList.remove('kiosk'); if (document.fullscreenElement) document.exitFullscreen?.(); }
@@ -503,19 +514,41 @@ setTimeout(() => { $('#hint').style.opacity = 0; }, 9000);
 
 /* ---------------- voice ---------------- */
 let orbs = () => $$('.orb');
+let sayGen = 0, curAudio = null;
 function say(t, onEnd){
-  if (!voice || !('speechSynthesis' in window)) { onEnd && setTimeout(onEnd, 400); return; }
+  if (!voice) { onEnd && setTimeout(onEnd, 400); return; }
+  if (AI.provider === 'openai' && AI.tts && AI.tts !== 'system') return speakOpenAI(t, onEnd);
+  speakSystem(t, onEnd);
+}
+function speakSystem(t, onEnd){
+  if (!('speechSynthesis' in window)) { onEnd && setTimeout(onEnd, 400); return; }
   try {
     speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(t); u.rate = 1.03; u.pitch = 1.05;
-    const vs = speechSynthesis.getVoices(); const pick = vs.find(v => /Samantha|Google US English|Ava|Allison|Serena|Karen/i.test(v.name)) || vs.find(v => v.lang.startsWith('en'));
-    if (pick) u.voice = pick;
+    const vs = speechSynthesis.getVoices(), prefs = ['Ava', 'Zoe', 'Samantha', 'Allison', 'Serena', 'Karen', 'Google US English', 'Daniel', 'Moira'];
+    let pick = null; for (const p of prefs){ pick = vs.find(v => v.name.includes(p) && v.lang.startsWith('en')); if (pick) break; }
+    pick = pick || vs.find(v => v.lang.startsWith('en')); if (pick) u.voice = pick;
     u.onstart = () => orbs().forEach(o => o.classList.add('talk'));
     u.onend = u.onerror = () => { orbs().forEach(o => o.classList.remove('talk')); onEnd && onEnd(); };
     speechSynthesis.speak(u);
   } catch(e){ onEnd && onEnd(); }
 }
-function stopSpeech(){ try { speechSynthesis.cancel(); } catch(e){} orbs().forEach(o => o.classList.remove('talk')); }
+async function speakOpenAI(t, onEnd){
+  const g = ++sayGen; const ctrl = new AbortController(); const to = setTimeout(() => ctrl.abort(), 9000);
+  try {
+    try { speechSynthesis.cancel(); } catch(e){}
+    const r = await fetch('https://api.openai.com/v1/audio/speech', { method:'POST', signal:ctrl.signal, headers:{ 'content-type':'application/json', 'authorization':'Bearer ' + AI.key },
+      body: JSON.stringify({ model:'gpt-4o-mini-tts', voice: AI.tts, input: t, response_format:'mp3', instructions:'A warm, calm, unhurried host in a quiet office lobby. Clear and concise.' }) });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const blob = await r.blob(); if (g !== sayGen) return;
+    const url = URL.createObjectURL(blob), a = new Audio(url); curAudio = a;
+    a.onplay = () => orbs().forEach(o => o.classList.add('talk'));
+    a.onended = a.onerror = () => { orbs().forEach(o => o.classList.remove('talk')); URL.revokeObjectURL(url); if (curAudio === a) curAudio = null; onEnd && onEnd(); };
+    await a.play();
+  } catch(e){ if (g === sayGen){ renderAI('Uma voice fell back to the system voice: ' + (e.name === 'AbortError' ? 'timed out' : e.message).slice(0, 60), 'err'); speakSystem(t, onEnd); } }
+  finally { clearTimeout(to); }
+}
+function stopSpeech(){ sayGen++; try { speechSynthesis.cancel(); } catch(e){} if (curAudio){ try { curAudio.pause(); } catch(e){} curAudio = null; } orbs().forEach(o => o.classList.remove('talk')); }
 try { speechSynthesis.getVoices(); speechSynthesis.onvoiceschanged = () => speechSynthesis.getVoices(); } catch(e){}
 
 /* ---------------- globe ---------------- */
@@ -653,7 +686,14 @@ async function answer(q){
   um.querySelector('.txt').innerHTML = a.split(' ').map((w,i)=>`<span class="w" style="animation-delay:${i*60}ms">${esc(w)} </span>`).join('');
   um.querySelector('.orb').classList.remove('talk');
   thread.scrollTop = 1e9;
-  if (hit && hit.card){ setTimeout(() => { if (mode!=='ask') return; const c = document.createElement('div'); c.innerHTML = renderItem(hit.card, 5); c.firstChild.style.marginLeft='7.6cqw'; thread.appendChild(c.firstChild); thread.scrollTop = 1e9; }, a.split(' ').length*60+200); }
+  setTimeout(() => {
+    if (mode!=='ask') return;
+    if (hit && hit.card){ const c = document.createElement('div'); c.innerHTML = renderItem(hit.card, 5); c.firstChild.style.marginLeft='7.6cqw'; thread.appendChild(c.firstChild); }
+    const asked = new Set(askHist.filter(m => m.role === 'user').map(m => m.content.toLowerCase()));
+    const next = faqs.filter(f => !asked.has(f.q.toLowerCase())).slice(0, 2);
+    if (next.length && !$('#sugg')){ const sg = document.createElement('div'); sg.className = 'sugg next'; sg.id = 'sugg'; sg.innerHTML = `<div class="kicker">Try next</div>` + next.map(f => `<button data-q="${faqs.indexOf(f)}">${f.q}<span>↗</span></button>`).join(''); thread.appendChild(sg); }
+    thread.scrollTop = 1e9;
+  }, a.split(' ').length*60+200);
   say(a);
 }
 
@@ -723,15 +763,16 @@ const UMA_SYSTEM = `You are Uma, Upwork's AI companion, speaking aloud inside a 
 Answer in at most two short spoken sentences. Plain words, no lists, no markdown, no emoji. Be warm and specific.
 Scope: Upwork, hiring independent talent, freelancing, the marketplace, work trends, the Lisbon office. If asked something outside that, say in one sentence what you can help with instead. Never ask for or repeat personal data. Reply in the language the person used.
 Illustrative facts you may use: Project Catalog work often starts the same day; a well-scoped post with a budget range usually gets its first proposals within about two hours; the fastest-growing requests this quarter are AI agent development, Webflow, data engineering and short-form video editing.`;
-function loadAI(){ try { AI.key = localStorage.getItem('uma.key') || ''; AI.model = localStorage.getItem('uma.model') || ''; } catch(e){} AI.provider = !AI.key ? null : (AI.key.startsWith('sk-ant-') ? 'anthropic' : 'openai'); $('#aimodel').value = AI.model; renderAI(); }
-function renderAI(msg, cls){ const s = $('#aistatus'); if (msg){ s.textContent = msg; s.className = 's ' + (cls || ''); } else if (!AI.provider){ s.textContent = 'Canned answers. Paste a key to go live.'; s.className = 's'; } else { s.textContent = `Live · ${AI.provider} · ${AI.model || (AI.provider === 'anthropic' ? 'claude-opus-5-5' : 'gpt-5.4-mini')}`; s.className = 's ok'; } $('#s-ai').textContent = AI.provider ? 'live' : 'canned'; }
+function loadAI(){ try { AI.key = localStorage.getItem('uma.key') || ''; AI.model = localStorage.getItem('uma.model') || ''; AI.tts = localStorage.getItem('uma.tts') || 'system'; } catch(e){} AI.tts = AI.tts || 'system'; AI.provider = !AI.key ? null : (AI.key.startsWith('sk-ant-') ? 'anthropic' : 'openai'); $('#aimodel').value = AI.model; $('#aitts').value = AI.tts; renderAI(); }
+function renderAI(msg, cls){ const s = $('#aistatus'); if (msg){ s.textContent = msg; s.className = 's ' + (cls || ''); } else if (!AI.provider){ s.textContent = 'Canned answers. Paste a key to go live.'; s.className = 's'; } else { s.textContent = `Live · ${AI.provider} · ${AI.model || (AI.provider === 'anthropic' ? 'claude-opus-5-5' : 'gpt-5.4-mini')}` + (AI.provider === 'openai' && AI.tts !== 'system' ? ' · voice ' + AI.tts : '') + (AI.lastMs ? ' · ' + (AI.lastMs / 1000).toFixed(1) + ' s' : ''); s.className = 's ok'; } $('#s-ai').textContent = AI.provider ? 'live' : 'canned'; }
 $('#aisave').onclick = () => { const k = $('#aikey').value.trim(), m = $('#aimodel').value.trim(); try { if (k) localStorage.setItem('uma.key', k); if (k || AI.key) localStorage.setItem('uma.model', m); } catch(e){} $('#aikey').value = ''; loadAI(); };
 $('#aikey').onkeydown = $('#aimodel').onkeydown = e => { if (e.key === 'Enter') $('#aisave').click(); };
 $('#aiforget').onclick = () => { try { localStorage.removeItem('uma.key'); localStorage.removeItem('uma.model'); } catch(e){} loadAI(); };
+$('#aitts').onchange = e => { AI.tts = e.target.value; try { localStorage.setItem('uma.tts', AI.tts); } catch(x){} renderAI(); };
 loadAI();
 async function askModel(history, system = UMA_SYSTEM){
   if (!AI.provider) return null;
-  const ctrl = new AbortController(); const to = setTimeout(() => ctrl.abort(), 20000);
+  const ctrl = new AbortController(); const to = setTimeout(() => ctrl.abort(), 20000); const t0 = performance.now();
   try {
     let text = '';
     if (AI.provider === 'anthropic'){
@@ -748,7 +789,7 @@ async function askModel(history, system = UMA_SYSTEM){
       const j = await r.json(); if (!r.ok) throw new Error(j.error?.message || ('HTTP ' + r.status));
       text = j.choices?.[0]?.message?.content || '';
     }
-    text = text.trim(); if (text) renderAI(); return text || null;
+    text = text.trim(); if (text){ AI.lastMs = performance.now() - t0; renderAI(); } return text || null;
   } catch(e){ const why = e.name === 'AbortError' ? 'timed out' : /Failed to fetch/i.test(e.message) ? 'the key was rejected or has no access to that model' : e.message; renderAI('Live answer failed: ' + String(why).slice(0, 90) + '. Used the canned answer.', 'err'); return null; }
   finally { clearTimeout(to); }
 }

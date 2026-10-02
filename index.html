@@ -222,12 +222,16 @@ textarea{width:100%;min-height:24cqw;background:rgba(16,23,15,.9);border:1px sol
 /* live voice + transcript */
 .listen .heard.live{color:var(--fg)}
 .listen .mic.real{background:var(--rec)}
-#cap-mic,#who-mic{width:24cqw;height:24cqw;border-radius:50%;background:var(--uma);display:grid;place-items:center;font-size:9cqw;animation:ringp 2.4s ease-out infinite;cursor:pointer}
+#cap-mic,#who-mic,#what-mic{width:24cqw;height:24cqw;border-radius:50%;background:var(--uma);display:grid;place-items:center;font-size:9cqw;animation:ringp 2.4s ease-out infinite;cursor:pointer}
 #who-mic{background:var(--luv);width:18cqw;height:18cqw;font-size:7cqw}
 #cap-mic.live,#who-mic.live{background:var(--rec);animation:ringp 1s ease-out infinite}
 #cap-form button{background:var(--uma);color:#031106}
 #cap-heard,#who-heard{min-height:1.2em}
-body.kiosk #askrow input,body.kiosk #cap-form{display:none}
+.micbar{display:flex;align-items:center;gap:4cqw;padding-top:2cqw}
+.micbar button{width:16cqw;height:16cqw;border-radius:50%;background:var(--uma);color:#031106;font-size:6.5cqw;display:grid;place-items:center;flex:none;animation:ringp 2.4s ease-out infinite}
+.micbar span{font-size:3.8cqw;color:var(--muted)}
+#what-mic{background:var(--luv);width:18cqw;height:18cqw;font-size:7cqw}
+#what-mic.live{background:var(--rec);animation:ringp 1s ease-out infinite}
 #who-confirm{display:flex;flex-direction:column;gap:3cqw}
 #who-confirm[hidden]{display:none}
 #transcript{max-height:12cqw;overflow:hidden;font-size:3.5cqw;color:var(--muted);line-height:1.4;text-align:center;padding:0 2cqw}
@@ -383,7 +387,6 @@ body.kiosk #askrow input,body.kiosk #cap-form{display:none}
       <div class="sub" id="cap-sub">Tap the mic and say it in a sentence.</div>
       <div class="listen" id="cap-listen" style="padding:3cqw 0"><button class="mic" id="cap-mic" aria-label="Speak">🎤</button><div class="heard" id="cap-heard"></div><div class="sub" id="cap-state">Tap to talk</div></div>
       <div class="chips" id="cap-chips"></div>
-      <form id="cap-form" class="ask-row" style="margin-top:auto"><input id="cap-input" placeholder="Or type it here" autocomplete="off"><button type="submit" aria-label="Go" id="cap-go">↑</button></form>
     </section>
 
     <!-- EXPLORE PLAYBACK -->
@@ -405,11 +408,7 @@ body.kiosk #askrow input,body.kiosk #cap-form{display:none}
     <section class="view" id="v-ask">
       <div class="bar"><span class="brand"><i class="orb" id="ask-orb"></i>Ask Uma</span><button class="ghost" data-go="home">← Back</button></div>
       <div id="thread" class="grow"></div>
-      <form id="askrow">
-        <button type="button" id="mic" aria-label="Speak">🎤</button>
-        <input id="askinput" placeholder="Ask anything about Upwork" autocomplete="off">
-        <button type="submit" id="send" aria-label="Send">↑</button>
-      </form>
+      <div class="micbar"><button id="mic" aria-label="Tap and ask Uma">🎤</button><span>Tap and ask, or pick a question</span></div>
     </section>
 
     <!-- LUV 0: nominator -->
@@ -427,7 +426,6 @@ body.kiosk #askrow input,body.kiosk #cap-form{display:none}
       <div class="bar"><span class="brand"><i class="orb" style="background:var(--luv);box-shadow:0 0 16px var(--luv)"></i>Send some LUV</span><button class="ghost" data-go="luv0">← Back</button></div>
       <div class="steps"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></div>
       <h2>Who deserves some LUV?</h2>
-      <input class="search" id="who" placeholder="Search a teammate" autocomplete="off">
       <div class="list grow" id="people"></div>
       <button class="big flat luvbtn" id="luv1next" disabled>Continue</button>
     </section>
@@ -436,7 +434,8 @@ body.kiosk #askrow input,body.kiosk #cap-form{display:none}
       <div class="bar"><span class="brand"><i class="orb" style="background:var(--luv);box-shadow:0 0 16px var(--luv)"></i>Send some LUV</span><button class="ghost" data-go="luv1">← Back</button></div>
       <div class="steps"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></div>
       <h2>What did <span id="luv-name">they</span> do?</h2>
-      <textarea id="what" placeholder="One or two sentences is plenty."></textarea>
+      <div class="listen" style="padding:1cqw 0"><button class="mic" id="what-mic" aria-label="Say what they did">🎤</button><div class="sub" id="what-state">Tap and say what they did</div></div>
+      <div class="bubble" id="what-text" hidden></div>
       <div class="sub">Which Upwork value does this live? <span style="color:var(--dim)">Placeholder list until Upwork shares the LUV set.</span></div>
       <div class="chips" id="values"></div>
       <div class="grow"></div>
@@ -810,7 +809,6 @@ const CAP = { talent:{ h:"What do you need?", sub:"Say what you're building. Uma
 function startCapture(path){ capPath = path; const c = CAP[path]; $('#cap-h').textContent = c.h; $('#cap-sub').textContent = c.sub; $('#cap-chips').innerHTML = c.chips.map(t => `<button class="chip" data-cap="${esc(t)}">${esc(t)}</button>`).join(''); $('#cap-heard').textContent = ''; $('#cap-state').textContent = 'Tap to talk'; $('#cap-mic').classList.remove('live'); go('capture'); say(path === 'talent' ? 'Tell me what you need.' : 'Tell me the challenge.'); }
 $$('[data-path]').forEach(b => b.onclick = () => startCapture(b.dataset.path));
 $('#cap-chips').onclick = e => { const b = e.target.closest('[data-cap]'); if (b) runCapture(b.dataset.cap); };
-$('#cap-form').onsubmit = e => { e.preventDefault(); const v = $('#cap-input').value.trim(); if (v){ $('#cap-input').value = ''; runCapture(v); } };
 $('#cap-mic').onclick = () => {
   const mic = $('#cap-mic'), heard = $('#cap-heard'), st = $('#cap-state');
   if (mic.classList.contains('live')){ stopReal(); mic.classList.remove('live'); st.textContent = 'Tap to talk'; return; }
@@ -853,7 +851,6 @@ const esc = s => String(s).replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'
 function resetAsk(){ askHist = []; thread.innerHTML = `<div class="uma"><i class="orb"></i><div class="txt">Ask me anything about Upwork. Speak, type, or pick one of these.</div></div><div class="sugg" id="sugg">${faqs.map((f,i)=>`<button data-q="${i}">${f.q}<span>↗</span></button>`).join('')}</div>`; }
 resetAsk();
 thread.addEventListener('click', e => { const b = e.target.closest('[data-q]'); if (b) answer(faqs[b.dataset.q].q); });
-$('#askrow').onsubmit = e => { e.preventDefault(); const q = $('#askinput').value.trim(); if (q){ answer(q); $('#askinput').value=''; } };
 $('#mic').onclick = () => listen(false);
 function listen(forceSim){
   if (mode!=='ask') return; touch();
@@ -901,8 +898,7 @@ let luv = {from:null, who:null, what:'', value:null, rec:0, transcript:'', video
 const personOf = e => Array.isArray(e) ? {name:e[0], role:e[1]} : e;
 function renderPeople(q=''){ $('#people').innerHTML = people.map(personOf).filter(p => p.name !== luv.from).filter(p => (p.name + ' ' + (p.role||'')).toLowerCase().includes(q.toLowerCase())).slice(0, 14).map(p => `<button class="row" data-p="${esc(p.name)}" aria-pressed="${luv.who===p.name}"><span class="avatar">${p.photo ? `<img src="${esc(p.photo)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">` : ''}${p.name.split(' ').map(x=>x[0]).slice(0,2).join('')}</span><span><div class="nm">${esc(p.name)}</div><div class="rl">${esc(p.role||'')}</div></span></button>`).join(''); }
 renderPeople();
-$('#who').oninput = e => renderPeople(e.target.value);
-$('#people').onclick = e => { const b = e.target.closest('[data-p]'); if (!b) return; luv.who = b.dataset.p; renderPeople($('#who').value); $('#luv1next').disabled = false; };
+$('#people').onclick = e => { const b = e.target.closest('[data-p]'); if (!b) return; luv.who = b.dataset.p; renderPeople(); $('#luv1next').disabled = false; };
 $('#luv1next').onclick = () => { $('#luv-name').textContent = luv.who.split(' ')[0]; go('luv2'); say(`What did ${luv.who.split(' ')[0]} do?`); };
 /* nominator */
 const personCard = p => `<span class="avatar">${p.photo ? `<img src="${esc(p.photo)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">` : ''}${p.name.split(' ').map(x=>x[0]).slice(0,2).join('')}</span><span><div class="nm">${esc(p.name)}</div><div class="rl">${esc(p.role||'')}</div></span>`;
@@ -920,7 +916,13 @@ $('#who-mic').onclick = () => {
 };
 $('#values').innerHTML = values.map(v=>`<button class="chip" data-v="${v}" aria-pressed="false">${v}</button>`).join('');
 $('#values').onclick = e => { const b = e.target.closest('[data-v]'); if (!b) return; luv.value = b.dataset.v; $$('#values .chip').forEach(c=>c.setAttribute('aria-pressed', c===b)); check2(); };
-$('#what').oninput = e => { luv.what = e.target.value; check2(); };
+$('#what-mic').onclick = () => {
+  const mic = $('#what-mic'), st = $('#what-state'), box = $('#what-text');
+  if (mic.classList.contains('live')){ stopReal(); mic.classList.remove('live'); st.textContent = 'Tap to try again'; return; }
+  stopSpeech();
+  const ok = listenReal((text, err) => { mic.classList.remove('live'); if (text){ luv.what = text; box.textContent = text; box.hidden = false; st.textContent = 'Tap to say it again'; check2(); } else st.textContent = err === 'not-allowed' ? 'Microphone blocked here.' : 'Didn’t catch that. Tap to try again.'; }, all => { box.textContent = all; box.hidden = false; st.textContent = 'Listening…'; });
+  if (ok){ mic.classList.add('live'); st.textContent = 'Listening… speak now'; } else st.textContent = 'No microphone here.';
+};
 function check2(){ $('#luv2next').disabled = !(luv.what.trim() && luv.value); }
 $('#luv2next').onclick = () => go('luv3');
 $('#wave').innerHTML = Array.from({length:30},()=>'<i></i>').join('');
@@ -972,7 +974,7 @@ async function finishLuv(){
   if (mode === 'ambient'){ si = 0; setTimeout(spotCycle, 1500); } else luvPending = true;
 }
 $('#sendluv').onclick = finishLuv; $('#skiprec').onclick = () => { luv.rec=0; finishLuv(); };
-function resetLuv(){ luv = {from:null, who:null, what:'', value:null, rec:0, transcript:'', video:null}; $('#who-confirm').hidden = true; $('#who-heard').textContent=''; $('#who-state').textContent='Tap to say your name'; $('#who-mic').classList.remove('live'); renderWhoList(); chunks = []; if (recorder && recorder.state !== 'inactive'){ try { recorder.stop(); } catch(e){} } recorder = null; $('#who').value=''; $('#what').value=''; renderPeople(); $('#luv1next').disabled = true; $('#luv2next').disabled = true; $$('#values .chip').forEach(c=>c.setAttribute('aria-pressed','false')); clearInterval(recT); clearInterval(waveT); $('#recbtn').classList.remove('live'); $('#cam').classList.remove('live'); $('#timer').textContent='00:00'; $('#transcript').innerHTML=''; stopCam(); }
+function resetLuv(){ luv = {from:null, who:null, what:'', value:null, rec:0, transcript:'', video:null}; $('#who-confirm').hidden = true; $('#who-heard').textContent=''; $('#who-state').textContent='Tap to say your name'; $('#who-mic').classList.remove('live'); renderWhoList(); chunks = []; if (recorder && recorder.state !== 'inactive'){ try { recorder.stop(); } catch(e){} } recorder = null; $('#what-text').hidden = true; $('#what-text').textContent = ''; $('#what-state').textContent = 'Tap and say what they did'; $('#what-mic').classList.remove('live'); renderPeople(); $('#luv1next').disabled = true; $('#luv2next').disabled = true; $$('#values .chip').forEach(c=>c.setAttribute('aria-pressed','false')); clearInterval(recT); clearInterval(waveT); $('#recbtn').classList.remove('live'); $('#cam').classList.remove('live'); $('#timer').textContent='00:00'; $('#transcript').innerHTML=''; stopCam(); }
 
 /* ---------------- real voice in (browser speech recognition) ---------------- */
 const SR = window.SpeechRecognition || window.webkitSpeechRecognition;

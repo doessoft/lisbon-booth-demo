@@ -93,7 +93,18 @@ h1{font-size:11cqw}h2{font-size:8.4cqw}
 .big.primary{background:var(--uma);border-color:var(--uma);color:#031106}
 .big.primary small{color:#0d3f1a}
 .big.luv{border-color:rgba(192,140,255,.45)}
+.big.flat{padding-right:5cqw!important;text-align:center}
 .big.flat::after{display:none}
+.btnrow .big{flex:1 1 0;min-width:0}
+#story-slot{min-height:0;overflow:auto;scrollbar-width:none;justify-content:safe center}
+#story-slot::-webkit-scrollbar{display:none}
+#story-slot .card{padding:5cqw;gap:2.6cqw}
+#story-slot .card .title{font-size:6.4cqw}
+#story-slot .card p{font-size:3.8cqw;line-height:1.45}
+#story-slot .stat b{font-size:6.8cqw}
+#story-slot .person .name{font-size:5cqw}
+#story-slot .qr .code{width:12cqw;height:12cqw}
+#v-story{gap:3.4cqw}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:2.2cqw}
 .grid2 .big{padding:3.2cqw 3.4cqw;font-size:4cqw;line-height:1.15}
 .grid2 .big small{font-size:2.9cqw;margin-top:.8cqw}
@@ -250,7 +261,9 @@ textarea{width:100%;min-height:24cqw;background:rgba(16,23,15,.9);border:1px sol
 #who-mic,#what-mic{color:#1a0b3a}
 #cap-mic.live,#who-mic.live,#what-mic.live{color:#fff}
 .you.live{min-width:34%;color:var(--muted)}
-#thread{-webkit-mask-image:linear-gradient(to bottom,transparent,#000 7%,#000 100%);mask-image:linear-gradient(to bottom,transparent,#000 7%,#000 100%);padding-top:2cqw}
+#thread{padding-top:1cqw}
+#thread > *{flex-shrink:0}
+#thread.scrolled{-webkit-mask-image:linear-gradient(to bottom,transparent,#000 6%,#000 100%);mask-image:linear-gradient(to bottom,transparent,#000 6%,#000 100%)}
 #what-text{max-height:24cqw;overflow:auto;scrollbar-width:none}
 #what-mic{background:var(--luv);width:18cqw;height:18cqw;font-size:7cqw}
 #what-mic.live{background:var(--rec);animation:ringp 1s ease-out infinite}
@@ -433,7 +446,7 @@ textarea{width:100%;min-height:24cqw;background:rgba(16,23,15,.9);border:1px sol
       </div>
       <div class="btnrow">
         <button class="big flat" data-go="explore">Explore something else</button>
-        <button class="big flat" data-go="ambient" style="flex:0 0 auto">Done</button>
+        <button class="big flat" data-go="ambient">Done</button>
       </div>
     </section>
 
@@ -904,6 +917,7 @@ function playItems(label, items, intro){
 
 /* ---------------- ask uma ---------------- */
 const thread = $('#thread');
+thread.addEventListener('scroll', () => thread.classList.toggle('scrolled', thread.scrollTop > 6), { passive:true });
 const esc = s => String(s).replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
 function resetAsk(){ askHist = []; thread.innerHTML = `<div class="uma"><i class="orb"></i><div class="txt">Ask me anything about Upwork. Tap the mic, or pick one of these.</div></div><div class="sugg" id="sugg">${faqs.map((f,i)=>`<button data-q="${i}">${f.q}<span>↗</span></button>`).join('')}</div>`; }
 resetAsk();

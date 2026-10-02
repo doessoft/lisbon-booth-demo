@@ -187,6 +187,8 @@ textarea{width:100%;min-height:24cqw;background:rgba(16,23,15,.9);border:1px sol
 #cam .sim{position:absolute;inset:0;display:grid;place-items:center;background:
   radial-gradient(60% 60% at 50% 45%, rgba(192,140,255,.25), transparent 70%),linear-gradient(160deg,#141022,#0a0d0b)}
 #cam .sim .sil{width:34%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 50% 40%,#2a2440,#171226);box-shadow:0 18cqw 0 6cqw #171226}
+#cam .sim[hidden]{display:none}
+#cam video[hidden]{display:none}
 #cam .recdot{position:absolute;top:3cqw;left:3cqw;display:flex;gap:1.6cqw;align-items:center;font-size:3cqw;letter-spacing:.1em;color:var(--fg);opacity:0;transition:opacity .3s}
 #cam.live .recdot{opacity:1}
 #cam .recdot i{width:2.4cqw;height:2.4cqw;border-radius:50%;background:var(--rec);animation:breathe 1s infinite}

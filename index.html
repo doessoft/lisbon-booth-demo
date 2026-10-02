@@ -909,16 +909,18 @@ async function runCapture(need){
 function playStory(topic){ const {label, items} = topics()[topic]; playItems(label, items, null); }
 function playItems(label, items, intro){
   go('story'); $('#story-label').textContent = label;
-  const per = 10000, total = items.length*per; let start = Date.now(); let idx = -1;
-  storyNext = () => { const el = Date.now() - start; const i = Math.floor(el / per); if (i < items.length - 1) start = Date.now() - (i + 1) * per; };
-  storyGoto = i => { start = Date.now() - Math.max(0, Math.min(items.length - 1, i)) * per; };
+  const per = 10000, total = items.length*per; let start = Date.now(); let idx = -1; let ended = false;
+  const resume = () => { if (ended){ ended = false; idx = -1; $('#story-voice').style.visibility = 'visible'; clearInterval(storyT); storyT = setInterval(tick, 150); } };
+  storyNext = () => { const el = Date.now() - start; const i = Math.floor(el / per); if (i < items.length - 1){ start = Date.now() - (i + 1) * per; resume(); } };
+  storyGoto = i => { start = Date.now() - Math.max(0, Math.min(items.length - 1, i)) * per; resume(); };
   $('#story-dots').innerHTML = items.map((_, k) => `<button data-i="${k}" aria-label="Card ${k + 1} of ${items.length}"></button>`).join('');
-  storyT = setInterval(() => {
+  const tick = () => {
     const el = Date.now()-start, i = Math.min(items.length-1, Math.floor(el/per)), left = Math.max(0, Math.ceil((total-el)/1000));
     $('#ringfg').style.strokeDashoffset = 100.5*(1-Math.min(1,el/total)); $('#ringtxt').textContent = left;
     if (i !== idx){ idx = i; const slot=$('#story-slot'); slot.innerHTML = renderItem(items[i], i); drawQRs(slot); slot.firstChild.animate([{opacity:0,transform:'translateY(14px) scale(.98)'},{opacity:1,transform:'none'}],{duration:600,easing:'cubic-bezier(.2,.9,.3,1)'}); $$('#story-dots button').forEach((d,k)=>d.classList.toggle('on',k===i)); const it = items[i]; say(it.say ? it.say : it.n ? `${i === 0 && intro ? intro + ' ' : ''}${it.n}. ${it.m.split('·')[0]}. ${it.p}` : `${it.t}. ${it.p}`); $('#story-voice').style.visibility='visible'; }
-    if (el >= total){ clearInterval(storyT); $('#story-slot').innerHTML = `<div class="card"><div class="title">Want to explore something else?</div><p>Or just walk away. Uma returns to the Pulse on her own.</p></div>`; $('#story-voice').style.visibility='hidden'; say("Want to explore something else?"); }
-  }, 150);
+    if (el >= total){ clearInterval(storyT); ended = true; $('#story-slot').innerHTML = `<div class="card"><div class="title">Want to explore something else?</div><p>Or just walk away. Uma returns to the Pulse on her own.</p></div>`; $('#story-voice').style.visibility='hidden'; say("Want to explore something else?"); }
+  };
+  storyT = setInterval(tick, 150);
 }
 
 /* ---------------- ask uma ---------------- */

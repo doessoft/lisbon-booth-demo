@@ -243,6 +243,15 @@ textarea{width:100%;min-height:24cqw;background:rgba(16,23,15,.9);border:1px sol
 .micbar{display:flex;align-items:center;gap:4cqw;padding-top:2cqw}
 .micbar button{width:16cqw;height:16cqw;border-radius:50%;background:var(--uma);color:#031106;font-size:6.5cqw;display:grid;place-items:center;flex:none;animation:ringp 2.4s ease-out infinite}
 .micbar span{font-size:3.8cqw;color:var(--muted)}
+.micbar button svg{width:48%;height:48%}
+.micbar button.live{background:var(--rec);color:#fff;animation:ringp 1s ease-out infinite}
+#cap-mic svg,#who-mic svg,#what-mic svg{width:44%;height:44%}
+#cap-mic{color:#031106}
+#who-mic,#what-mic{color:#1a0b3a}
+#cap-mic.live,#who-mic.live,#what-mic.live{color:#fff}
+.you.live{min-width:34%;color:var(--muted)}
+#thread{-webkit-mask-image:linear-gradient(to bottom,transparent,#000 7%,#000 100%);mask-image:linear-gradient(to bottom,transparent,#000 7%,#000 100%);padding-top:2cqw}
+#what-text{max-height:24cqw;overflow:auto;scrollbar-width:none}
 #what-mic{background:var(--luv);width:18cqw;height:18cqw;font-size:7cqw}
 #what-mic.live{background:var(--rec);animation:ringp 1s ease-out infinite}
 #who-confirm{display:flex;flex-direction:column;gap:3cqw}
@@ -409,7 +418,7 @@ textarea{width:100%;min-height:24cqw;background:rgba(16,23,15,.9);border:1px sol
       <div class="bar"><span class="brand"><i class="orb"></i>Uma</span><button class="ghost" data-go="explore">← Back</button></div>
       <h2 id="cap-h">What do you need?</h2>
       <div class="sub" id="cap-sub">Tap the mic and say it in a sentence.</div>
-      <div class="listen" id="cap-listen" style="padding:3cqw 0"><button class="mic" id="cap-mic" aria-label="Speak">🎤</button><div class="heard" id="cap-heard"></div><div class="sub" id="cap-state">Tap to talk</div></div>
+      <div class="listen" id="cap-listen" style="padding:3cqw 0"><button class="mic" id="cap-mic" aria-label="Speak"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v3"/></svg></button><div class="heard" id="cap-heard"></div><div class="sub" id="cap-state">Tap to talk</div></div>
       <div class="chips" id="cap-chips"></div>
     </section>
 
@@ -432,7 +441,7 @@ textarea{width:100%;min-height:24cqw;background:rgba(16,23,15,.9);border:1px sol
     <section class="view" id="v-ask">
       <div class="bar"><span class="brand"><i class="orb" id="ask-orb"></i>Ask Uma</span><button class="ghost" data-go="home">← Back</button></div>
       <div id="thread" class="grow"></div>
-      <div class="micbar"><button id="mic" aria-label="Tap and ask Uma">🎤</button><span>Tap and ask, or pick a question</span></div>
+      <div class="micbar"><button id="mic" aria-label="Tap and ask Uma"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v3"/></svg></button><span>Tap and ask, or pick a question</span></div>
     </section>
 
     <!-- LUV 0: nominator -->
@@ -441,7 +450,7 @@ textarea{width:100%;min-height:24cqw;background:rgba(16,23,15,.9);border:1px sol
       <div class="steps"><i class="on"></i><i></i><i></i><i></i><i></i></div>
       <h2>First, who are you?</h2>
       <div class="sub">Say your name or tap it. Every quarterly LUV award records who gave it.</div>
-      <div class="listen" style="padding:2cqw 0"><button class="mic" id="who-mic" aria-label="Say your name">🎤</button><div class="heard" id="who-heard"></div><div class="sub" id="who-state">Tap to say your name</div></div>
+      <div class="listen" style="padding:2cqw 0"><button class="mic" id="who-mic" aria-label="Say your name"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v3"/></svg></button><div class="heard" id="who-heard"></div><div class="sub" id="who-state">Tap to say your name</div></div>
       <div id="who-confirm" class="card" hidden><div class="sub">Is this you?</div><div class="person" id="who-match"></div><div class="btnrow"><button class="big flat luvbtn" id="who-yes">Yes, that's me</button><button class="big flat" id="who-no">No</button></div></div>
       <div class="list grow" id="who-list"></div>
     </section>
@@ -458,7 +467,7 @@ textarea{width:100%;min-height:24cqw;background:rgba(16,23,15,.9);border:1px sol
       <div class="bar"><span class="brand"><i class="orb" style="background:var(--luv);box-shadow:0 0 16px var(--luv)"></i>Send some LUV</span><button class="ghost" data-go="luv1">← Back</button></div>
       <div class="steps"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></div>
       <h2>What did <span id="luv-name">they</span> do?</h2>
-      <div class="listen" style="padding:1cqw 0"><button class="mic" id="what-mic" aria-label="Say what they did">🎤</button><div class="sub" id="what-state">Tap and say what they did</div></div>
+      <div class="listen" style="padding:1cqw 0"><button class="mic" id="what-mic" aria-label="Say what they did"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v3"/></svg></button><div class="sub" id="what-state">Tap and say what they did</div></div>
       <div class="bubble" id="what-text" hidden></div>
       <div class="sub">Which Upwork value does this live? <span style="color:var(--dim)">Placeholder list until Upwork shares the LUV set.</span></div>
       <div class="chips" id="values"></div>
@@ -900,21 +909,21 @@ function resetAsk(){ askHist = []; thread.innerHTML = `<div class="uma"><i class
 resetAsk();
 thread.addEventListener('click', e => { const b = e.target.closest('[data-q]'); if (b) answer(faqs[b.dataset.q].q); });
 $('#mic').onclick = () => listen(false);
+let listenBox = null;
+function setAskMic(on){ const b = $('#mic'); b.classList.toggle('live', on); const lbl = $('.micbar span'); if (lbl) lbl.textContent = on ? 'Listening… tap to stop' : 'Tap and ask, or pick a question'; }
 function listen(forceSim){
-  if (mode!=='ask') return; touch(); stopSpeech();
-  const box = document.createElement('div'); box.className='listen';
-  box.innerHTML = `<div class="mic">🎤</div><div class="heard"><span class="caret"></span></div><div class="sub">Listening…</div>`;
-  thread.appendChild(box); thread.scrollTop = 1e9;
-  const heard = box.querySelector('.heard'), micEl = box.querySelector('.mic'), subEl = box.querySelector('.sub');
+  if (mode!=='ask') return; touch();
+  if ($('#mic').classList.contains('live')){ stopReal(); setAskMic(false); if (listenBox){ listenBox.remove(); listenBox = null; } return; }
+  stopSpeech();
+  const box = document.createElement('div'); box.className = 'you live'; box.innerHTML = '<span class="caret"></span>'; thread.appendChild(box); thread.scrollTop = 1e9; listenBox = box;
   let finished = false;
-  const finish = q => { if (finished) return; finished = true; box.remove(); if (q && mode==='ask') answer(q); };
-  const simulate = () => { const q = faqs[Math.random()*faqs.length|0].q; let i=0; const tick = setInterval(() => { i++; heard.innerHTML = esc(q.slice(0,i)) + '<span class="caret"></span>'; if (i>=q.length){ clearInterval(tick); setTimeout(() => finish(q), 500); } }, 55); };
+  const finish = q => { if (finished) return; finished = true; setAskMic(false); box.remove(); if (listenBox === box) listenBox = null; if (q && mode==='ask') answer(q); };
+  const fail = msg => { if (finished) return; finished = true; setAskMic(false); box.classList.remove('live'); box.textContent = msg; setTimeout(() => box.remove(), 1800); if (listenBox === box) listenBox = null; };
+  const simulate = () => { const q = faqs[Math.random()*faqs.length|0].q; let i = 0; const tick = setInterval(() => { i++; box.innerHTML = esc(q.slice(0, i)) + '<span class="caret"></span>'; if (i >= q.length){ clearInterval(tick); setTimeout(() => finish(q), 400); } }, 45); };
+  setAskMic(true);
   if (forceSim) return simulate();
-  const ok = listenReal(
-    (text, err) => { if (text) finish(text); else { subEl.textContent = err==='not-allowed' ? 'Microphone blocked here. Using a sample question.' : 'Didn’t catch that. Using a sample question.'; micEl.classList.remove('real'); setTimeout(simulate, 700); } },
-    (all) => { heard.innerHTML = esc(all) + '<span class="caret"></span>'; heard.classList.add('live'); }
-  );
-  if (ok){ micEl.classList.add('real'); subEl.textContent = 'Listening… speak now'; } else simulate();
+  const ok = listenReal((text, err) => { if (text) finish(text); else fail(err === 'not-allowed' ? 'Microphone blocked here. Pick a question instead.' : 'Didn’t catch that. Tap the mic to try again.'); }, all => { box.innerHTML = esc(all) + '<span class="caret"></span>'; thread.scrollTop = 1e9; });
+  if (!ok) fail('No microphone here. Pick a question instead.');
 }
 async function answer(q){
   $('#sugg')?.remove(); touch();

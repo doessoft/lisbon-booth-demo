@@ -296,6 +296,15 @@ textarea{width:100%;min-height:24cqw;background:rgba(16,23,15,.9);border:1px sol
 /* toast + follow-ups + voice select */
 #toast{position:absolute;top:20cqw;left:50%;transform:translateX(-50%) translateY(-8px);z-index:6;background:rgba(16,23,15,.92);border:1px solid var(--line);border-radius:99px;padding:2.6cqw 4.6cqw;font-size:3.4cqw;color:var(--muted);opacity:0;transition:opacity .5s,transform .5s;pointer-events:none;white-space:nowrap}
 #toast.on{opacity:1;transform:translateX(-50%)}
+#mute{position:absolute;top:4.6cqw;right:4.6cqw;z-index:8;width:10cqw;height:10cqw;border-radius:50%;border:1px solid var(--line);background:rgba(16,23,15,.85);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);display:grid;place-items:center;color:var(--muted);transition:color .2s,border-color .2s}
+#mute:hover{color:var(--fg)}
+#mute svg{width:5cqw;height:5cqw}
+#mute .off-icon{display:none}
+#mute.off{color:var(--rec);border-color:rgba(255,77,109,.55)}
+#mute.off .on-icon{display:none}
+#mute.off .off-icon{display:block}
+.bar{padding-right:12cqw}
+#count{right:18cqw}
 .sugg.next{margin-left:7.6cqw;gap:1.6cqw}
 .sugg.next .kicker{color:var(--dim);font-size:2.9cqw;margin-bottom:.4cqw}
 .sugg.next button{font-size:3.6cqw;padding:2.8cqw 4cqw}
@@ -346,6 +355,7 @@ textarea{width:100%;min-height:24cqw;background:rgba(16,23,15,.9);border:1px sol
     <canvas id="globe"></canvas>
     <canvas id="fx"></canvas>
       <div id="toast" aria-live="polite"></div>
+      <button id="mute" aria-label="Mute Uma" aria-pressed="false"><svg class="on-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg><svg class="off-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="m22 9-6 6"/><path d="m16 9 6 6"/></svg></button>
 
     <!-- THE PULSE -->
     <section class="view on" id="v-ambient">
@@ -636,6 +646,9 @@ async function presenceStart(){
   }, 350);
 }
 function presenceStop(){ presence = false; clearInterval(presT); if (presStream){ presStream.getTracks().forEach(t => t.stop()); presStream = null; } presPrev = null; renderPresence('off'); }
+function setVoice(on){ voice = on; try { localStorage.setItem('uma.voice', on ? '1' : '0'); } catch(e){} $('#s-voice').textContent = on ? 'on' : 'off'; const b = $('#mute'); b.classList.toggle('off', !on); b.setAttribute('aria-pressed', String(!on)); b.setAttribute('aria-label', on ? 'Mute Uma' : 'Unmute Uma'); if (!on) stopSpeech(); }
+$('#mute').addEventListener('click', e => { e.stopPropagation(); setVoice(!voice); touch(); });
+try { if (localStorage.getItem('uma.voice') === '0') setVoice(false); } catch(e){}
 let toastT = null;
 function toast(t){ const el = $('#toast'); el.textContent = t; el.classList.add('on'); clearTimeout(toastT); toastT = setTimeout(() => el.classList.remove('on'), 3500); }
 function touch(){ if (mode==='ambient') return; clearTimeout(idleT); idleDeadline = Date.now()+IDLE_MS; idleT = setTimeout(() => go('ambient'), IDLE_MS); }
@@ -655,7 +668,7 @@ document.addEventListener('keydown', e => {
   else if (k==='p'){ if (presence) { presenceStop(); try { localStorage.setItem('uma.presence','0'); } catch(x){} } else { presenceStart(); try { localStorage.setItem('uma.presence','1'); } catch(x){} } }
   else if (k==='1') go('ambient'); else if (k==='2') go('home'); else if (k==='3') go('explore'); else if (k==='4') go('ask'); else if (k==='5') go('luv0');
   else if (k==='i'){ if (mode!=='ambient') go('ambient'); }
-  else if (k==='m'){ voice = !voice; $('#s-voice').textContent = voice?'on':'off'; if (!voice) stopSpeech(); }
+  else if (k==='m') setVoice(!voice);
   else if (k==='v'){ const sim = e.shiftKey; if (mode!=='ask') go('ask'); setTimeout(() => listen(sim), 400); }
 });
 

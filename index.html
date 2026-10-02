@@ -297,15 +297,18 @@ textarea{width:100%;min-height:24cqw;background:rgba(16,23,15,.9);border:1px sol
 .sc.live{border-color:rgba(43,227,90,.5);color:var(--uma2)}.sc.live::before{background:var(--uma2);box-shadow:0 0 8px var(--uma2)}
 .sc.sim{border-color:rgba(255,255,255,.22);color:#d5ded7}.sc.sim::before{background:#d5ded7}
 .sc.plan{border-style:dashed}
-#glass .grid{display:grid;grid-template-columns:1fr 1.5fr 1fr;gap:16px;align-items:start}
+#glass .grid{display:grid;grid-template-columns:minmax(240px,1fr) minmax(320px,1.5fr) minmax(240px,1fr);gap:16px;align-items:start}
+@media (max-width:1100px){#glass .grid{grid-template-columns:1fr 1fr}}
 #glass .col h3,#glass .infra h3{margin:0 0 10px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--uma2);font-weight:600;font-family:var(--body)}
 #glass .node{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:6px;margin-bottom:10px;min-width:0}
-#glass .node .t{display:flex;justify-content:space-between;align-items:center;gap:10px;color:var(--fg);font-size:14px;font-family:var(--display)}
+#glass .node .t{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:6px 10px;color:var(--fg);font-size:14px;font-family:var(--display)}
+#glass .node .t>span:first-child{flex:1 1 auto;min-width:0}
+#glass .node .t .sc{flex:none}
 #glass .node .d{font-size:12px;color:var(--dim)}
 #glass .node .n{font-size:12.5px;line-height:1.5}
 #glass .node .n b{color:var(--fg);font-weight:500}
 #glass .app{border-color:rgba(43,227,90,.45);background:rgba(20,168,0,.08)}
-#glass .modes{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+#glass .modes{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px}
 #glass .modes .node{margin:0}
 #glass .infra{margin-top:16px;border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--panel)}
 #glass .infra .row{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}

@@ -1,17 +1,5 @@
 [
  {
-  "name": "Charlotte",
-  "role": "Workplace · leads the Lisbon office build-out",
-  "photo": "people/charlotte.jpg",
-  "group": "Lisbon project"
- },
- {
-  "name": "Lee",
-  "role": "Creative team lead",
-  "photo": "people/lee.jpg",
-  "group": "Lisbon project"
- },
- {
   "name": "Hayden Brown",
   "role": "President and CEO",
   "photo": "https://cdn.prod.website-files.com/604761b6a7e539ea274cfd6b/691de9541fa33b9dd603be2b_Ellipse%201%20(7).png",
@@ -88,5 +76,17 @@
   "role": "Board Member",
   "photo": "https://cdn.prod.website-files.com/604761b6a7e539ea274cfd6b/6a21f816fb44574d4d62590e_David%20Lissy.jpg",
   "group": "Board"
+ },
+ {
+  "name": "Charlotte Johnson",
+  "role": "Senior Director, Workplace & Remote Organizational Effectiveness",
+  "photo": "people/charlotte.jpg",
+  "group": "Lisbon project"
+ },
+ {
+  "name": "Lee",
+  "role": "Creative team lead",
+  "photo": "people/lee.jpg",
+  "group": "Lisbon project"
  }
 ]

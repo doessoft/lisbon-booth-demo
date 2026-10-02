@@ -430,7 +430,7 @@ textarea{width:100%;min-height:24cqw;background:rgba(16,23,15,.9);border:1px sol
     <div class="r"><select id="aitts" aria-label="Uma voice"><option value="system">System voice</option><option value="nova">Uma voice · nova (OpenAI)</option><option value="coral">Uma voice · coral (OpenAI)</option><option value="sage">Uma voice · sage (OpenAI)</option></select></div>
     <div class="s" id="aistatus">Canned answers. Paste a key to go live.</div>
   </div>
-  <div class="fine">Sample content throughout: people, projects and numbers are illustrative. Value names are placeholders until Upwork shares the LUV list. Mic and camera use whatever this browser allows. A pasted key stays in this browser only and never leaves with the file.</div>
+  <div class="fine">The three people in Find great talent and the three projects in What businesses are building are real public Upwork profiles and postings, pulled Oct 2 2026. Everything else (stories, feed, counter, teammates) is illustrative. Value names are placeholders until Upwork shares the LUV list. A pasted key stays in this browser only and never leaves with the file.</div>
 </aside>
 <div id="glass" role="dialog" aria-label="Behind the glass"></div>
 
@@ -446,14 +446,14 @@ const skills = ["brand identity","AI agent build","Webflow site","data pipeline"
 const roles = ["a designer","a developer","an ML engineer","a copywriter","a video editor","a data analyst","a marketer","a translator"];
 const counterBase = 12400;
 const talent = [
-  {n:"Inês Carvalho", i:"IC", m:"Brand strategist · Lisbon · 98% job success", t:["Branding","Identity","Packaging"], p:"Built identities for 40+ consumer brands. Known for finishing a week early."},
-  {n:"Daniel Okafor", i:"DO", m:"ML engineer · Lagos · Top Rated Plus", t:["LLM apps","Python","RAG"], p:"Ships retrieval pipelines for support teams. Fluent in production, not just notebooks."},
-  {n:"Marta Jensen", i:"MJ", m:"Webflow developer · Copenhagen · Expert-Vetted", t:["Webflow","Motion","SEO"], p:"Marketing sites that load fast and get edited by marketers, not developers."}
+  {k:"Live on Upwork · Expert-Vetted", n:"Luis Sousa T.", i:"LT", m:"Senior brand identity designer · Portugal · $70/hr", t:["Brand identity","Brand strategy","Art direction"], p:"Top Rated Plus and Expert-Vetted. 100% job success, $90K+ earned on Upwork. Visual systems for brands and digital products."},
+  {k:"Live on Upwork", n:"Mykola L.", i:"ML", m:"Web and landing-page designer · Portugal · $45/hr", t:["UX/UI","Webflow","CRO"], p:"Top Rated Plus. 100% job success across 18 contracts, $600K+ earned. Landing pages built to convert, not just to look good."},
+  {k:"Live on Upwork", n:"Goga K.", i:"GK", m:"AI and machine learning engineer · Georgia · $40/hr", t:["AI agents","RAG","LangChain"], p:"Top Rated Plus. 100% job success across 20 contracts, $100K+ earned. Ships agents and retrieval pipelines on AWS and Google Cloud."}
 ];
 const building = [
-  {k:"In progress now", t:"A DTC skincare brand is rebuilding its storefront", p:"Shopify migration, 3D product renders and a lifecycle email program, run by a 4-person Upwork team.", s:[["6 wks","timeline"],["4","specialists"]]},
-  {k:"Shipped this month", t:"A logistics startup launched a dispatcher mobile app", p:"Flutter app, offline-first, built with a developer in Kraków and a QA lead in Manila.", s:[["$42k","project value"],["10 wks","start to launch"]]},
-  {k:"Hiring today", t:"A Lisbon restaurant group wants an AI phone agent", p:"Voice agent that takes reservations in Portuguese and English, with a fallback to staff.", s:[["12","proposals in"],["2 h","time to first reply"]]}
+  {k:"Live on Upwork · posted Oct 2", t:"A software consultancy in Ireland is hiring a senior agentic-AI engineer for Google Cloud", p:"Full time, six months and more, expert level. The client has spent $448K on Upwork and holds a 5.0 rating from 75 freelancers.", s:[["$45–50/hr","posted rate"],["53","proposals in"]]},
+  {k:"Live on Upwork · posted Oct 2", t:"A golf app is going from MVP to production with a React Native team", p:"A senior full-stack developer or small team to take a working GPS golf app the last mile to launch. Part time, one to three months.", s:[["1–3 mo","timeline"],["22","proposals in"]]},
+  {k:"Live on Upwork · posted Oct 2", t:"A 50-year-old US construction firm is replacing its website on Webflow", p:"Template site already built, information architecture finished, a designer needed to finish and polish it. Part time for one to three months.", s:[["52","proposals in"],["4.8","client rating"]]}
 ];
 const stories = [
   {k:"Success story", t:"From a founder and a laptop to a 12-person remote team", p:"A marketplace startup hired its first designer here, then its CTO. Revenue grew 5× in 18 months.", s:[["5×","revenue"],["18 mo","time"]]},
@@ -467,10 +467,10 @@ const surprises = [
 ];
 const faqs = [
   {q:"How can Upwork help my business?", a:"Upwork gives you access to independent talent in nearly every skill, from a single freelancer to a full managed team. You post what you need, review proposals, and pay only for work delivered.", card:building[2]},
-  {q:"Help me hire a designer.", a:"Tell me what you're making, a budget range, and when you need it. I'll draft the job post and suggest a shortlist. Here's the kind of person I'd start with.", card:talent[0]},
-  {q:"What's the fastest way to hire?", a:"Project Catalog, for fixed-scope work with a set price, often starts same day. For custom work, a well-scoped post with a clear budget usually gets its first proposals within a couple of hours.", card:building[2]},
-  {q:"Show me an example project.", a:"Here's one: a logistics startup shipped a dispatcher mobile app in ten weeks with a developer in Kraków and a QA lead in Manila.", card:building[1]},
-  {q:"What skills are trending?", a:"This quarter the fastest-growing requests are AI agent development, Webflow, data engineering and short-form video editing. Generative AI work roughly doubled year over year.", card:talent[1]}
+  {q:"Help me hire a designer.", a:"Tell me what you're making, a budget range, and when you need it. I'll draft the job post and suggest a shortlist. Here's the kind of person I'd start with, live on Upwork right now.", card:talent[0]},
+  {q:"What's the fastest way to hire?", a:"Project Catalog, for fixed-scope work with a set price, often starts same day. For custom work, a well-scoped post with a clear budget usually gets its first proposals within a couple of hours.", card:building[1]},
+  {q:"Show me an example project.", a:"Here's one posted today: a software consultancy in Ireland is hiring a senior engineer to ship agentic AI on Google Cloud, full time for six months or more.", card:building[0]},
+  {q:"What skills are trending?", a:"This quarter the fastest-growing requests are AI agent development, Webflow, data engineering and short-form video editing. Here's someone doing that work right now.", card:talent[2]}
 ];
 const people = [["Taylor Robinson","Design Lead"],["Avery Kim","Account Manager"],["Jordan Lee","Software Engineer"],["Morgan Patel","People Ops"],["Sofia Almeida","Office Lead, Lisbon"],["Noah Fischer","Product Marketing"],["Priya Nair","Data Science"],["Lucas Mendes","Customer Success"]];
 const values = ["Put community first","Have a bias toward action","Build amazing teams","Think boldly","Do the right thing"];
@@ -620,7 +620,7 @@ const spots = [
   {k:"Customer story", h:"A two-person startup shipped its first app with a team it met here.", d:"12 weeks · 3 countries · now 14 people"},
   {k:"Hiring trend", h:"AI agent development requests tripled this quarter.", d:"Fastest-growing skill across Europe"},
   {k:"Business insight", h:"Posts with a budget range get their first proposal twice as fast.", d:"Median: under 2 hours"},
-  {k:"Featured project", h:"A Lisbon restaurant group is building an AI phone agent.", d:"Portuguese and English · 12 proposals in"},
+  {k:"Featured project · live on Upwork", h:"A consultancy in Ireland is hiring a senior agentic-AI engineer for Google Cloud.", d:"$45–50/hr · six months and more · 53 proposals in today"},
   {k:"Platform statistic", h:"Most-hired skill in Lisbon this month: Webflow development.", d:"Followed by brand identity and voiceover"},
   {k:"Customer story", h:"An enterprise support team cut its backlog by 60% with a six-person pod.", d:"Staffed in 13 days"}
 ];
@@ -633,7 +633,7 @@ const topics = {talent:{label:'Find great talent', items:talent}, building:{labe
 $$('[data-topic]').forEach(b => b.onclick = () => playStory(b.dataset.topic));
 function art(seed){ const h1 = 110+((seed*47)%40), h2=140+((seed*31)%60); return `<div class="art" style="background:radial-gradient(70% 80% at ${20+(seed*37)%60}% ${10+(seed*53)%50}%, hsl(${h1} 80% 35% / .9), transparent 70%), radial-gradient(50% 60% at ${60+(seed*17)%30}% 90%, hsl(${h2} 70% 30% / .8), transparent 70%)"></div>`; }
 function renderItem(it, i){
-  if (it.n) return `<div class="card">${art(i+3)}<div class="person"><div class="avatar">${it.i}</div><div><div class="name">${it.n}</div><div class="meta">${it.m}</div></div></div><div class="tags">${it.t.map(x=>`<span class="tag">${x}</span>`).join('')}</div><p>${it.p}</p></div>`;
+  if (it.n) return `<div class="card">${art(i+3)}${it.k ? `<div class="kicker">${it.k}</div>` : ''}<div class="person"><div class="avatar">${it.i}</div><div><div class="name">${it.n}</div><div class="meta">${it.m}</div></div></div><div class="tags">${it.t.map(x=>`<span class="tag">${x}</span>`).join('')}</div><p>${it.p}</p></div>`;
   return `<div class="card">${art(i+7)}<div class="kicker">${it.k}</div><div class="title">${it.t}</div><p>${it.p}</p><div class="stats">${it.s.map(([b,l])=>`<div class="stat"><b>${b}</b><span>${l}</span></div>`).join('')}</div></div>`;
 }
 function playStory(topic){
@@ -762,7 +762,8 @@ const AI = {key:'', model:'', provider:null};
 const UMA_SYSTEM = `You are Uma, Upwork's AI companion, speaking aloud inside a small booth in the reception of Upwork's Lisbon office. Visitors and employees talk to you by voice.
 Answer in at most two short spoken sentences. Plain words, no lists, no markdown, no emoji. Be warm and specific.
 Scope: Upwork, hiring independent talent, freelancing, the marketplace, work trends, the Lisbon office. If asked something outside that, say in one sentence what you can help with instead. Never ask for or repeat personal data. Reply in the language the person used.
-Illustrative facts you may use: Project Catalog work often starts the same day; a well-scoped post with a budget range usually gets its first proposals within about two hours; the fastest-growing requests this quarter are AI agent development, Webflow, data engineering and short-form video editing.`;
+Illustrative facts you may use: Project Catalog work often starts the same day; a well-scoped post with a budget range usually gets its first proposals within about two hours; the fastest-growing requests this quarter are AI agent development, Webflow, data engineering and short-form video editing.
+Real examples live on Upwork today, October 2 2026, that you may mention: a software consultancy in Ireland hiring a senior agentic-AI engineer for Google Cloud at 45 to 50 dollars an hour with 53 proposals in; a golf app going from MVP to production with a React Native team; a 50-year-old US construction firm rebuilding its website on Webflow. Talent you may mention without full names: a Top Rated Plus, Expert-Vetted brand identity designer in Portugal at 70 dollars an hour; a Top Rated Plus web designer in Portugal with 600 thousand dollars earned; a Top Rated Plus AI engineer who ships agents and RAG pipelines at 40 dollars an hour.`;
 function loadAI(){ try { AI.key = localStorage.getItem('uma.key') || ''; AI.model = localStorage.getItem('uma.model') || ''; AI.tts = localStorage.getItem('uma.tts') || 'system'; } catch(e){} AI.tts = AI.tts || 'system'; AI.provider = !AI.key ? null : (AI.key.startsWith('sk-ant-') ? 'anthropic' : 'openai'); $('#aimodel').value = AI.model; $('#aitts').value = AI.tts; renderAI(); }
 function renderAI(msg, cls){ const s = $('#aistatus'); if (msg){ s.textContent = msg; s.className = 's ' + (cls || ''); } else if (!AI.provider){ s.textContent = 'Canned answers. Paste a key to go live.'; s.className = 's'; } else { s.textContent = `Live · ${AI.provider} · ${AI.model || (AI.provider === 'anthropic' ? 'claude-opus-5-5' : 'gpt-5.4-mini')}` + (AI.provider === 'openai' && AI.tts !== 'system' ? ' · voice ' + AI.tts : '') + (AI.lastMs ? ' · ' + (AI.lastMs / 1000).toFixed(1) + ' s' : ''); s.className = 's ok'; } $('#s-ai').textContent = AI.provider ? 'live' : 'canned'; }
 $('#aisave').onclick = () => { const k = $('#aikey').value.trim(), m = $('#aimodel').value.trim(); try { if (k) localStorage.setItem('uma.key', k); if (k || AI.key) localStorage.setItem('uma.model', m); } catch(e){} $('#aikey').value = ''; loadAI(); };

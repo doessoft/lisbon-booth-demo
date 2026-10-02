@@ -749,7 +749,7 @@ async function askModel(history, system = UMA_SYSTEM){
       text = j.choices?.[0]?.message?.content || '';
     }
     text = text.trim(); if (text) renderAI(); return text || null;
-  } catch(e){ renderAI('Live answer failed: ' + (e.name === 'AbortError' ? 'timed out' : e.message).slice(0, 90) + '. Used the canned answer.', 'err'); return null; }
+  } catch(e){ const why = e.name === 'AbortError' ? 'timed out' : /Failed to fetch/i.test(e.message) ? 'the key was rejected or has no access to that model' : e.message; renderAI('Live answer failed: ' + String(why).slice(0, 90) + '. Used the canned answer.', 'err'); return null; }
   finally { clearTimeout(to); }
 }
 

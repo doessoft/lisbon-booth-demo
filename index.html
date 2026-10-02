@@ -72,7 +72,9 @@ body.kiosk #screen{border-radius:0}
 .bar{display:flex;justify-content:space-between;align-items:center;font-size:3.2cqw;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;min-height:6cqw}
 .brand{display:flex;align-items:center;gap:1.8cqw;color:var(--fg);text-transform:none;letter-spacing:0;font-family:var(--display);font-weight:600;font-size:4.2cqw}
 .orb{width:4.6cqw;height:4.6cqw;border-radius:50%;background:radial-gradient(circle at 35% 35%,#d8ffd8,var(--uma2) 40%,var(--uma));box-shadow:0 0 16px var(--uma2);animation:breathe 3s ease-in-out infinite}
-.orb.talk{animation:none;transform:scale(calc(1 + var(--amp,0) * 1.1));box-shadow:0 0 calc(14px + var(--amp,0) * 40px) var(--uma2);transition:transform .08s linear,box-shadow .08s linear}
+.orb.talk{animation:none;transform:scale(calc(1 + var(--amp,0) * .28));box-shadow:0 0 calc(14px + var(--amp,0) * 36px) var(--uma2);transition:transform .08s linear,box-shadow .08s linear}
+.uma .orb,.brand .orb{flex:none}
+.uma .txt{min-width:0;flex:1}
 .hero-orb{position:absolute;left:50%;top:30%;width:64cqw;height:64cqw;transform:translate(-50%,-50%) scale(calc(1 + var(--amp,0) * .35));border-radius:50%;background:radial-gradient(circle at 40% 35%, rgba(216,255,216,.85), rgba(43,227,90,.5) 35%, rgba(20,168,0,.14) 64%, transparent 72%);filter:blur(5cqw);opacity:.85;animation:breathe 5s ease-in-out infinite;pointer-events:none;z-index:0;transition:transform .08s linear}
 #v-home > *,#v-ask > *{position:relative;z-index:1}
 #v-home > .hero-orb{position:absolute;z-index:0}

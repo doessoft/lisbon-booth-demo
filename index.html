@@ -488,7 +488,7 @@ document.addEventListener('pointerdown', e => { const b = e.target.closest('[dat
 document.addEventListener('click', e => { const b = e.target.closest('[data-go]'); if (b) go(b.dataset.go); });
 $('#screen').addEventListener('input', touch);
 document.addEventListener('keydown', e => {
-  if (e.target.matches('input,textarea')) { touch(); return; }
+  if (e.target.closest?.('input,textarea')) { touch(); return; }
   const k = e.key.toLowerCase();
   if (k==='?' || k==='h') $('#panel').classList.toggle('on');
   else if (k==='escape'){ if ($('#glass').classList.contains('on')) { $('#glass').classList.remove('on'); return; } $('#panel').classList.remove('on'); document.body.classList.remove('kiosk'); if (document.fullscreenElement) document.exitFullscreen?.(); }
@@ -726,6 +726,7 @@ Illustrative facts you may use: Project Catalog work often starts the same day; 
 function loadAI(){ try { AI.key = localStorage.getItem('uma.key') || ''; AI.model = localStorage.getItem('uma.model') || ''; } catch(e){} AI.provider = !AI.key ? null : (AI.key.startsWith('sk-ant-') ? 'anthropic' : 'openai'); $('#aimodel').value = AI.model; renderAI(); }
 function renderAI(msg, cls){ const s = $('#aistatus'); if (msg){ s.textContent = msg; s.className = 's ' + (cls || ''); } else if (!AI.provider){ s.textContent = 'Canned answers. Paste a key to go live.'; s.className = 's'; } else { s.textContent = `Live · ${AI.provider} · ${AI.model || (AI.provider === 'anthropic' ? 'claude-opus-5-5' : 'gpt-5.4-mini')}`; s.className = 's ok'; } $('#s-ai').textContent = AI.provider ? 'live' : 'canned'; }
 $('#aisave').onclick = () => { const k = $('#aikey').value.trim(), m = $('#aimodel').value.trim(); try { if (k) localStorage.setItem('uma.key', k); if (k || AI.key) localStorage.setItem('uma.model', m); } catch(e){} $('#aikey').value = ''; loadAI(); };
+$('#aikey').onkeydown = $('#aimodel').onkeydown = e => { if (e.key === 'Enter') $('#aisave').click(); };
 $('#aiforget').onclick = () => { try { localStorage.removeItem('uma.key'); localStorage.removeItem('uma.model'); } catch(e){} loadAI(); };
 loadAI();
 async function askModel(history, system = UMA_SYSTEM){
@@ -743,7 +744,7 @@ async function askModel(history, system = UMA_SYSTEM){
     } else {
       const r = await fetch('https://api.openai.com/v1/chat/completions', { method:'POST', signal:ctrl.signal,
         headers: { 'content-type':'application/json', 'authorization':'Bearer ' + AI.key },
-        body: JSON.stringify({ model: AI.model || 'gpt-5.4-mini', max_completion_tokens: 2000, messages: [{ role:'system', content: system }, ...history] }) });
+        body: JSON.stringify({ model: AI.model || 'gpt-5.4-mini', max_completion_tokens: 4000, messages: [{ role:'system', content: system }, ...history] }) });
       const j = await r.json(); if (!r.ok) throw new Error(j.error?.message || ('HTTP ' + r.status));
       text = j.choices?.[0]?.message?.content || '';
     }

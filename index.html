@@ -294,7 +294,7 @@ textarea{width:100%;min-height:24cqw;background:rgba(16,23,15,.9);border:1px sol
     <!-- THE PULSE -->
     <section class="view on" id="v-ambient">
       <button id="tap" aria-label="Wake Uma" data-go="home"></button>
-      <div id="live"><i></i>Live across Upwork</div>
+      <div id="live"><i></i>Posted on Upwork · Oct 2</div>
       <div id="count"><b id="counter">0</b><span>contracts active now</span></div>
       <div id="feed"></div>
       <div id="spot"><div class="kicker" id="spot-k"></div><div class="h" id="spot-h"></div><div class="d" id="spot-d"></div></div>
@@ -435,7 +435,7 @@ textarea{width:100%;min-height:24cqw;background:rgba(16,23,15,.9);border:1px sol
     <div class="r"><select id="aitts" aria-label="Uma voice"><option value="system">System voice</option><option value="nova">Uma voice · nova (OpenAI)</option><option value="coral">Uma voice · coral (OpenAI)</option><option value="sage">Uma voice · sage (OpenAI)</option></select></div>
     <div class="s" id="aistatus">Canned answers. Paste a key to go live.</div>
   </div>
-  <div class="fine">The three people in Find great talent and the three projects in What businesses are building are real public Upwork profiles and postings, pulled Oct 2 2026. Everything else (stories, feed, counter, teammates) is illustrative. Value names are placeholders until Upwork shares the LUV list. A pasted key stays in this browser only and never leaves with the file.</div>
+  <div class="fine">The three people in Find great talent, the three projects in What businesses are building, and the ambient ticker are real public Upwork profiles and postings, pulled Oct 2 2026 (times shown in Lisbon time). The counter, success stories, spotlight stats and teammates are illustrative. Value names are placeholders until Upwork shares the LUV list. A pasted key stays in this browser only and never leaves with the file.</div>
 </aside>
 <div id="glass" role="dialog" aria-label="Behind the glass"></div>
 
@@ -450,6 +450,23 @@ const cities = {Lisbon:[38.72,-9.14],Porto:[41.15,-8.61],London:[51.5,-.12],Berl
 const skills = ["brand identity","AI agent build","Webflow site","data pipeline","Portuguese voiceover","Shopify migration","UX research","motion design","bookkeeping","Flutter app","SEO audit","LLM evaluation","3D product render","React dashboard","copywriting"];
 const roles = ["a designer","a developer","an ML engineer","a copywriter","a video editor","a data analyst","a marketer","a translator"];
 const counterBase = 12400;
+const livePosts = [
+  ["2026-10-02T16:55:53Z","United States","Custom AI agent and RAG system for a small business",31],
+  ["2026-10-02T16:37:30Z","Kuwait","Mobile attribution expert for AppsFlyer, Meta and TikTok",2],
+  ["2026-10-02T16:17:00Z","United States","Senior team to take a GPS golf app from MVP to production",22],
+  ["2026-10-02T16:14:20Z","United States","AI agent inside a CRM to answer inbound leads by text",67],
+  ["2026-10-02T16:03:42Z","United States","Webflow designer to finish a 50-year-old construction firm’s site",52],
+  ["2026-10-02T13:04:11Z","Ireland","Senior agentic-AI engineer on Google Cloud, $45–50/hr",53],
+  ["2026-10-02T13:00:59Z","United States","AI research agent that writes structured reports",20],
+  ["2026-10-02T13:00:38Z","Philippines","AI-powered full-stack engineer for SaaS and automations",13],
+  ["2026-10-02T12:10:23Z","United States","Website developer for an Austin studio, ongoing",58],
+  ["2026-10-02T11:48:37Z","Jordan","User acquisition for a mobile app on TikTok and Meta",5],
+  ["2026-10-02T10:48:21Z","United Kingdom","Webflow site optimisation for speed and mobile",24],
+  ["2026-10-02T09:52:46Z","Pakistan","100 exercise visuals and animations for a fitness app",1],
+  ["2026-10-02T06:58:16Z","Bangladesh","Webflow improvements and content updates",15],
+  ["2026-10-02T00:29:34Z","Canada","Webflow website for a barber shop",10]
+];
+let liveIdx = 0;
 const talent = [
   {k:"Live on Upwork · Expert-Vetted", n:"Luis Sousa T.", u:"https://www.upwork.com/freelancers/~01d2ee6dec906f1cdf", i:"LT", m:"Senior brand identity designer · Portugal · $70/hr", t:["Brand identity","Brand strategy","Art direction"], p:"Top Rated Plus and Expert-Vetted. 100% job success, $90K+ earned on Upwork. Visual systems for brands and digital products."},
   {k:"Live on Upwork", n:"Mykola L.", u:"https://www.upwork.com/freelancers/~010745e80bc4b9a85f", i:"ML", m:"Web and landing-page designer · Portugal · $45/hr", t:["UX/UI","Webflow","CRO"], p:"Top Rated Plus. 100% job success across 18 contracts, $600K+ earned. Landing pages built to convert, not just to look good."},
@@ -611,9 +628,9 @@ requestAnimationFrame(drawGlobe);
 /* ---------------- feed + counter ---------------- */
 const feed = $('#feed'); let counter = counterBase;
 function addEvent(a,b){
-  const role = roles[Math.random()*roles.length|0], sk = skills[Math.random()*skills.length|0];
-  const now = new Date(), t = now.toLocaleTimeString('en-GB', {hour:'2-digit',minute:'2-digit'});
-  const line = Math.random()<.5 ? `<em>${a}</em> just hired ${role} in <em>${b}</em> for a ${sk}` : `A ${sk} kicked off between <em>${a}</em> and <em>${b}</em>`;
+  const [iso, country, what, props] = livePosts[liveIdx++ % livePosts.length];
+  const t = new Date(iso).toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit', timeZone:'Europe/Lisbon'});
+  const line = `<em>${country}</em> · ${what} · ${props} proposal${props === 1 ? '' : 's'}`;
   const el = document.createElement('div'); el.className='ev'; el.innerHTML = `<span class="t">${t}</span><span class="r">${line}</span>`;
   feed.appendChild(el); while (feed.children.length>3) feed.firstChild.remove();
   counter += 1 + (Math.random()*3|0);

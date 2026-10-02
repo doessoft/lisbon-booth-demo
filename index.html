@@ -6,6 +6,7 @@
 <meta name="robots" content="noindex">
 <title>Uma's Office</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@200;300;400;600&family=Manrope:wght@400;500;700&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
 /* Booth: a dark room, two LED strips, a floor reflection, and the Elo in portrait.
    Press ? for presenter controls. F = kiosk fullscreen. */
@@ -259,6 +260,10 @@ textarea{width:100%;min-height:24cqw;background:rgba(16,23,15,.9);border:1px sol
 .sugg.next .kicker{color:var(--dim);font-size:2.9cqw;margin-bottom:.4cqw}
 .sugg.next button{font-size:3.6cqw;padding:2.8cqw 4cqw}
 #panel .ai select{flex:1;min-width:0;background:#0d130f;border:1px solid var(--line);border-radius:7px;padding:6px 8px;color:var(--fg);font:inherit;font-size:12.5px}
+.qr{display:flex;align-items:center;gap:3cqw;margin-top:1cqw}
+.qr .code{width:14cqw;height:14cqw;flex:none;background:#fff;padding:1cqw;border-radius:1.6cqw;display:grid;place-items:center;overflow:hidden}
+.qr .code canvas,.qr .code img{width:100%!important;height:100%!important;display:block}
+.qr span{font-size:3.2cqw;color:var(--muted);line-height:1.35}
 /* presenter overlay + hint */
 #hint{position:fixed;right:2vw;bottom:2vh;font-size:12px;color:var(--dim);letter-spacing:.06em;transition:opacity 1s}
 #hint kbd{font-family:ui-monospace,monospace;border:1px solid var(--line);border-radius:4px;padding:1px 5px;color:var(--muted)}
@@ -446,14 +451,14 @@ const skills = ["brand identity","AI agent build","Webflow site","data pipeline"
 const roles = ["a designer","a developer","an ML engineer","a copywriter","a video editor","a data analyst","a marketer","a translator"];
 const counterBase = 12400;
 const talent = [
-  {k:"Live on Upwork · Expert-Vetted", n:"Luis Sousa T.", i:"LT", m:"Senior brand identity designer · Portugal · $70/hr", t:["Brand identity","Brand strategy","Art direction"], p:"Top Rated Plus and Expert-Vetted. 100% job success, $90K+ earned on Upwork. Visual systems for brands and digital products."},
-  {k:"Live on Upwork", n:"Mykola L.", i:"ML", m:"Web and landing-page designer · Portugal · $45/hr", t:["UX/UI","Webflow","CRO"], p:"Top Rated Plus. 100% job success across 18 contracts, $600K+ earned. Landing pages built to convert, not just to look good."},
-  {k:"Live on Upwork", n:"Goga K.", i:"GK", m:"AI and machine learning engineer · Georgia · $40/hr", t:["AI agents","RAG","LangChain"], p:"Top Rated Plus. 100% job success across 20 contracts, $100K+ earned. Ships agents and retrieval pipelines on AWS and Google Cloud."}
+  {k:"Live on Upwork · Expert-Vetted", n:"Luis Sousa T.", u:"https://www.upwork.com/freelancers/~01d2ee6dec906f1cdf", i:"LT", m:"Senior brand identity designer · Portugal · $70/hr", t:["Brand identity","Brand strategy","Art direction"], p:"Top Rated Plus and Expert-Vetted. 100% job success, $90K+ earned on Upwork. Visual systems for brands and digital products."},
+  {k:"Live on Upwork", n:"Mykola L.", u:"https://www.upwork.com/freelancers/~010745e80bc4b9a85f", i:"ML", m:"Web and landing-page designer · Portugal · $45/hr", t:["UX/UI","Webflow","CRO"], p:"Top Rated Plus. 100% job success across 18 contracts, $600K+ earned. Landing pages built to convert, not just to look good."},
+  {k:"Live on Upwork", n:"Goga K.", u:"https://www.upwork.com/freelancers/~01eac91067d86ae7b8", i:"GK", m:"AI and machine learning engineer · Georgia · $40/hr", t:["AI agents","RAG","LangChain"], p:"Top Rated Plus. 100% job success across 20 contracts, $100K+ earned. Ships agents and retrieval pipelines on AWS and Google Cloud."}
 ];
 const building = [
-  {k:"Live on Upwork · posted Oct 2", t:"A software consultancy in Ireland is hiring a senior agentic-AI engineer for Google Cloud", p:"Full time, six months and more, expert level. The client has spent $448K on Upwork and holds a 5.0 rating from 75 freelancers.", s:[["$45–50/hr","posted rate"],["53","proposals in"]]},
-  {k:"Live on Upwork · posted Oct 2", t:"A golf app is going from MVP to production with a React Native team", p:"A senior full-stack developer or small team to take a working GPS golf app the last mile to launch. Part time, one to three months.", s:[["1–3 mo","timeline"],["22","proposals in"]]},
-  {k:"Live on Upwork · posted Oct 2", t:"A 50-year-old US construction firm is replacing its website on Webflow", p:"Template site already built, information architecture finished, a designer needed to finish and polish it. Part time for one to three months.", s:[["52","proposals in"],["4.8","client rating"]]}
+  {k:"Live on Upwork · posted Oct 2", u:"https://www.upwork.com/jobs/~022106006818305458580", t:"A software consultancy in Ireland is hiring a senior agentic-AI engineer for Google Cloud", p:"Full time, six months and more, expert level. The client has spent $448K on Upwork and holds a 5.0 rating from 75 freelancers.", s:[["$45–50/hr","posted rate"],["53","proposals in"]]},
+  {k:"Live on Upwork · posted Oct 2", u:"https://www.upwork.com/jobs/~022106055706765299533", t:"A golf app is going from MVP to production with a React Native team", p:"A senior full-stack developer or small team to take a working GPS golf app the last mile to launch. Part time, one to three months.", s:[["1–3 mo","timeline"],["22","proposals in"]]},
+  {k:"Live on Upwork · posted Oct 2", u:"https://www.upwork.com/jobs/~022106051509705641805", t:"A 50-year-old US construction firm is replacing its website on Webflow", p:"Template site already built, information architecture finished, a designer needed to finish and polish it. Part time for one to three months.", s:[["52","proposals in"],["4.8","client rating"]]}
 ];
 const stories = [
   {k:"Success story", t:"From a founder and a laptop to a 12-person remote team", p:"A marketplace startup hired its first designer here, then its CTO. Revenue grew 5× in 18 months.", s:[["5×","revenue"],["18 mo","time"]]},
@@ -632,9 +637,11 @@ setTimeout(spotCycle, 11000); setInterval(spotCycle, 24000);
 const topics = {talent:{label:'Find great talent', items:talent}, building:{label:"What businesses are building", items:building}, stories:{label:'Success stories', items:stories}, surprise:{label:'Surprise me', items:surprises}};
 $$('[data-topic]').forEach(b => b.onclick = () => playStory(b.dataset.topic));
 function art(seed){ const h1 = 110+((seed*47)%40), h2=140+((seed*31)%60); return `<div class="art" style="background:radial-gradient(70% 80% at ${20+(seed*37)%60}% ${10+(seed*53)%50}%, hsl(${h1} 80% 35% / .9), transparent 70%), radial-gradient(50% 60% at ${60+(seed*17)%30}% 90%, hsl(${h2} 70% 30% / .8), transparent 70%)"></div>`; }
+const qrBlock = it => it.u ? `<div class="qr"><div class="code" data-qr="${it.u}"></div><span>Scan to open this ${it.n ? 'profile' : 'posting'} on Upwork</span></div>` : '';
+function drawQRs(root){ root.querySelectorAll('[data-qr]').forEach(el => { if (el.dataset.done) return; el.dataset.done = 1; if (!window.QRCode){ el.closest('.qr')?.remove(); return; } try { new QRCode(el, { text: el.dataset.qr, width: 128, height: 128, colorDark: '#0b100c', colorLight: '#ffffff', correctLevel: QRCode.CorrectLevel.M }); } catch(e){ el.closest('.qr')?.remove(); } }); }
 function renderItem(it, i){
-  if (it.n) return `<div class="card">${art(i+3)}${it.k ? `<div class="kicker">${it.k}</div>` : ''}<div class="person"><div class="avatar">${it.i}</div><div><div class="name">${it.n}</div><div class="meta">${it.m}</div></div></div><div class="tags">${it.t.map(x=>`<span class="tag">${x}</span>`).join('')}</div><p>${it.p}</p></div>`;
-  return `<div class="card">${art(i+7)}<div class="kicker">${it.k}</div><div class="title">${it.t}</div><p>${it.p}</p><div class="stats">${it.s.map(([b,l])=>`<div class="stat"><b>${b}</b><span>${l}</span></div>`).join('')}</div></div>`;
+  if (it.n) return `<div class="card">${art(i+3)}${it.k ? `<div class="kicker">${it.k}</div>` : ''}<div class="person"><div class="avatar">${it.i}</div><div><div class="name">${it.n}</div><div class="meta">${it.m}</div></div></div><div class="tags">${it.t.map(x=>`<span class="tag">${x}</span>`).join('')}</div><p>${it.p}</p>${qrBlock(it)}</div>`;
+  return `<div class="card">${art(i+7)}<div class="kicker">${it.k}</div><div class="title">${it.t}</div><p>${it.p}</p><div class="stats">${it.s.map(([b,l])=>`<div class="stat"><b>${b}</b><span>${l}</span></div>`).join('')}</div>${qrBlock(it)}</div>`;
 }
 function playStory(topic){
   const {label, items} = topics[topic]; go('story'); $('#story-label').textContent = label;
@@ -643,7 +650,7 @@ function playStory(topic){
   storyT = setInterval(() => {
     const el = Date.now()-start, i = Math.min(items.length-1, Math.floor(el/per)), left = Math.max(0, Math.ceil((total-el)/1000));
     $('#ringfg').style.strokeDashoffset = 100.5*(1-Math.min(1,el/total)); $('#ringtxt').textContent = left;
-    if (i !== idx){ idx = i; const slot=$('#story-slot'); slot.innerHTML = renderItem(items[i], i); slot.firstChild.animate([{opacity:0,transform:'translateY(14px) scale(.98)'},{opacity:1,transform:'none'}],{duration:600,easing:'cubic-bezier(.2,.9,.3,1)'}); $$('#story-dots i').forEach((d,k)=>d.classList.toggle('on',k===i)); const it = items[i]; say(it.n ? `${it.n}. ${it.m.split('·')[0]}. ${it.p}` : `${it.t}. ${it.p}`); $('#story-voice').style.visibility='visible'; }
+    if (i !== idx){ idx = i; const slot=$('#story-slot'); slot.innerHTML = renderItem(items[i], i); drawQRs(slot); slot.firstChild.animate([{opacity:0,transform:'translateY(14px) scale(.98)'},{opacity:1,transform:'none'}],{duration:600,easing:'cubic-bezier(.2,.9,.3,1)'}); $$('#story-dots i').forEach((d,k)=>d.classList.toggle('on',k===i)); const it = items[i]; say(it.n ? `${it.n}. ${it.m.split('·')[0]}. ${it.p}` : `${it.t}. ${it.p}`); $('#story-voice').style.visibility='visible'; }
     if (el >= total){ clearInterval(storyT); $('#story-slot').innerHTML = `<div class="card"><div class="title">Want to explore something else?</div><p>Or just walk away. Uma returns to the Pulse on her own.</p></div>`; $('#story-voice').style.visibility='hidden'; say("Want to explore something else?"); }
   }, 150);
 }
@@ -688,7 +695,7 @@ async function answer(q){
   thread.scrollTop = 1e9;
   setTimeout(() => {
     if (mode!=='ask') return;
-    if (hit && hit.card){ const c = document.createElement('div'); c.innerHTML = renderItem(hit.card, 5); c.firstChild.style.marginLeft='7.6cqw'; thread.appendChild(c.firstChild); }
+    if (hit && hit.card){ const c = document.createElement('div'); c.innerHTML = renderItem(hit.card, 5); c.firstChild.style.marginLeft='7.6cqw'; thread.appendChild(c.firstChild); drawQRs(thread); }
     const asked = new Set(askHist.filter(m => m.role === 'user').map(m => m.content.toLowerCase()));
     const next = faqs.filter(f => !asked.has(f.q.toLowerCase())).slice(0, 2);
     if (next.length && !$('#sugg')){ const sg = document.createElement('div'); sg.className = 'sugg next'; sg.id = 'sugg'; sg.innerHTML = `<div class="kicker">Try next</div>` + next.map(f => `<button data-q="${faqs.indexOf(f)}">${f.q}<span>↗</span></button>`).join(''); thread.appendChild(sg); }
@@ -854,7 +861,8 @@ function confetti(){
   requestAnimationFrame(step);
 }
 
-if (location.hash === '#kiosk') document.body.classList.add('kiosk');
+const applyHash = () => { if (location.hash === '#kiosk') document.body.classList.add('kiosk'); };
+applyHash(); addEventListener('hashchange', applyHash);
 })();
 </script>
 </body>
